@@ -6,7 +6,11 @@ import type {
     IGameSession,
     IPlayer,
 } from '../engine/mod.ts';
-import { PlayerComputeThrowError } from '../engine/errors.ts';
+import {
+    PlayerComputeThrowError,
+    PlayerForfeitError,
+    PlayerTimeoutError,
+} from '../engine/errors.ts';
 
 import type { ValueOf } from '../util/mod.ts';
 
@@ -141,7 +145,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
     let currentTurnComputeDuration: number = -1;
     let currentTurnStartTimestamp: number = -1;
 
-    let playerThatErrored: IPlayer | null = null;
+    let playerError: { error: Error; player: IPlayer } | null = null;
 
     function logGameRecord(
         levelName: LevelName,
@@ -281,9 +285,9 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
             if (error instanceof PlayerComputeThrowError) ({ error } = error);
 
-            const { message, name, stack } = error;
+            playerError = { error, player };
 
-            playerThatErrored = player;
+            const { message, name, stack } = error;
 
             switch (outputKind) {
                 case OUTPUT_KIND.human:
