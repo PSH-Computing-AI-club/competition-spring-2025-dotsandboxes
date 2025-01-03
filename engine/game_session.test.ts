@@ -29,7 +29,7 @@ Deno.test(function makeGameSession_Success() {
     });
 
     const gameSession = makeGameSession({
-        players: [playerA, playerB],
+        players: [playerB, playerA],
         timeout: 0,
     });
 

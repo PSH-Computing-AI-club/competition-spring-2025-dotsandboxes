@@ -81,7 +81,7 @@ export interface IGameSession extends IGameSessionOptions {
 }
 
 export function makeGameSession(options: IGameSessionOptions): IGameSession {
-    const { players, timeout: timeoutDuration } = options;
+    const { players: initialPlayers, timeout: timeoutDuration } = options;
 
     const EVENT_PLAYER_FORFEIT = event<IPlayerForfeitEvent>();
     const EVENT_PLAYER_TIMEOUT = event<IPlayerTimeoutEvent>();
@@ -90,7 +90,17 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
     const EVENT_TURN_MOVE = event<ITurnMoveEvent>();
     const EVENT_TURN_START = event<ITurnStartEvent>();
 
-    const turnOrderedPlayers: IPlayer[] = [...players];
+    const turnOrderedPlayers: IPlayer[] = [...initialPlayers];
+
+    const players: IPlayer[] = initialPlayers.toSorted(
+        (playerA, playerB) => {
+            const playerInitialA = playerA.playerInitial.toLowerCase();
+            const playerInitialB = playerB.playerInitial.toLowerCase();
+
+            return playerInitialB > playerInitialA ? -1 : 0;
+        },
+    );
+
     const playerTurns: IPlayerTurn[] = [];
 
     return {
@@ -101,7 +111,7 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
         EVENT_TURN_MOVE,
         EVENT_TURN_START,
 
-        players: turnOrderedPlayers,
+        players,
         playerTurns,
         timeout: timeoutDuration,
 
