@@ -14,7 +14,7 @@ export const makeDummyPlayer =
             playerInitial,
             seed,
 
-            computePlayerMove() {
+            async computePlayerMove() {
                 throw new NotImplementedError(
                     "bad dispatch to 'IDummyPlayer.computePlayerMove' (not implemented)",
                 );

@@ -1,4 +1,4 @@
-import { assertObjectMatch, assertThrows } from '@std/assert';
+import { assertObjectMatch, assertRejects } from '@std/assert';
 
 import { assertTypeOf } from '../util/mod.ts';
 
@@ -21,7 +21,7 @@ Deno.test(function makeDummyPlayer_Success() {
     });
 });
 
-Deno.test(function IDummyPlayer_computePlayerMove_Failure() {
+Deno.test(async function IDummyPlayer_computePlayerMove_Failure() {
     const dummyPlayer = makeDummyPlayer({
         playerInitial: 'D',
         seed: 0,
@@ -37,7 +37,7 @@ Deno.test(function IDummyPlayer_computePlayerMove_Failure() {
         timeout: 0,
     });
 
-    assertThrows(() => {
-        dummyPlayer.computePlayerMove(gameSession, gameBoard);
+    await assertRejects(async () => {
+        await dummyPlayer.computePlayerMove(gameSession, gameBoard);
     }, "bad dispatch to 'IDummyPlayer.computePlayerMove' (not implemented)");
 });
