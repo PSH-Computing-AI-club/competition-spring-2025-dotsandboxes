@@ -32,23 +32,13 @@ export interface IGameResult extends IGameResultOptions {
 export function makeGameResult(options: IGameResultOptions): IGameResult {
     const { scores } = options;
 
-    // We are sorting by initial then by score (for duplicate initials) so when
-    // we go to print the score, everything is already nice and sorted.
-    //
-    // And so when competitors are debugging their code they get nice console
-    // output.
-
     let highestScore = 0;
     const sortedScoreEntries = Array.from(scores.entries()).toSorted(
-        ([playerA, scoreA], [playerB, scoreB]) => {
+        ([playerA, _scoreA], [playerB, _scoreB]) => {
             const playerInitialA = playerA.playerInitial.toLowerCase();
             const playerInitialB = playerB.playerInitial.toLowerCase();
 
-            if (playerInitialB > playerInitialA) {
-                return -1;
-            }
-
-            return scoreA - scoreB;
+            return playerInitialB > playerInitialA ? -1 : 0;
         },
     );
 
