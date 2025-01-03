@@ -13,6 +13,10 @@ export interface IPlayer extends IPlayerOptions {
         gameSession: IGameSession,
         gameBoard: IGameBoard,
     ): Promise<IPlayerMove | null>;
+
+    destroy(): Promise<void>;
+
+    initialize(): Promise<void>;
 }
 
 export type IPlayerConstructor = (options: IPlayerOptions) => IPlayer;

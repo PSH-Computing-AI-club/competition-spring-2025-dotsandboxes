@@ -1,4 +1,8 @@
-import { assertObjectMatch, assertRejects } from '@std/assert';
+import {
+    assertInstanceOf,
+    assertObjectMatch,
+    assertRejects,
+} from '@std/assert';
 
 import { assertTypeOf } from '../util/mod.ts';
 
@@ -15,6 +19,9 @@ Deno.test(function makeDummyPlayer_Success() {
     assertTypeOf(dummyPlayer, 'object');
 
     assertTypeOf(dummyPlayer.playerInitial, 'string');
+    assertInstanceOf(dummyPlayer.computePlayerMove, Function);
+    assertInstanceOf(dummyPlayer.destroy, Function);
+    assertInstanceOf(dummyPlayer.initialize, Function);
 
     assertObjectMatch(dummyPlayer, {
         playerInitial: 'D',

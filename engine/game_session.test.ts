@@ -66,6 +66,9 @@ Deno.test(async function IGameSession_applyNextPlayerTurn_Success() {
         playerInitial: 'A',
         seed: 0,
 
+        async destroy() {},
+        async initialize() {},
+
         async computePlayerMove(_gameSession, _gameBoard) {
             return {
                 x: 1,
@@ -77,6 +80,9 @@ Deno.test(async function IGameSession_applyNextPlayerTurn_Success() {
     const playerB = {
         playerInitial: 'B',
         seed: 0,
+
+        async destroy() {},
+        async initialize() {},
 
         async computePlayerMove(_gameSession, _gameBoard) {
             return {
@@ -358,6 +364,9 @@ Deno.test(
             playerInitial: 'A',
             seed: 0,
 
+            async destroy() {},
+            async initialize() {},
+
             async computePlayerMove(_gameSession, _gameBoard) {
                 return {
                     x: 0,
@@ -392,6 +401,9 @@ Deno.test(
         const playerA = {
             playerInitial: 'A',
             seed: 0,
+
+            async destroy() {},
+            async initialize() {},
 
             computePlayerMove(_gameSession, _gameBoard) {
                 return new Promise((resolve, _reject) => {

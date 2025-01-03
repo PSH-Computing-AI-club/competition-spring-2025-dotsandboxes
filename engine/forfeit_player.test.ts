@@ -1,4 +1,4 @@
-import { assertEquals, assertObjectMatch } from '@std/assert';
+import { assertEquals, assertInstanceOf, assertObjectMatch } from '@std/assert';
 
 import { assertTypeOf } from '../util/mod.ts';
 
@@ -7,16 +7,18 @@ import { makeGameBoard } from './game_board.ts';
 import { makeGameSession } from './game_session.ts';
 
 Deno.test(function makeForfeitPlayer_Success() {
-    const ForfeitPlayer = makeForfeitPlayer({
+    const forfeitPlayer = makeForfeitPlayer({
         playerInitial: 'F',
         seed: 0,
     });
 
-    assertTypeOf(ForfeitPlayer, 'object');
+    assertTypeOf(forfeitPlayer, 'object');
 
-    assertTypeOf(ForfeitPlayer.playerInitial, 'string');
+    assertInstanceOf(forfeitPlayer.computePlayerMove, Function);
+    assertInstanceOf(forfeitPlayer.destroy, Function);
+    assertInstanceOf(forfeitPlayer.initialize, Function);
 
-    assertObjectMatch(ForfeitPlayer, {
+    assertObjectMatch(forfeitPlayer, {
         playerInitial: 'F',
     });
 });

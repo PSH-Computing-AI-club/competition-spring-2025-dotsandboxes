@@ -12,6 +12,9 @@ export const makeForfeitPlayer =
             playerInitial,
             seed,
 
+            async destroy() {},
+            async initialize() {},
+
             async computePlayerMove() {
                 return null;
             },
