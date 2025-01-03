@@ -1,6 +1,5 @@
 import { Command } from '@cliffy/command';
 
-import type { IPlayerTurn } from '../engine/mod.ts';
 import {
     computeGameResultFromGame,
     InvalidPlacementError,

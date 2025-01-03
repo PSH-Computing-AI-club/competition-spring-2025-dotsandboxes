@@ -6,12 +6,7 @@ import type {
     IGameSession,
     IPlayer,
 } from '../engine/mod.ts';
-import {
-    PlayerComputeThrowError,
-    PlayerForfeitError,
-    PlayerTimeoutError,
-    WIN_KIND,
-} from '../engine/mod.ts';
+import { PlayerComputeThrowError, WIN_KIND } from '../engine/mod.ts';
 
 import type { ValueOf } from '../util/mod.ts';
 
