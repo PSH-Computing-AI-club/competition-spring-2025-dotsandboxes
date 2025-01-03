@@ -44,9 +44,12 @@ export const COMMAND_SIMULATE = new Command()
         'Determine how long in milliseconds should each player get to compute their turns.',
         { default: 1000 },
     ).action(
-        async (
-            options: ISimulateOptions,
-        ) => {
+        // @ts-expect-error - **HACK**: There's currently some weirdness with cliffy's
+        // string to type parser causing types like `.gridColumns` being inferred as
+        // `number | boolean` rather than just `number`.
+        //
+        // So we are manually ignoring the inferred typing to focus the actual behaviour.
+        async (options: ISimulateOptions) => {
             const { gridColumns, gridRows, outputKind, seed, timeout } =
                 options;
 
@@ -97,5 +100,6 @@ export const COMMAND_SIMULATE = new Command()
 
             gameLogger.endSession(gameResult);
             gameLogger.destroy();
+            // **TODO**: destroy players
         },
     );
