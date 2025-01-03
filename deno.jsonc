@@ -1,0 +1,36 @@
+{
+    "imports": {
+        "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.7",
+        "@std/assert": "jsr:@std/assert@^1.0.9",
+        "@std/log": "jsr:@std/log@^0.224.12",
+        "@std/random": "jsr:@std/random@^0.1.0"
+    },
+
+    "fmt": {
+        "include": ["./"],
+
+        "useTabs": false,
+        "lineWidth": 80,
+        "indentWidth": 4,
+        "singleQuote": true,
+        "proseWrap": "preserve"
+    },
+
+    "lint": {
+        "include": ["./"],
+
+        "rules": {
+            "tags": ["recommended"]
+        }
+    },
+
+    "tasks": {
+        "check": "deno task check:format;deno task check:types;deno task check:lint",
+        "check:format": "deno fmt --check ./",
+        "check:lint": "deno lint ./",
+        "check:types": "deno check ./.scripts/modules.ts",
+        "deps:cache": "deno cache ./.scripts/deps.ts",
+        "format": "deno fmt ./",
+        "test": "deno test --allow-all"
+    }
+}
