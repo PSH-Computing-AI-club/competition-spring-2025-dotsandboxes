@@ -17,6 +17,9 @@ export function timeout<T extends unknown>(
             .then((value) => {
                 clearTimeout(timeoutIdentifier);
                 resolve(value);
-            }).catch(reject);
+            }).catch((error) => {
+                clearTimeout(timeoutIdentifier);
+                reject(error);
+            });
     });
 }
