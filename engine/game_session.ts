@@ -141,7 +141,7 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
                 playerMove = await timeout(playerMovePromise, timeoutDuration);
             } catch (error) {
                 if (error instanceof TimeoutError) {
-                    EVENT_PLAYER_FORFEIT.dispatch({
+                    EVENT_PLAYER_TIMEOUT.dispatch({
                         player: nextPlayer,
                         turnIndex,
                     });
