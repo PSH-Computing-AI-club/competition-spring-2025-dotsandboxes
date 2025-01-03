@@ -13,6 +13,7 @@ import type { IPlayer } from './player.ts';
 import { makeGameBoard } from './game_board.ts';
 import { SLOT_KIND } from './game_board_slot.ts';
 import { makeGameSession } from './game_session.ts';
+import { makeForfeitPlayer } from './forfeit_player.ts';
 
 // **TEST:** Test events
 
@@ -331,14 +332,10 @@ Deno.test(
 
 Deno.test(
     async function IGameSession_applyNextPlayerTurn_PlayerForfeit_Failure() {
-        const playerA = {
-            playerInitial: 'A',
+        const forfeitPlayer = makeForfeitPlayer({
+            playerInitial: 'F',
             seed: 0,
-
-            async computePlayerMove(_gameSession, _gameBoard) {
-                return null;
-            },
-        } satisfies IPlayer;
+        });
 
         const gameBoard = makeGameBoard({
             columns: 5,
@@ -346,7 +343,7 @@ Deno.test(
         });
 
         const gameSession = makeGameSession({
-            players: [playerA],
+            players: [forfeitPlayer],
             timeout: 0,
         });
 
