@@ -482,11 +482,11 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                             outputLogger.info(
                                 `Player ${playerInitial} has -1 boxes (error).`,
                             );
-                        } else if (playerThatForfeited) {
+                        } else if (playerThatForfeited === player) {
                             outputLogger.info(
                                 `Player ${playerInitial} has -1 boxes (forfeited).`,
                             );
-                        } else if (playerThatTimedout) {
+                        } else if (playerThatTimedout === player) {
                             outputLogger.info(
                                 `Player ${playerInitial} has -1 boxes (timed out).`,
                             );
