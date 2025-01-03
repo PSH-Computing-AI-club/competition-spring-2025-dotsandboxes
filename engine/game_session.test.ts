@@ -302,14 +302,10 @@ Deno.test(
 
 Deno.test(
     async function IGameSession_applyNextPlayerTurn_PlayerComputeThrowError_Failure() {
-        const playerA = {
-            playerInitial: 'A',
+        const dummyPlayer = makeDummyPlayer({
+            playerInitial: 'D',
             seed: 0,
-
-            computePlayerMove(_gameSession, _gameBoard) {
-                throw new Error('hello world');
-            },
-        } satisfies IPlayer;
+        });
 
         const gameBoard = makeGameBoard({
             columns: 5,
@@ -317,7 +313,7 @@ Deno.test(
         });
 
         const gameSession = makeGameSession({
-            players: [playerA],
+            players: [dummyPlayer],
             timeout: 0,
         });
 
