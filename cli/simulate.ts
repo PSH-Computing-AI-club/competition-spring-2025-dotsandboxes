@@ -6,12 +6,13 @@ import {
     makeGameBoard,
     makeGameSession,
     PlayerComputeThrowError,
+    PlayerForfeitError,
+    PlayerTimeoutError,
 } from '../engine/mod.ts';
 import { makeRandomPlayer } from '../engine/random_player.ts';
 
 import type { IGlobalOptions } from './global.ts';
 import { makeGameLogger } from './game_logger.ts';
-import { PlayerForfeitError } from '../engine/errors.ts';
 
 interface ISimulateOptions extends IGlobalOptions {
     readonly gridColumns: number;
@@ -79,7 +80,8 @@ export const COMMAND_SIMULATE = new Command()
                     if (
                         error instanceof InvalidPlacementError ||
                         error instanceof PlayerComputeThrowError ||
-                        error instanceof PlayerForfeitError
+                        error instanceof PlayerForfeitError ||
+                        error instanceof PlayerTimeoutError
                     ) {
                         break;
                     }
