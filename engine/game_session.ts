@@ -137,15 +137,13 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
                     });
 
                     throw new PlayerTimeoutError(
-                        `bad dispatch to 'IGameSession.applyNextPlayerTurn' (player '${nextPlayer.playerInitial}' timed out during compute)`,
+                        `bad dispatch to 'IGameSession.applyNextPlayerTurn' (player '${nextPlayer.playerInitial}' timed out during compute')`,
                         { player: nextPlayer },
                     );
                 }
 
                 const computeError = new PlayerComputeThrowError(
-                    `bad dispatch to 'IGameSession.applyNextPlayerTurn' (player '${nextPlayer.playerInitial}' throw an error during computation during turn '${
-                        turnIndex + 1
-                    }')`,
+                    `bad dispatch to 'IGameSession.applyNextPlayerTurn' (player '${nextPlayer.playerInitial}' threw an error during compute')`,
                     {
                         // **HACK:** This could maybe not be an `Error` instance... but
                         // surely who would throw anything but!?

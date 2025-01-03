@@ -321,7 +321,7 @@ Deno.test(
             async () => {
                 await gameSession.applyNextPlayerTurn(gameBoard);
             },
-            "bad dispatch to 'IGameSession.applyNextPlayerTurn' (player 'A' throw an error during computation during turn '1')",
+            "bad dispatch to 'IGameSession.applyNextPlayerTurn' (player 'D' threw an error during compute)",
         );
     },
 );
