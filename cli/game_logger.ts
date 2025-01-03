@@ -368,8 +368,8 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                         `Player ${playerInitial} had an error while computing or performing a move:`,
                     );
 
-                    outputLogger.error(`${name}: ${message}`);
                     if (stack) outputLogger.error(stack);
+                    else outputLogger.error(`${name}: ${message}`);
 
                     break;
 
