@@ -1,3 +1,4 @@
+export * from './constant_player.ts';
 export * from './dummy_player.ts';
 export * from './errors.ts';
 export * from './forfeit_player.ts';
