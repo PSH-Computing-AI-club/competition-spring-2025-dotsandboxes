@@ -10,7 +10,8 @@ import {
     PlayerComputeThrowError,
     PlayerForfeitError,
     PlayerTimeoutError,
-} from '../engine/errors.ts';
+    WIN_KIND,
+} from '../engine/mod.ts';
 
 import type { ValueOf } from '../util/mod.ts';
 
@@ -384,8 +385,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
         endSession(gameResult) {
             const { players } = gameSession;
-            const { highestScore, scores, winKind, winningPlayers } =
-                gameResult;
+            const { scores, winKind, winningPlayers } = gameResult;
 
             switch (outputKind) {
                 case OUTPUT_KIND.human: {
@@ -398,7 +398,9 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                                 `Player ${playerInitial} has ${score} ${
                                     score > 1 ? 'boxes' : 'box'
                                 } (${
-                                    winningPlayers.size > 1 ? 'tie' : 'win'
+                                    winKind === WIN_KIND.multiple
+                                        ? 'tie'
+                                        : 'win'
                                 }).`,
                             );
                         } else if (playerError?.player === player) {
@@ -418,7 +420,11 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                             outputLogger.info(
                                 `Player ${playerInitial} has ${score} ${
                                     score > 1 ? 'boxes' : 'box'
-                                } (lost).`,
+                                } (${
+                                    winKind === WIN_KIND.no_contest
+                                        ? 'no contest'
+                                        : 'lost'
+                                }).`,
                             );
                         }
                     }
