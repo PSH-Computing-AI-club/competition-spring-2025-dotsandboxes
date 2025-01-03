@@ -14,6 +14,18 @@ import type { IPlayerMove } from './player_move.ts';
 import type { IPlayerTurn } from './player_turn.ts';
 import { makePlayerTurnFromPlayerMove } from './player_turn.ts';
 
+export interface IPlayerForfeitEvent {
+    readonly player: IPlayer;
+
+    readonly turnIndex: number;
+}
+
+export interface IPlayerTimeoutEvent {
+    readonly player: IPlayer;
+
+    readonly turnIndex: number;
+}
+
 export interface ITurnErrorEvent {
     readonly error: Error;
 
@@ -51,6 +63,10 @@ export interface IGameSessionOptions {
 }
 
 export interface IGameSession extends IGameSessionOptions {
+    readonly EVENT_PLAYER_FORFEIT: IEvent<IPlayerForfeitEvent>;
+
+    readonly EVENT_PLAYER_TIMEOUT: IEvent<IPlayerTimeoutEvent>;
+
     readonly EVENT_TURN_END: IEvent<ITurnEndEvent>;
 
     readonly EVENT_TURN_ERROR: IEvent<ITurnErrorEvent>;
@@ -67,6 +83,8 @@ export interface IGameSession extends IGameSessionOptions {
 export function makeGameSession(options: IGameSessionOptions): IGameSession {
     const { players, timeout: timeoutDuration } = options;
 
+    const EVENT_PLAYER_FORFEIT = event<IPlayerForfeitEvent>();
+    const EVENT_PLAYER_TIMEOUT = event<IPlayerTimeoutEvent>();
     const EVENT_TURN_END = event<ITurnEndEvent>();
     const EVENT_TURN_ERROR = event<ITurnErrorEvent>();
     const EVENT_TURN_MOVE = event<ITurnMoveEvent>();
@@ -76,6 +94,8 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
     const playerTurns: IPlayerTurn[] = [];
 
     return {
+        EVENT_PLAYER_FORFEIT,
+        EVENT_PLAYER_TIMEOUT,
         EVENT_TURN_END,
         EVENT_TURN_ERROR,
         EVENT_TURN_MOVE,
@@ -111,18 +131,15 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
                 playerMove = await timeout(playerMovePromise, timeoutDuration);
             } catch (error) {
                 if (error instanceof TimeoutError) {
-                    const timeoutError = new PlayerTimeoutError(
-                        `bad dispatch to 'IGameSession.applyNextPlayerTurn' (player '${nextPlayer.playerInitial}' timed out during compute)`,
-                        { player: nextPlayer },
-                    );
-
-                    EVENT_TURN_ERROR.dispatch({
-                        error: timeoutError,
+                    EVENT_PLAYER_FORFEIT.dispatch({
                         player: nextPlayer,
                         turnIndex,
                     });
 
-                    throw timeoutError;
+                    throw new PlayerTimeoutError(
+                        `bad dispatch to 'IGameSession.applyNextPlayerTurn' (player '${nextPlayer.playerInitial}' timed out during compute)`,
+                        { player: nextPlayer },
+                    );
                 }
 
                 const computeError = new PlayerComputeThrowError(
@@ -147,18 +164,15 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
             }
 
             if (playerMove === null) {
-                const error = new PlayerForfeitError(
-                    `bad dispatch to 'IGameSession.applyNextPlayerTurn' (player '${nextPlayer.playerInitial}' forfeited the game)`,
-                    { player: nextPlayer },
-                );
-
-                EVENT_TURN_ERROR.dispatch({
-                    error,
+                EVENT_PLAYER_FORFEIT.dispatch({
                     player: nextPlayer,
                     turnIndex,
                 });
 
-                throw error;
+                throw new PlayerForfeitError(
+                    `bad dispatch to 'IGameSession.applyNextPlayerTurn' (player '${nextPlayer.playerInitial}' forfeited the game)`,
+                    { player: nextPlayer },
+                );
             }
 
             EVENT_TURN_MOVE.dispatch({

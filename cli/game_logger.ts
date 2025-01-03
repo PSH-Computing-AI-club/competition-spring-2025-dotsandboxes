@@ -18,14 +18,16 @@ import type { ValueOf } from '../util/mod.ts';
 import type { OutputKind } from './output_logger.ts';
 import { getOutputLogger, OUTPUT_KIND } from './output_logger.ts';
 
-// **TODO:** player errors, results
-
 type LevelName = Lowercase<Exclude<STDLevelName, 'NOTSET'>>;
 
 export const MESSAGE_KIND = {
     appliedCapture: 'MESSAGE_APPLIED_CAPTURE',
 
     placedLine: 'MESSAGE_PLACED_LINE',
+
+    playerForfeit: 'MESSAGE_PLAYER_FORFEIT',
+
+    playerTimeout: 'MESSAGE_PLAYER_TIMEOUT',
 
     sessionEnd: 'MESSAGE_SESSION_END',
 
@@ -56,6 +58,14 @@ export interface IPlacedLineArgs {
     readonly x: number;
 
     readonly y: number;
+}
+
+export interface IPlayerForfeitArgs {
+    readonly playerInitial: string;
+}
+
+export interface IPlayerTimeoutArgs {
+    readonly playerInitial: string;
 }
 
 export interface ISessionEndArgs {
@@ -111,6 +121,8 @@ export interface ITurnStartArgs {
 export type IGameLogArgs =
     | IAppliedCaptureArgs
     | IPlacedLineArgs
+    | IPlayerForfeitArgs
+    | IPlayerTimeoutArgs
     | ISessionEndArgs
     | ISessionStartArgs
     | ITurnEndArgs
@@ -147,7 +159,9 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
     let currentTurnComputeDuration: number = -1;
     let currentTurnStartTimestamp: number = -1;
 
-    let playerError: { error: Error; player: IPlayer } | null = null;
+    let playerThatErrored: IPlayer | null = null;
+    let playerThatForfeited: IPlayer | null = null;
+    let playerThatTimedout: IPlayer | null = null;
 
     function logGameRecord(
         levelName: LevelName,
@@ -158,6 +172,16 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
         levelName: LevelName,
         messageKind: typeof MESSAGE_KIND['placedLine'],
         args: IPlacedLineArgs,
+    ): void;
+    function logGameRecord(
+        levelName: LevelName,
+        messageKind: typeof MESSAGE_KIND['playerForfeit'],
+        args: IPlayerForfeitArgs,
+    ): void;
+    function logGameRecord(
+        levelName: LevelName,
+        messageKind: typeof MESSAGE_KIND['playerTimeout'],
+        args: IPlayerTimeoutArgs,
     ): void;
     function logGameRecord(
         levelName: LevelName,
@@ -253,6 +277,58 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
             }
         });
 
+    const playerForfeitSubscription = gameSession.EVENT_PLAYER_TIMEOUT
+        .subscribe((event) => {
+            const { player } = event;
+
+            const { playerInitial } = player;
+
+            playerThatForfeited = player;
+
+            switch (outputKind) {
+                case OUTPUT_KIND.human: {
+                    outputLogger.error(
+                        `Player ${playerInitial} forfeited the game session.`,
+                    );
+
+                    break;
+                }
+
+                case OUTPUT_KIND.jsonl:
+                    logGameRecord('error', MESSAGE_KIND.playerForfeit, {
+                        playerInitial,
+                    });
+
+                    break;
+            }
+        });
+
+    const playerTimeoutSubscription = gameSession.EVENT_PLAYER_TIMEOUT
+        .subscribe((event) => {
+            const { player } = event;
+
+            const { playerInitial } = player;
+
+            playerThatTimedout = player;
+
+            switch (outputKind) {
+                case OUTPUT_KIND.human: {
+                    outputLogger.error(
+                        `Player ${playerInitial} took too long to compute their move.`,
+                    );
+
+                    break;
+                }
+
+                case OUTPUT_KIND.jsonl:
+                    logGameRecord('error', MESSAGE_KIND.playerTimeout, {
+                        playerInitial,
+                    });
+
+                    break;
+            }
+        });
+
     const turnEndSubscription = gameSession.EVENT_TURN_END
         .subscribe((event) => {
             const { capturesMade, player, turnIndex } = event;
@@ -287,7 +363,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
             if (error instanceof PlayerComputeThrowError) ({ error } = error);
 
-            playerError = { error, player };
+            playerThatErrored = player;
 
             const { message, name, stack } = error;
 
@@ -378,6 +454,9 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
             appliedCaptureSubscription.destroy();
             placedLineSubscription.destroy();
 
+            playerForfeitSubscription.destroy();
+            playerTimeoutSubscription.destroy();
+
             turnEndSubscription.destroy();
             turnErrorSubscription.destroy();
             turnMoveSubscription.destroy();
@@ -404,18 +483,17 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                                         : 'win'
                                 }).`,
                             );
-                        } else if (playerError?.player === player) {
-                            const { error } = playerError;
-
-                            let name: string = 'error';
-                            if (error instanceof PlayerForfeitError) {
-                                name = 'forfeited';
-                            } else if (error instanceof PlayerTimeoutError) {
-                                name = 'timed out';
-                            }
-
+                        } else if (playerThatErrored === player) {
                             outputLogger.info(
-                                `Player ${playerInitial} has -1 (${name}).`,
+                                `Player ${playerInitial} has -1 boxes (error).`,
+                            );
+                        } else if (playerThatForfeited) {
+                            outputLogger.info(
+                                `Player ${playerInitial} has -1 boxes (forfeited).`,
+                            );
+                        } else if (playerThatTimedout) {
+                            outputLogger.info(
+                                `Player ${playerInitial} has -1 boxes (timed out).`,
                             );
                         } else {
                             outputLogger.info(
