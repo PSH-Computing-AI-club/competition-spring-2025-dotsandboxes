@@ -59,6 +59,7 @@ export interface IPlacedLineArgs {
 }
 
 export interface ISessionEndArgs {
+    readonly scores: Record<string, number>;
 }
 
 export interface ISessionStartArgs {
@@ -384,11 +385,11 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
         },
 
         endSession(gameResult) {
-            const { players } = gameSession;
-            const { scores, winKind, winningPlayers } = gameResult;
-
             switch (outputKind) {
                 case OUTPUT_KIND.human: {
+                    const { players } = gameSession;
+                    const { scores, winKind, winningPlayers } = gameResult;
+
                     for (const player of players) {
                         const { playerInitial } = player;
                         const score = scores.get(player)!;
@@ -432,9 +433,23 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                     break;
                 }
 
-                case OUTPUT_KIND.jsonl:
-                    //logGameRecord('info', MESSAGE_KIND.sessionEnd, {});
+                case OUTPUT_KIND.jsonl: {
+                    const scores: Record<string, number> = Object.fromEntries(
+                        gameResult.scores.entries().map((
+                            [player, score],
+                        ) => {
+                            const { playerInitial } = player;
+
+                            return [playerInitial, score];
+                        }),
+                    );
+
+                    logGameRecord('info', MESSAGE_KIND.sessionEnd, {
+                        scores,
+                    });
+
                     break;
+                }
             }
         },
 
