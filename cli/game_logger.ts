@@ -272,7 +272,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
             }
         });
 
-    const playerForfeitSubscription = gameSession.EVENT_PLAYER_TIMEOUT
+    const playerForfeitSubscription = gameSession.EVENT_PLAYER_FORFEIT
         .subscribe((event) => {
             const { player } = event;
 
