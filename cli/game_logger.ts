@@ -382,14 +382,52 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
             turnStartSubscription.destroy();
         },
 
-        endSession(gameSession) {
+        endSession(gameResult) {
+            const { players } = gameSession;
+            const { highestScore, scores, winKind, winningPlayers } =
+                gameResult;
+
             switch (outputKind) {
-                case OUTPUT_KIND.human:
+                case OUTPUT_KIND.human: {
+                    for (const player of players) {
+                        const { playerInitial } = player;
+                        const score = scores.get(player)!;
+
+                        if (winningPlayers.has(player)) {
+                            outputLogger.info(
+                                `Player ${playerInitial} has ${score} ${
+                                    score > 1 ? 'boxes' : 'box'
+                                } (${
+                                    winningPlayers.size > 1 ? 'tie' : 'win'
+                                }).`,
+                            );
+                        } else if (playerError?.player === player) {
+                            const { error } = playerError;
+
+                            let name: string = 'error';
+                            if (error instanceof PlayerForfeitError) {
+                                name = 'forfeited';
+                            } else if (error instanceof PlayerTimeoutError) {
+                                name = 'timed out';
+                            }
+
+                            outputLogger.info(
+                                `Player ${playerInitial} has -1 (${name}).`,
+                            );
+                        } else {
+                            outputLogger.info(
+                                `Player ${playerInitial} has ${score} ${
+                                    score > 1 ? 'boxes' : 'box'
+                                } (lost).`,
+                            );
+                        }
+                    }
+
                     break;
+                }
 
                 case OUTPUT_KIND.jsonl:
                     //logGameRecord('info', MESSAGE_KIND.sessionEnd, {});
-
                     break;
             }
         },
