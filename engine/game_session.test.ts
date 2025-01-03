@@ -8,6 +8,7 @@ import {
 
 import { assertTypeOf } from '../util/mod.ts';
 
+import { makeConstantPlayer } from './constant_player.ts';
 import { makeDummyPlayer } from './dummy_player.ts';
 import type { IPlayer } from './player.ts';
 import { makeGameBoard } from './game_board.ts';
@@ -62,35 +63,19 @@ Deno.test(function makeGameSession_Success() {
 });
 
 Deno.test(async function IGameSession_applyNextPlayerTurn_Success() {
-    const playerA = {
+    const playerA = makeConstantPlayer({
         playerInitial: 'A',
         seed: 0,
+        x: 1,
+        y: 0,
+    });
 
-        async destroy() {},
-        async initialize() {},
-
-        async computePlayerMove(_gameSession, _gameBoard) {
-            return {
-                x: 1,
-                y: 0,
-            };
-        },
-    } satisfies IPlayer;
-
-    const playerB = {
+    const playerB = makeConstantPlayer({
         playerInitial: 'B',
         seed: 0,
-
-        async destroy() {},
-        async initialize() {},
-
-        async computePlayerMove(_gameSession, _gameBoard) {
-            return {
-                x: 0,
-                y: 1,
-            };
-        },
-    } satisfies IPlayer;
+        x: 0,
+        y: 1,
+    });
 
     const gameBoard = makeGameBoard({
         columns: 5,
@@ -360,20 +345,12 @@ Deno.test(
 
 Deno.test(
     async function IGameSession_applyNextPlayerTurn_PlayerInvalidPlacement_Failure() {
-        const playerA = {
+        const constantPlayer = makeConstantPlayer({
             playerInitial: 'A',
             seed: 0,
-
-            async destroy() {},
-            async initialize() {},
-
-            async computePlayerMove(_gameSession, _gameBoard) {
-                return {
-                    x: 0,
-                    y: 0,
-                };
-            },
-        } satisfies IPlayer;
+            x: 0,
+            y: 0,
+        });
 
         const gameBoard = makeGameBoard({
             columns: 5,
@@ -381,7 +358,7 @@ Deno.test(
         });
 
         const gameSession = makeGameSession({
-            players: [playerA],
+            players: [constantPlayer],
             timeout: 0,
         });
 
