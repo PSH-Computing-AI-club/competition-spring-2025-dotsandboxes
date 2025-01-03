@@ -17,6 +17,9 @@ export const makeRandomPlayer =
             playerInitial,
             seed,
 
+            async destroy() {},
+            async initialize() {},
+
             async computePlayerMove(_gameSession, gameBoard) {
                 const availableSpacers = Array.from(gameBoard.walkSpacers())
                     .filter(
