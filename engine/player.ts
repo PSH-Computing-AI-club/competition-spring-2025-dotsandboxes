@@ -19,4 +19,8 @@ export interface IPlayer extends IPlayerOptions {
     initialize(): Promise<void>;
 }
 
-export type IPlayerConstructor = (options: IPlayerOptions) => IPlayer;
+export type IPlayerConstructor<
+    Options extends IPlayerOptions = IPlayerOptions,
+> = (
+    options: Options,
+) => IPlayer;
