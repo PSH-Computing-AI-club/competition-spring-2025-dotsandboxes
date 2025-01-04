@@ -18,9 +18,6 @@ export const makeConstantPlayer =
             x,
             y,
 
-            async destroy() {},
-            async initialize() {},
-
             async computePlayerMove() {
                 return {
                     x,
@@ -28,4 +25,4 @@ export const makeConstantPlayer =
                 };
             },
         };
-    }) satisfies IPlayerConstructor<IConstantPlayerOptions>;
+    }) satisfies IPlayerConstructor<IConstantPlayerOptions, IConstantPlayer>;
