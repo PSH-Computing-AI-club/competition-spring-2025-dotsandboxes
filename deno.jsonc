@@ -7,6 +7,10 @@
         "@workers/caplink": "jsr:@workers/caplink@^0.0.5"
     },
 
+    "unstable": [
+        "worker-options"
+    ],
+
     "fmt": {
         "include": ["./"],
 
