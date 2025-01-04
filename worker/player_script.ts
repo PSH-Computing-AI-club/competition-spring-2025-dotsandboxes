@@ -30,7 +30,6 @@ export async function bundlePlayerScript(
         type: 'classic',
 
         compilerOptions: {
-            checkJs: true,
             inlineSourceMap: true,
             inlineSources: true,
         },
