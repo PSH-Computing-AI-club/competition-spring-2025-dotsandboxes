@@ -6,7 +6,7 @@ import * as Engine from '../engine/mod.ts';
 
 export type IEngineNamespace = typeof Engine;
 
-export function makeMathNamespace(): IEngineNamespace {
+export function makeEngineNamespace(): IEngineNamespace {
     const { ...members } = Engine;
 
     return Object.freeze({
