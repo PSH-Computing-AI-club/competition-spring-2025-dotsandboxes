@@ -379,9 +379,6 @@ Deno.test(
             playerInitial: 'A',
             seed: 0,
 
-            async destroy() {},
-            async initialize() {},
-
             computePlayerMove(_gameSession, _gameBoard) {
                 return new Promise((resolve, _reject) => {
                     timeoutIdentifier = setTimeout(resolve, 99999999);

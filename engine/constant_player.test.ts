@@ -17,8 +17,6 @@ Deno.test(function makeConstantPlayer_Success() {
     assertTypeOf(constantPlayer, 'object');
 
     assertInstanceOf(constantPlayer.computePlayerMove, Function);
-    assertInstanceOf(constantPlayer.destroy, Function);
-    assertInstanceOf(constantPlayer.initialize, Function);
 
     assertObjectMatch(constantPlayer, {
         playerInitial: 'C',
