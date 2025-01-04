@@ -3,6 +3,7 @@ import { wrap } from '@workers/caplink';
 
 import type { IEventSubscription } from '../util/mod.ts';
 import type { IWorkerAPI } from '../worker/mod.ts';
+import { bundlePlayerScript } from '../worker/mod.ts';
 
 import type { IGameBoard } from './game_board.ts';
 import type { IGameSession, ITurnMoveEvent } from './game_session.ts';
@@ -81,7 +82,7 @@ export const makeWebWorkerPlayer =
 
                 const { filePath, gameBoard, gameSession } = options;
 
-                const code = await Deno.readTextFile(filePath);
+                const code = await bundlePlayerScript({ root: filePath });
 
                 const { columns, rows } = gameBoard;
                 const playerInitials = gameSession.players.map((player) =>
