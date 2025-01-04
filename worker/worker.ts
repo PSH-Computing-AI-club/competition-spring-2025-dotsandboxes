@@ -70,6 +70,7 @@ export const WORKER_API = {
     },
 
     computePlayerMove() {
+        return null;
     },
 
     destroy() {
