@@ -118,7 +118,7 @@ export interface IWorkerGlobalThis {
     readonly isNaN: typeof isNaN;
 }
 
-export function makeGlobalThis(
+export function makeWorkerGlobalThis(
     options: IWorkerGlobalThisOptions,
 ): IWorkerGlobalThis {
     const { Engine, Game, Math } = options;
