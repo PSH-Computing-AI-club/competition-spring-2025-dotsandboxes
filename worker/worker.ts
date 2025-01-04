@@ -3,12 +3,13 @@
 
 import { expose } from '@workers/caplink';
 
-import { makeDummyPlayer } from '../engine/dummy_player.ts';
-import { makeGameBoard } from '../engine/game_board.ts';
-import { makeGameSession } from '../engine/game_session.ts';
-import type { IPlayer } from '../engine/player.ts';
-import type { IPlayerMove } from '../engine/player_move.ts';
-import { makePlayerTurnFromPlayerMove } from '../engine/player_turn.ts';
+import type { IPlayer, IPlayerMove } from '../engine/mod.ts';
+import {
+    makeDummyPlayer,
+    makeGameBoard,
+    makeGameSession,
+    makePlayerTurnFromPlayerMove,
+} from '../engine/mod.ts';
 
 import { makeEngineNamespace } from './engine_namespace.ts';
 import { makeMathNamespace } from './math_namespace.ts';
