@@ -224,5 +224,5 @@ export function makeWorkerGlobalThis(
         window: globalThis,
     });
 
-    return Object.freeze(globalThis) as IWorkerGlobalThis;
+    return Object.seal(globalThis) as IWorkerGlobalThis;
 }
