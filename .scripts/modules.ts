@@ -4,3 +4,4 @@
 import '../cli/mod.ts';
 import '../engine/mod.ts';
 import '../util/mod.ts';
+import '../worker/mod.ts';
