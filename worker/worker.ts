@@ -112,10 +112,6 @@ export const WORKER_API = {
             globalThis,
             timeout: 1000,
         });
-
-        console.log({
-            onComputePlayerTurn: globalThis.onComputePlayerTurn,
-        });
     },
 } satisfies IWorkerAPI;
 
