@@ -8,6 +8,7 @@ import { makeGameBoard } from '../engine/game_board.ts';
 import { makeGameSession } from '../engine/game_session.ts';
 import type { IPlayer } from '../engine/player.ts';
 import type { IPlayerMove } from '../engine/player_move.ts';
+import { makePlayerTurnFromPlayerMove } from '../engine/player_turn.ts';
 
 import { makeEngineNamespace } from './engine_namespace.ts';
 import { makeMathNamespace } from './math_namespace.ts';
@@ -17,10 +18,16 @@ import { makeWorkerGlobalThis } from './worker_global_this.ts';
 
 let globalThis: IWorkerGlobalThis | null = null;
 
-export interface IWorkerInitializeOptions {
-    readonly columns: number;
+export interface IOnTurnMoveOptions {
+    readonly playerInitial: string;
 
-    readonly payload: string;
+    readonly playerMove: IPlayerMove;
+
+    readonly turnIndex: number;
+}
+
+export interface IInitializeOptions {
+    readonly columns: number;
 
     readonly playerInitial: string;
 
@@ -36,10 +43,31 @@ export interface IWorkerAPI {
 
     destroy(): void;
 
-    initialize(options: IWorkerInitializeOptions): void;
+    initialize(options: IInitializeOptions): void;
+
+    onTurnMove(options: IOnTurnMoveOptions): void;
 }
 
 export const WORKER_API = {
+    onTurnMove(options) {
+        // **TODO:** Handle turn rotation.
+
+        const { playerInitial, playerMove, turnIndex } = options;
+        const { board: gameBoard, session: gameSession } = globalThis!.Game;
+
+        const player = gameSession.players.find((player) =>
+            player.playerInitial === playerInitial
+        )!;
+
+        const playerTurn = makePlayerTurnFromPlayerMove(playerMove, {
+            player,
+            turnIndex,
+        });
+
+        gameBoard.placeLine(playerTurn);
+        gameBoard.applyCaptures();
+    },
+
     computePlayerMove() {
     },
 
