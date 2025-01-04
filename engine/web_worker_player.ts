@@ -10,17 +10,26 @@ import type { IPlayer, IPlayerConstructor, IPlayerOptions } from './player.ts';
 
 const { AlreadyExists, BadResource } = Deno.errors;
 
-export interface IWebWorkerPlayerOptions extends IPlayerOptions {
+export interface IInitializeOptions {
     readonly gameBoard: IGameBoard;
 
     readonly gameSession: IGameSession;
 }
 
-export type IWebWorkerPlayer = IPlayer & IWebWorkerPlayerOptions;
+export type IWebWorkerPlayerOptions = IPlayerOptions;
+
+export interface IWebWorkerPlayer extends IPlayer {
+    destroy(): Promise<void>;
+
+    initialize(options: IInitializeOptions): Promise<void>;
+}
 
 export const makeWebWorkerPlayer =
     ((options: IWebWorkerPlayerOptions): IWebWorkerPlayer => {
-        const { gameBoard, gameSession, playerInitial, seed } = options;
+        const { playerInitial, seed } = options;
+
+        let gameBoard: IGameBoard | null = null;
+        let gameSession: IGameSession | null = null;
 
         let remote: Remote<IWorkerAPI> | null = null;
         let turnMoveSubscription: IEventSubscription<ITurnMoveEvent> | null =
@@ -45,8 +54,6 @@ export const makeWebWorkerPlayer =
         }
 
         return {
-            gameBoard,
-            gameSession,
             playerInitial,
             seed,
 
@@ -66,12 +73,14 @@ export const makeWebWorkerPlayer =
                 worker = null;
             },
 
-            async initialize() {
+            async initialize(options) {
                 if (worker) {
                     throw new AlreadyExists(
                         "bad dispatch to 'IWebWorkerPlayer.initialize' (worker was already initialized)",
                     );
                 }
+
+                ({ gameBoard, gameSession } = options);
 
                 const { columns, rows } = gameBoard;
                 const playerInitials = gameSession.players.map((player) =>
@@ -112,4 +121,4 @@ export const makeWebWorkerPlayer =
                 return remote!.computePlayerMove();
             },
         };
-    }) satisfies IPlayerConstructor<IWebWorkerPlayerOptions>;
+    }) satisfies IPlayerConstructor<IWebWorkerPlayerOptions, IWebWorkerPlayer>;
