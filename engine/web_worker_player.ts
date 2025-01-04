@@ -11,6 +11,8 @@ import type { IPlayer, IPlayerConstructor, IPlayerOptions } from './player.ts';
 const { AlreadyExists, BadResource } = Deno.errors;
 
 export interface IInitializeOptions {
+    readonly filePath: string;
+
     readonly gameBoard: IGameBoard;
 
     readonly gameSession: IGameSession;
@@ -77,7 +79,9 @@ export const makeWebWorkerPlayer =
                     );
                 }
 
-                const { gameBoard, gameSession } = options;
+                const { filePath, gameBoard, gameSession } = options;
+
+                const code = await Deno.readTextFile(filePath);
 
                 const { columns, rows } = gameBoard;
                 const playerInitials = gameSession.players.map((player) =>
@@ -102,6 +106,7 @@ export const makeWebWorkerPlayer =
                 remote = wrap<IWorkerAPI>(worker);
 
                 await remote.initialize({
+                    code,
                     columns,
                     playerInitial,
                     playerInitials,

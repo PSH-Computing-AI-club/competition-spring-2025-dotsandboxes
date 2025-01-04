@@ -14,12 +14,15 @@ import {
 import { makeEngineNamespace } from './engine_namespace.ts';
 import { makeMathNamespace } from './math_namespace.ts';
 import { makeGameNamespace } from './game_namespace.ts';
+import { evaluatePlayerScript } from './player_script.ts';
 import type { IWorkerGlobalThis } from './worker_global_this.ts';
 import { makeWorkerGlobalThis } from './worker_global_this.ts';
 
 let globalThis: IWorkerGlobalThis | null = null;
 
 export interface IInitializeOptions {
+    readonly code: string;
+
     readonly columns: number;
 
     readonly playerInitial: string;
@@ -44,7 +47,7 @@ export interface IWorkerAPI {
 
     destroy(): void;
 
-    initialize(options: IInitializeOptions): void;
+    initialize(options: IInitializeOptions): Promise<void>;
 
     onTurnMove(options: IOnTurnMoveOptions): void;
 }
@@ -70,35 +73,18 @@ export const WORKER_API = {
     },
 
     computePlayerMove() {
-        const availableSpacers = Array.from(
-            globalThis!.Game.board.walkSpacers(),
-        ).filter(
-            (gameBoardSlot) =>
-                gameBoardSlot.slotKind === globalThis!.Engine.SLOT_KIND.spacer,
-        );
+        const { onComputePlayerTurn } = globalThis!;
 
-        const boardSlotIndex = Math.trunc(
-            (availableSpacers.length - 1) * Math.random(),
-        );
-
-        const gameBoardSlot = availableSpacers[boardSlotIndex];
-
-        if (gameBoardSlot === undefined) return null;
-
-        const { x, y } = gameBoardSlot;
-
-        return {
-            x,
-            y,
-        };
+        return onComputePlayerTurn ? onComputePlayerTurn() : null;
     },
 
     destroy() {
         globalThis = null;
     },
 
-    initialize(options) {
-        const { columns, playerInitial, playerInitials, rows, seed } = options;
+    async initialize(options) {
+        const { code, columns, playerInitial, playerInitials, rows, seed } =
+            options;
 
         const players: IPlayer[] = playerInitials.map((playerInitial) =>
             makeDummyPlayer({ playerInitial, seed })
@@ -119,6 +105,16 @@ export const WORKER_API = {
             Engine,
             Game,
             Math,
+        });
+
+        await evaluatePlayerScript({
+            code,
+            globalThis,
+            timeout: 1000,
+        });
+
+        console.log({
+            onComputePlayerTurn: globalThis.onComputePlayerTurn,
         });
     },
 } satisfies IWorkerAPI;
