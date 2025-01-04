@@ -15,8 +15,6 @@ Deno.test(function makeForfeitPlayer_Success() {
     assertTypeOf(forfeitPlayer, 'object');
 
     assertInstanceOf(forfeitPlayer.computePlayerMove, Function);
-    assertInstanceOf(forfeitPlayer.destroy, Function);
-    assertInstanceOf(forfeitPlayer.initialize, Function);
 
     assertObjectMatch(forfeitPlayer, {
         playerInitial: 'F',

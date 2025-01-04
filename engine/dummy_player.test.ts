@@ -20,8 +20,6 @@ Deno.test(function makeDummyPlayer_Success() {
 
     assertTypeOf(dummyPlayer.playerInitial, 'string');
     assertInstanceOf(dummyPlayer.computePlayerMove, Function);
-    assertInstanceOf(dummyPlayer.destroy, Function);
-    assertInstanceOf(dummyPlayer.initialize, Function);
 
     assertObjectMatch(dummyPlayer, {
         playerInitial: 'D',
