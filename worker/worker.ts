@@ -19,14 +19,6 @@ import { makeWorkerGlobalThis } from './worker_global_this.ts';
 
 let globalThis: IWorkerGlobalThis | null = null;
 
-export interface IOnTurnMoveOptions {
-    readonly playerInitial: string;
-
-    readonly playerMove: IPlayerMove;
-
-    readonly turnIndex: number;
-}
-
 export interface IInitializeOptions {
     readonly columns: number;
 
@@ -37,6 +29,14 @@ export interface IInitializeOptions {
     readonly seed: number;
 
     readonly rows: number;
+}
+
+export interface IOnTurnMoveOptions {
+    readonly playerInitial: string;
+
+    readonly playerMove: IPlayerMove;
+
+    readonly turnIndex: number;
 }
 
 export interface IWorkerAPI {
