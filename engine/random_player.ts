@@ -36,4 +36,4 @@ export const makeRandomPlayer =
                 };
             },
         };
-    }) satisfies IPlayerConstructor;
+    }) satisfies IPlayerConstructor<IRandomPlayerOptions, IRandomPlayer>;

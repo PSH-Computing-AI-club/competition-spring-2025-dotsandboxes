@@ -20,4 +20,4 @@ export const makeDummyPlayer =
                 );
             },
         };
-    }) satisfies IPlayerConstructor;
+    }) satisfies IPlayerConstructor<IDummyPlayerOptions, IDummyPlayer>;

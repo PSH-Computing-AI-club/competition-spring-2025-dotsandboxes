@@ -16,4 +16,4 @@ export const makeForfeitPlayer =
                 return null;
             },
         };
-    }) satisfies IPlayerConstructor;
+    }) satisfies IPlayerConstructor<IForfeitPlayerOptions, IForfeitPlayer>;
