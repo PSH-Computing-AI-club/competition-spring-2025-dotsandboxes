@@ -58,5 +58,5 @@ Deno.test(async function IDummyPlayer_toString_Success() {
     const playerString = dummyPlayer.toString();
 
     assertTypeOf(playerString, 'string');
-    assertEquals(playerString, 'dummy_player');
+    assertEquals(playerString, 'builtin:dummy_player');
 });

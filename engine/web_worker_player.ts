@@ -142,7 +142,7 @@ export const makeWebWorkerPlayer =
 
                 const directoryBaseName = basename(scriptDirectoryName);
 
-                return `${directoryBaseName}/${
+                return `user:${directoryBaseName}/${
                     scriptBaseName.slice(0, scriptExtension.length * -1)
                 }`;
             },

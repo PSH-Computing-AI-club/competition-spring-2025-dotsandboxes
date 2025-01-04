@@ -17,7 +17,7 @@ export const makeForfeitPlayer =
             },
 
             toString() {
-                return 'forfeit_player';
+                return 'builtin:forfeit_player';
             },
         };
     }) satisfies IPlayerConstructor<IForfeitPlayerOptions, IForfeitPlayer>;

@@ -67,5 +67,5 @@ Deno.test(async function IConstantPlayer_toString_Success() {
     const playerString = constantPlayer.toString();
 
     assertTypeOf(playerString, 'string');
-    assertEquals(playerString, 'constant_player');
+    assertEquals(playerString, 'builtin:constant_player');
 });

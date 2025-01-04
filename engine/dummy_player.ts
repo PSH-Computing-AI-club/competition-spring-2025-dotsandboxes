@@ -21,7 +21,7 @@ export const makeDummyPlayer =
             },
 
             toString() {
-                return 'dummy_player';
+                return 'builtin:dummy_player';
             },
         };
     }) satisfies IPlayerConstructor<IDummyPlayerOptions, IDummyPlayer>;

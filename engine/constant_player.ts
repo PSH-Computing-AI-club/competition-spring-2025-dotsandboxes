@@ -26,7 +26,7 @@ export const makeConstantPlayer =
             },
 
             toString() {
-                return 'constant_player';
+                return 'builtin:constant_player';
             },
         };
     }) satisfies IPlayerConstructor<IConstantPlayerOptions, IConstantPlayer>;

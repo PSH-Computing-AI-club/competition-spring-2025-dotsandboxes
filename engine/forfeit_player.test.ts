@@ -55,5 +55,5 @@ Deno.test(async function IForfeitPlayer_toString_Success() {
     const playerString = forfeitPlayer.toString();
 
     assertTypeOf(playerString, 'string');
-    assertEquals(playerString, 'forfeit_player');
+    assertEquals(playerString, 'builtin:forfeit_player');
 });
