@@ -1,4 +1,4 @@
-import { basename, extname } from '@std/path';
+import { basename, dirname, extname } from '@std/path';
 import type { Remote } from '@workers/caplink';
 import { wrap } from '@workers/caplink';
 
@@ -137,9 +137,14 @@ export const makeWebWorkerPlayer =
                 }
 
                 const scriptBaseName = basename(filePath);
+                const scriptDirectoryName = dirname(filePath);
                 const scriptExtension = extname(filePath);
 
-                return scriptBaseName.slice(0, scriptExtension.length * -1);
+                const directoryBaseName = basename(scriptDirectoryName);
+
+                return `${directoryBaseName}/${
+                    scriptBaseName.slice(0, scriptExtension.length * -1)
+                }`;
             },
         };
     }) satisfies IPlayerConstructor<IWebWorkerPlayerOptions, IWebWorkerPlayer>;
