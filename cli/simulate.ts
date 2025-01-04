@@ -73,8 +73,17 @@ export const COMMAND_SIMULATE = new Command()
             });
 
             await Promise.all([
-                playerA.initialize({ gameBoard, gameSession }),
-                playerB.initialize({ gameBoard, gameSession }),
+                playerA.initialize({
+                    filePath: './players/random_player.js',
+                    gameBoard,
+                    gameSession,
+                }),
+
+                playerB.initialize({
+                    filePath: './players/random_player.js',
+                    gameBoard,
+                    gameSession,
+                }),
             ]);
 
             gameLogger.startSession();
