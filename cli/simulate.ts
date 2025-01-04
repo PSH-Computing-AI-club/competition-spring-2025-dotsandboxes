@@ -5,11 +5,11 @@ import {
     InvalidPlacementError,
     makeGameBoard,
     makeGameSession,
+    makeWebWorkerPlayer,
     PlayerComputeThrowError,
     PlayerForfeitError,
     PlayerTimeoutError,
 } from '../engine/mod.ts';
-import { makeRandomPlayer } from '../engine/random_player.ts';
 
 import type { IGlobalOptions } from './global.ts';
 import { makeGameLogger } from './game_logger.ts';
@@ -53,8 +53,8 @@ export const COMMAND_SIMULATE = new Command()
             const { gridColumns, gridRows, outputKind, seed, timeout } =
                 options;
 
-            const playerA = makeRandomPlayer({ playerInitial: 'A', seed });
-            const playerB = makeRandomPlayer({ playerInitial: 'B', seed });
+            const playerA = makeWebWorkerPlayer({ playerInitial: 'A', seed });
+            const playerB = makeWebWorkerPlayer({ playerInitial: 'B', seed });
 
             const gameBoard = makeGameBoard({
                 columns: gridColumns,
@@ -71,6 +71,11 @@ export const COMMAND_SIMULATE = new Command()
                 gameSession,
                 outputKind,
             });
+
+            await Promise.all([
+                playerA.initialize({ gameBoard, gameSession }),
+                playerB.initialize({ gameBoard, gameSession }),
+            ]);
 
             gameLogger.startSession();
 
@@ -99,7 +104,12 @@ export const COMMAND_SIMULATE = new Command()
             );
 
             gameLogger.endSession(gameResult);
+
+            await Promise.all([
+                playerA.destroy(),
+                playerB.destroy(),
+            ]);
+
             gameLogger.destroy();
-            // **TODO**: destroy players
         },
     );
