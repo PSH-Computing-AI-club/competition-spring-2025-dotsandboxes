@@ -218,11 +218,11 @@ export function makeWorkerGlobalThis(
         isNaN,
     } as Omit<IWorkerGlobalThis, 'globalThis' | 'self' | 'window'>;
 
-    Object.seal(Object.assign(globalThis, {
+    Object.assign(globalThis, {
         globalThis,
         self: globalThis,
         window: globalThis,
-    }));
+    });
 
     return Object.freeze(globalThis) as IWorkerGlobalThis;
 }
