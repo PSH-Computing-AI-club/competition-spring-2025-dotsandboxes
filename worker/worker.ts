@@ -40,7 +40,7 @@ export interface IInitializeOptions {
 }
 
 export interface IWorkerAPI {
-    computePlayerMove(): IPlayerMove;
+    computePlayerMove(): IPlayerMove | null;
 
     destroy(): void;
 
