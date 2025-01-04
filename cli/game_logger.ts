@@ -532,8 +532,33 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
             const { columns, rows } = gameBoard;
 
             switch (outputKind) {
-                case OUTPUT_KIND.human:
+                case OUTPUT_KIND.human: {
+                    const { players } = gameSession;
+                    const visualizedGameBoard = gameBoard.toString();
+
+                    outputLogger.info(
+                        `Simulating Dots and Boxes game session on a ${rows}x${columns} game board:`,
+                    );
+
+                    outputLogger.info('\n' + visualizedGameBoard + '\n');
+                    outputLogger.info(
+                        'The following players are participating:',
+                    );
+
+                    outputLogger.info('\n');
+
+                    for (const player of players) {
+                        const { playerInitial } = player;
+                        const playerIdentifier = player.toString();
+
+                        outputLogger.info(
+                            `Player ${playerInitial} [${playerIdentifier}]`,
+                        );
+                    }
+
+                    outputLogger.info('\n');
                     break;
+                }
 
                 case OUTPUT_KIND.jsonl: {
                     const players = gameSession.players.map((player) => {
