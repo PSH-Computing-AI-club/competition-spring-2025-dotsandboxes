@@ -84,6 +84,11 @@ export const makeWebWorkerPlayer =
                         type: 'module',
                         // @ts-expect-error - **HACK:** Deno currently does not
                         // have this feature typed.
+                        //
+                        // **IMPORTANT:** We need to give no permissions to the WebWorker!
+                        // Otherwise, if the code supplied by participants in the
+                        // competition can break V8 / Deno to perform ACE, then they
+                        // could wreak havoc on our infrastructure.
                         deno: 'none',
                     },
                 );
