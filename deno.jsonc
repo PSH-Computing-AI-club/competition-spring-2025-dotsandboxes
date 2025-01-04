@@ -37,6 +37,9 @@
         "check:format": "deno fmt --check ./",
         "check:lint": "deno lint ./",
         "check:types": "deno check ./.scripts/modules.ts",
+        "compile:linux": "deno compile --frozen --cached-only --allow-env --allow-read --allow-write --no-prompt --include ./worker/worker.ts -o ./dist/dotsandboxes-linux ./cli/mod.ts",
+        "compile:macos": "deno compile  --frozen --cached-only --allow-env --allow-read --allow-write --no-prompt --include ./worker/worker.ts -o ./dist/dotsandboxes-macos ./cli/mod.ts",
+        "compile:windows": "deno compile  --frozen --cached-only --allow-env --allow-read --allow-write --no-prompt --include ./worker/worker.ts -o ./dist/dotsandboxes-windows.exe ./cli/mod.ts",
         "deps:cache": "deno cache ./.scripts/deps.ts",
         "format": "deno fmt ./",
         "test": "deno test --allow-all"
