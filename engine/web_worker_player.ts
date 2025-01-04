@@ -13,14 +13,14 @@ import type { IPlayer, IPlayerConstructor, IPlayerOptions } from './player.ts';
 const { AlreadyExists, BadResource } = Deno.errors;
 
 export interface IInitializeOptions {
-    readonly filePath: string;
-
     readonly gameBoard: IGameBoard;
 
     readonly gameSession: IGameSession;
 }
 
-export type IWebWorkerPlayerOptions = IPlayerOptions;
+export interface IWebWorkerPlayerOptions extends IPlayerOptions {
+    readonly filePath: string;
+}
 
 export interface IWebWorkerPlayer extends IPlayer {
     destroy(): Promise<void>;
@@ -30,9 +30,8 @@ export interface IWebWorkerPlayer extends IPlayer {
 
 export const makeWebWorkerPlayer =
     ((options: IWebWorkerPlayerOptions): IWebWorkerPlayer => {
-        const { playerInitial, seed } = options;
+        const { filePath, playerInitial, seed } = options;
 
-        let filePath: string | null = null;
         let remote: Remote<IWorkerAPI> | null = null;
         let turnMoveSubscription: IEventSubscription<ITurnMoveEvent> | null =
             null;
@@ -70,7 +69,6 @@ export const makeWebWorkerPlayer =
                 await remote!.destroy();
                 worker.terminate();
 
-                filePath = null;
                 remote = null;
                 turnMoveSubscription = null;
                 worker = null;
@@ -83,11 +81,10 @@ export const makeWebWorkerPlayer =
                     );
                 }
 
-                const { filePath: suppliedFilePath, gameBoard, gameSession } =
-                    options;
+                const { gameBoard, gameSession } = options;
 
                 const code = await bundlePlayerScript({
-                    root: suppliedFilePath,
+                    root: filePath,
                 });
 
                 const { columns, rows } = gameBoard;
@@ -121,7 +118,6 @@ export const makeWebWorkerPlayer =
                     rows,
                 });
 
-                filePath = suppliedFilePath;
                 turnMoveSubscription = gameSession.EVENT_TURN_MOVE.subscribe(
                     onTurnMove,
                 );
@@ -132,10 +128,6 @@ export const makeWebWorkerPlayer =
             },
 
             toString() {
-                if (filePath === null) {
-                    return 'web_worker_player<uninitialized>';
-                }
-
                 const scriptBaseName = basename(filePath);
                 const scriptDirectoryName = dirname(filePath);
                 const scriptExtension = extname(filePath);
