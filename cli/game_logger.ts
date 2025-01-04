@@ -71,7 +71,7 @@ export interface ISessionStartArgs {
     readonly columns: number;
 
     readonly players: {
-        readonly identifier: string;
+        readonly playerIdentifier: string;
 
         readonly playerInitial: string;
     }[];
@@ -563,9 +563,10 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                 case OUTPUT_KIND.jsonl: {
                     const players = gameSession.players.map((player) => {
                         const { playerInitial } = player;
+                        const playerIdentifier = player.toString();
 
                         return {
-                            identifier: player.toString(),
+                            playerIdentifier,
                             playerInitial,
                         };
                     });
