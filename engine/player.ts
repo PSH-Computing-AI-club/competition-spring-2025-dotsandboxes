@@ -21,6 +21,7 @@ export interface IPlayer extends IPlayerOptions {
 
 export type IPlayerConstructor<
     Options extends IPlayerOptions = IPlayerOptions,
+    Player extends IPlayer = IPlayer,
 > = (
     options: Options,
-) => IPlayer;
+) => Player;
