@@ -218,7 +218,7 @@ export function makeWorkerGlobalThis(
         isNaN,
     } as Omit<IWorkerGlobalThis, 'globalThis' | 'self' | 'window'>;
 
-    Object.freeze(Object.assign(globalThis, {
+    Object.seal(Object.assign(globalThis, {
         globalThis,
         self: globalThis,
         window: globalThis,
