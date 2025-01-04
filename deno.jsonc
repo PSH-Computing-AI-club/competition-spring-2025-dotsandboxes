@@ -3,7 +3,8 @@
         "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.7",
         "@std/assert": "jsr:@std/assert@^1.0.9",
         "@std/log": "jsr:@std/log@^0.224.12",
-        "@std/random": "jsr:@std/random@^0.1.0"
+        "@std/random": "jsr:@std/random@^0.1.0",
+        "@workers/caplink": "jsr:@workers/caplink@^0.0.5"
     },
 
     "fmt": {
