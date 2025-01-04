@@ -19,5 +19,9 @@ export const makeDummyPlayer =
                     "bad dispatch to 'IDummyPlayer.computePlayerMove' (not implemented)",
                 );
             },
+
+            toString() {
+                return 'dummy_player';
+            },
         };
     }) satisfies IPlayerConstructor<IDummyPlayerOptions, IDummyPlayer>;

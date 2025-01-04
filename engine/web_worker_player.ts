@@ -1,3 +1,4 @@
+import { basename, extname } from '@std/path';
 import type { Remote } from '@workers/caplink';
 import { wrap } from '@workers/caplink';
 
@@ -31,6 +32,7 @@ export const makeWebWorkerPlayer =
     ((options: IWebWorkerPlayerOptions): IWebWorkerPlayer => {
         const { playerInitial, seed } = options;
 
+        let filePath: string | null = null;
         let remote: Remote<IWorkerAPI> | null = null;
         let turnMoveSubscription: IEventSubscription<ITurnMoveEvent> | null =
             null;
@@ -68,6 +70,7 @@ export const makeWebWorkerPlayer =
                 await remote!.destroy();
                 worker.terminate();
 
+                filePath = null;
                 remote = null;
                 turnMoveSubscription = null;
                 worker = null;
@@ -80,9 +83,12 @@ export const makeWebWorkerPlayer =
                     );
                 }
 
-                const { filePath, gameBoard, gameSession } = options;
+                const { filePath: suppliedFilePath, gameBoard, gameSession } =
+                    options;
 
-                const code = await bundlePlayerScript({ root: filePath });
+                const code = await bundlePlayerScript({
+                    root: suppliedFilePath,
+                });
 
                 const { columns, rows } = gameBoard;
                 const playerInitials = gameSession.players.map((player) =>
@@ -115,6 +121,7 @@ export const makeWebWorkerPlayer =
                     rows,
                 });
 
+                filePath = suppliedFilePath;
                 turnMoveSubscription = gameSession.EVENT_TURN_MOVE.subscribe(
                     onTurnMove,
                 );
@@ -122,6 +129,17 @@ export const makeWebWorkerPlayer =
 
             computePlayerMove() {
                 return remote!.computePlayerMove();
+            },
+
+            toString() {
+                if (filePath === null) {
+                    return 'web_worker_player<uninitialized>';
+                }
+
+                const scriptBaseName = basename(filePath);
+                const scriptExtension = extname(filePath);
+
+                return scriptBaseName.slice(0, scriptExtension.length * -1);
             },
         };
     }) satisfies IPlayerConstructor<IWebWorkerPlayerOptions, IWebWorkerPlayer>;

@@ -17,6 +17,7 @@ Deno.test(function makeConstantPlayer_Success() {
     assertTypeOf(constantPlayer, 'object');
 
     assertInstanceOf(constantPlayer.computePlayerMove, Function);
+    assertInstanceOf(constantPlayer.toString, Function);
 
     assertObjectMatch(constantPlayer, {
         playerInitial: 'C',
@@ -53,4 +54,18 @@ Deno.test(async function IConstantPlayer_computePlayerMove_Success() {
         x: 0,
         y: 0,
     });
+});
+
+Deno.test(async function IConstantPlayer_toString_Success() {
+    const constantPlayer = makeConstantPlayer({
+        playerInitial: 'C',
+        seed: 0,
+        x: 0,
+        y: 0,
+    });
+
+    const playerString = constantPlayer.toString();
+
+    assertTypeOf(playerString, 'string');
+    assertEquals(playerString, 'constant_player');
 });

@@ -15,5 +15,9 @@ export const makeForfeitPlayer =
             async computePlayerMove() {
                 return null;
             },
+
+            toString() {
+                return 'forfeit_player';
+            },
         };
     }) satisfies IPlayerConstructor<IForfeitPlayerOptions, IForfeitPlayer>;

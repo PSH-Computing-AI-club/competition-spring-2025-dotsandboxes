@@ -15,6 +15,7 @@ Deno.test(function makeForfeitPlayer_Success() {
     assertTypeOf(forfeitPlayer, 'object');
 
     assertInstanceOf(forfeitPlayer.computePlayerMove, Function);
+    assertInstanceOf(forfeitPlayer.toString, Function);
 
     assertObjectMatch(forfeitPlayer, {
         playerInitial: 'F',
@@ -43,4 +44,16 @@ Deno.test(async function IForfeitPlayer_computePlayerMove_Success() {
     );
 
     assertEquals(nullMove, null);
+});
+
+Deno.test(async function IForfeitPlayer_toString_Success() {
+    const forfeitPlayer = makeForfeitPlayer({
+        playerInitial: 'F',
+        seed: 0,
+    });
+
+    const playerString = forfeitPlayer.toString();
+
+    assertTypeOf(playerString, 'string');
+    assertEquals(playerString, 'forfeit_player');
 });

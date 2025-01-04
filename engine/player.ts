@@ -6,6 +6,8 @@ export interface IPlayerOptions {
     readonly playerInitial: string;
 
     readonly seed: number;
+
+    toString(): string;
 }
 
 export interface IPlayer extends IPlayerOptions {

@@ -24,5 +24,9 @@ export const makeConstantPlayer =
                     y,
                 };
             },
+
+            toString() {
+                return 'constant_player';
+            },
         };
     }) satisfies IPlayerConstructor<IConstantPlayerOptions, IConstantPlayer>;
