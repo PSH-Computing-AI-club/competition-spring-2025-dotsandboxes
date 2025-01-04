@@ -1,9 +1,9 @@
 import type { IGameBoard, IGameSession } from '../engine/mod.ts';
 
 export interface IGameNamespaceOptions {
-    readonly board: IGameBoard;
+    readonly gameBoard: IGameBoard;
 
-    readonly session: IGameSession;
+    readonly gameSession: IGameSession;
 }
 
 export interface IGameNamespace {
@@ -15,10 +15,10 @@ export interface IGameNamespace {
 export function makeGameNamespace(
     options: IGameNamespaceOptions,
 ): IGameNamespace {
-    const { board, session } = options;
+    const { gameBoard, gameSession } = options;
 
     return Object.freeze({
-        board,
-        session,
+        board: gameBoard,
+        session: gameSession,
     });
 }
