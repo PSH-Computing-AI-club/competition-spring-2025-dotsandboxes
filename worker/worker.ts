@@ -70,7 +70,27 @@ export const WORKER_API = {
     },
 
     computePlayerMove() {
-        return null;
+        const availableSpacers = Array.from(
+            globalThis!.Game.board.walkSpacers(),
+        ).filter(
+            (gameBoardSlot) =>
+                gameBoardSlot.slotKind === globalThis!.Engine.SLOT_KIND.spacer,
+        );
+
+        const boardSlotIndex = Math.trunc(
+            (availableSpacers.length - 1) * Math.random(),
+        );
+
+        const gameBoardSlot = availableSpacers[boardSlotIndex];
+
+        if (gameBoardSlot === undefined) return null;
+
+        const { x, y } = gameBoardSlot;
+
+        return {
+            x,
+            y,
+        };
     },
 
     destroy() {
