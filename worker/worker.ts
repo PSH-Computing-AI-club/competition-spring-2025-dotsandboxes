@@ -15,7 +15,7 @@ import { makeGameNamespace } from './game_namespace.ts';
 import type { IWorkerGlobalThis } from './worker_global_this.ts';
 import { makeWorkerGlobalThis } from './worker_global_this.ts';
 
-let globalThis: IWorkerGlobalThis;
+let globalThis: IWorkerGlobalThis | null = null;
 
 export interface IWorkerInitializeOptions {
     readonly columns: number;
@@ -44,6 +44,7 @@ export const WORKER_API = {
     },
 
     destroy() {
+        globalThis = null;
     },
 
     initialize(options) {
