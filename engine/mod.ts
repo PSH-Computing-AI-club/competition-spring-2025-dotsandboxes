@@ -9,3 +9,4 @@ export * from './game_session.ts';
 export * from './player.ts';
 export * from './player_move.ts';
 export * from './player_turn.ts';
+export * from './web_worker_player.ts';
