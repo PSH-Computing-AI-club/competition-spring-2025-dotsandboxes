@@ -1,4 +1,5 @@
 import { Command } from '@cliffy/command';
+import { resolve } from '@std/path';
 
 import {
     computeGameResultFromGame,
@@ -63,6 +64,8 @@ export const COMMAND_SIMULATE = new Command()
                 const playerInitial = String.fromCharCode(
                     UTF16_CODE_LETTER_A + index,
                 );
+
+                filePath = resolve(filePath);
 
                 return makeWebWorkerPlayer({
                     filePath,
