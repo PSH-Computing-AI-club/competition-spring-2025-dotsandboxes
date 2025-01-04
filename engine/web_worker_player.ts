@@ -28,9 +28,6 @@ export const makeWebWorkerPlayer =
     ((options: IWebWorkerPlayerOptions): IWebWorkerPlayer => {
         const { playerInitial, seed } = options;
 
-        let gameBoard: IGameBoard | null = null;
-        let gameSession: IGameSession | null = null;
-
         let remote: Remote<IWorkerAPI> | null = null;
         let turnMoveSubscription: IEventSubscription<ITurnMoveEvent> | null =
             null;
@@ -80,7 +77,7 @@ export const makeWebWorkerPlayer =
                     );
                 }
 
-                ({ gameBoard, gameSession } = options);
+                const { gameBoard, gameSession } = options;
 
                 const { columns, rows } = gameBoard;
                 const playerInitials = gameSession.players.map((player) =>
