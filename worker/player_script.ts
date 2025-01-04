@@ -1,5 +1,5 @@
 import { createContext, Script } from 'node:vm';
-import { bundle } from 'jsr:@deno/emit';
+import { bundle } from '@deno/emit';
 
 import { IPlayerMove } from '../engine/mod.ts';
 
