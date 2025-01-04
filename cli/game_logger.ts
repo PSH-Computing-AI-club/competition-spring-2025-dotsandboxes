@@ -71,6 +71,8 @@ export interface ISessionStartArgs {
     readonly columns: number;
 
     readonly players: {
+        readonly identifier: string;
+
         readonly playerInitial: string;
     }[];
 
@@ -529,19 +531,20 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
         startSession() {
             const { columns, rows } = gameBoard;
 
-            const players = gameSession.players.map((player) => {
-                const { playerInitial } = player;
-
-                return {
-                    playerInitial,
-                };
-            });
-
             switch (outputKind) {
                 case OUTPUT_KIND.human:
                     break;
 
-                case OUTPUT_KIND.jsonl:
+                case OUTPUT_KIND.jsonl: {
+                    const players = gameSession.players.map((player) => {
+                        const { playerInitial } = player;
+
+                        return {
+                            identifier: player.toString(),
+                            playerInitial,
+                        };
+                    });
+
                     logGameRecord('info', MESSAGE_KIND.sessionStart, {
                         columns,
                         rows,
@@ -549,6 +552,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                     });
 
                     break;
+                }
             }
         },
     };
