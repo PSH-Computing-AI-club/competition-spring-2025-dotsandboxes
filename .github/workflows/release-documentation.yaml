@@ -1,0 +1,43 @@
+name: release-documentation
+
+on:
+    release:
+        types:
+            - published
+
+jobs:
+    build-and-upload:
+        runs-on: ubuntu-22.04
+        permissions:
+            contents: write
+
+        steps:
+            - name: Clone Repository
+              uses: actions/checkout@v4
+
+            - name: Configure Deno
+              uses: denoland/setup-deno@v2
+              with:
+                  deno-version: 2.1.4
+
+            - name: Build Documentation
+              run: deno task docs:build
+
+            - name: Upload Documentation as Artifact
+              uses: actions/upload-pages-artifact@v3
+              id: documentation-artifact
+              with:
+                  path: ./dist/docs
+
+    deploy-artifact:
+        needs: build-and-upload
+
+        runs-on: ubuntu-22.04
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+
+        steps:
+            - name: Deploy to GitHub Pages
+              uses: actions/deploy-pages@v4
+              id: documentation-artifact
