@@ -190,7 +190,7 @@ Deno.test(
 );
 
 Deno.test(
-    async function IGameSession_applyNextPlayerTurn_PlayerTimeout_Failure() {
+    async function IGameSession_computeNextPlayerTurn_PlayerTimeout_Failure() {
         let timeoutIdentifier: number | null = null;
 
         const playerA = {
