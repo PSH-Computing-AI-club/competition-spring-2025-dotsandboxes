@@ -2,7 +2,7 @@
 // for whatever reason they want to do that. So, we are exporting the entire engine to
 // player environment.
 
-import * as Engine from '../engine/mod.ts';
+import * as Engine from '../engine/mod_safe.ts';
 
 export type IEngineNamespace = typeof Engine;
 
