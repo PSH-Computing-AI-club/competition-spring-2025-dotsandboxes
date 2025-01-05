@@ -34,6 +34,7 @@ Deno.test(async function IForfeitPlayer_computePlayerMove_Success() {
     });
 
     const gameSession = makeGameSession({
+        gameBoard,
         players: [forfeitPlayer],
         timeout: 0,
     });

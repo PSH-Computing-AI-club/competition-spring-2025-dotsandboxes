@@ -40,6 +40,7 @@ Deno.test(async function IConstantPlayer_computePlayerMove_Success() {
     });
 
     const gameSession = makeGameSession({
+        gameBoard,
         players: [constantPlayer],
         timeout: 0,
     });

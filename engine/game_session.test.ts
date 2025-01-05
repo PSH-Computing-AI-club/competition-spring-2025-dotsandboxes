@@ -4,6 +4,7 @@ import {
     assertInstanceOf,
     assertObjectMatch,
     assertRejects,
+    assertThrows,
 } from '@std/assert';
 
 import { assertTypeOf } from '../util/mod.ts';
@@ -29,7 +30,13 @@ Deno.test(function makeGameSession_Success() {
         seed: 0,
     });
 
+    const gameBoard = makeGameBoard({
+        columns: 5,
+        rows: 3,
+    });
+
     const gameSession = makeGameSession({
+        gameBoard,
         players: [playerB, playerA],
         timeout: 0,
     });
@@ -50,9 +57,11 @@ Deno.test(function makeGameSession_Success() {
     assertTypeOf(gameSession.players[1].playerInitial, 'string');
     assertTypeOf(gameSession.players[1].seed, 'number');
 
-    assertInstanceOf(gameSession.applyNextPlayerTurn, Function);
+    assertInstanceOf(gameSession.applyPlayerTurn, Function);
+    assertInstanceOf(gameSession.computeNextPlayerTurn, Function);
 
     assertObjectMatch(gameSession, {
+        gameBoard,
         playerTurns: [],
 
         players: [
@@ -62,7 +71,7 @@ Deno.test(function makeGameSession_Success() {
     });
 });
 
-Deno.test(async function IGameSession_applyNextPlayerTurn_Success() {
+Deno.test(async function IGameSession_computeNextPlayerTurn_Success() {
     const playerA = makeConstantPlayer({
         playerInitial: 'A',
         seed: 0,
@@ -83,43 +92,175 @@ Deno.test(async function IGameSession_applyNextPlayerTurn_Success() {
     });
 
     const gameSession = makeGameSession({
+        gameBoard,
         players: [playerA, playerB],
         timeout: 0,
     });
 
-    const playerTurn0 = (await gameSession.applyNextPlayerTurn(gameBoard))!;
+    const playerTurn = await gameSession.computeNextPlayerTurn();
 
-    assertTypeOf(playerTurn0, 'object');
+    assertTypeOf(playerTurn, 'object');
 
-    assertTypeOf(playerTurn0!.player, 'object');
-    assertTypeOf(playerTurn0!.turnIndex, 'number');
-    assertTypeOf(playerTurn0!.x, 'number');
-    assertTypeOf(playerTurn0!.y, 'number');
+    assertTypeOf(playerTurn.player, 'object');
+    assertTypeOf(playerTurn.turnIndex, 'number');
+    assertTypeOf(playerTurn.x, 'number');
+    assertTypeOf(playerTurn.y, 'number');
 
-    assertEquals(playerTurn0, {
+    assertEquals(playerTurn, {
         player: playerA,
         turnIndex: 0,
 
         x: 1,
         y: 0,
     });
+});
 
-    const playerTurn1 = (await gameSession.applyNextPlayerTurn(gameBoard))!;
+Deno.test(
+    async function IGameSession_computeNextPlayerTurn_NoNextPlayerError_Failure() {
+        const gameBoard = makeGameBoard({
+            columns: 5,
+            rows: 3,
+        });
 
-    assertTypeOf(playerTurn1, 'object');
+        const gameSession = makeGameSession({
+            gameBoard,
+            players: [],
+            timeout: 0,
+        });
 
-    assertTypeOf(playerTurn1!.player, 'object');
-    assertTypeOf(playerTurn1!.turnIndex, 'number');
-    assertTypeOf(playerTurn1!.x, 'number');
-    assertTypeOf(playerTurn1!.y, 'number');
+        await assertRejects(
+            async () => {
+                await gameSession.computeNextPlayerTurn();
+            },
+            "bad dispatch to 'IGameSession.computeNextPlayerTurn' (no players available in 'IGameSession.players')",
+        );
+    },
+);
 
-    assertEquals(playerTurn1, {
-        player: playerB,
-        turnIndex: 1,
+Deno.test(
+    async function IGameSession_computeNextPlayerTurn_PlayerComputeThrowError_Failure() {
+        const dummyPlayer = makeDummyPlayer({
+            playerInitial: 'D',
+            seed: 0,
+        });
 
+        const gameBoard = makeGameBoard({
+            columns: 5,
+            rows: 3,
+        });
+
+        const gameSession = makeGameSession({
+            gameBoard,
+            players: [dummyPlayer],
+            timeout: 0,
+        });
+
+        await assertRejects(
+            async () => {
+                await gameSession.computeNextPlayerTurn();
+            },
+            "bad dispatch to 'IGameSession.computeNextPlayerTurn' (player 'D' threw an error during compute)",
+        );
+    },
+);
+
+Deno.test(
+    async function IGameSession_computeNextPlayerTurn_PlayerForfeit_Failure() {
+        const forfeitPlayer = makeForfeitPlayer({
+            playerInitial: 'F',
+            seed: 0,
+        });
+
+        const gameBoard = makeGameBoard({
+            columns: 5,
+            rows: 3,
+        });
+
+        const gameSession = makeGameSession({
+            gameBoard,
+            players: [forfeitPlayer],
+            timeout: 0,
+        });
+
+        await assertRejects(
+            async () => {
+                await gameSession.computeNextPlayerTurn();
+            },
+            "bad dispatch to 'IGameSession.computeNextPlayerTurn' (player 'A' forfeited the game)",
+        );
+    },
+);
+
+Deno.test(
+    async function IGameSession_applyNextPlayerTurn_PlayerTimeout_Failure() {
+        let timeoutIdentifier: number | null = null;
+
+        const playerA = {
+            playerInitial: 'A',
+            seed: 0,
+
+            computePlayerMove(_gameSession, _gameBoard) {
+                return new Promise((resolve, _reject) => {
+                    timeoutIdentifier = setTimeout(resolve, 99999999);
+                });
+            },
+        } satisfies IPlayer;
+
+        const gameBoard = makeGameBoard({
+            columns: 5,
+            rows: 3,
+        });
+
+        const gameSession = makeGameSession({
+            gameBoard,
+            players: [playerA],
+            timeout: 10,
+        });
+
+        await assertRejects(
+            async () => {
+                await gameSession.computeNextPlayerTurn();
+            },
+            "bad dispatch to 'IGameSession.computeNextPlayerTurn' (player 'A' timed out during compute)",
+        );
+
+        if (timeoutIdentifier) clearTimeout(timeoutIdentifier);
+    },
+);
+
+Deno.test(async function IGameSession_applyPlayerTurn_Success() {
+    const playerA = makeConstantPlayer({
+        playerInitial: 'A',
+        seed: 0,
+        x: 1,
+        y: 0,
+    });
+
+    const playerB = makeConstantPlayer({
+        playerInitial: 'B',
+        seed: 0,
         x: 0,
         y: 1,
     });
+
+    const gameBoard = makeGameBoard({
+        columns: 5,
+        rows: 3,
+    });
+
+    const gameSession = makeGameSession({
+        gameBoard,
+        players: [playerA, playerB],
+        timeout: 0,
+    });
+
+    const playerTurn0 = await gameSession.computeNextPlayerTurn();
+
+    gameSession.applyPlayerTurn(playerTurn0);
+
+    const playerTurn1 = await gameSession.computeNextPlayerTurn();
+
+    gameSession.applyPlayerTurn(playerTurn1);
 
     assertArrayIncludes(
         // **HACK:** We only need to check these properties and there isn't an array
@@ -271,80 +412,7 @@ Deno.test(async function IGameSession_applyNextPlayerTurn_Success() {
 });
 
 Deno.test(
-    async function IGameSession_applyNextPlayerTurn_NoNextPlayerError_Failure() {
-        const gameBoard = makeGameBoard({
-            columns: 5,
-            rows: 3,
-        });
-
-        const gameSession = makeGameSession({
-            players: [],
-            timeout: 0,
-        });
-
-        await assertRejects(
-            async () => {
-                await gameSession.applyNextPlayerTurn(gameBoard);
-            },
-            "bad dispatch to 'IGameSession.applyNextPlayerTurn' (no players available in 'IGameSession.players')",
-        );
-    },
-);
-
-Deno.test(
-    async function IGameSession_applyNextPlayerTurn_PlayerComputeThrowError_Failure() {
-        const dummyPlayer = makeDummyPlayer({
-            playerInitial: 'D',
-            seed: 0,
-        });
-
-        const gameBoard = makeGameBoard({
-            columns: 5,
-            rows: 3,
-        });
-
-        const gameSession = makeGameSession({
-            players: [dummyPlayer],
-            timeout: 0,
-        });
-
-        await assertRejects(
-            async () => {
-                await gameSession.applyNextPlayerTurn(gameBoard);
-            },
-            "bad dispatch to 'IGameSession.applyNextPlayerTurn' (player 'D' threw an error during compute)",
-        );
-    },
-);
-
-Deno.test(
-    async function IGameSession_applyNextPlayerTurn_PlayerForfeit_Failure() {
-        const forfeitPlayer = makeForfeitPlayer({
-            playerInitial: 'F',
-            seed: 0,
-        });
-
-        const gameBoard = makeGameBoard({
-            columns: 5,
-            rows: 3,
-        });
-
-        const gameSession = makeGameSession({
-            players: [forfeitPlayer],
-            timeout: 0,
-        });
-
-        await assertRejects(
-            async () => {
-                await gameSession.applyNextPlayerTurn(gameBoard);
-            },
-            "bad dispatch to 'IGameSession.applyNextPlayerTurn' (player 'A' forfeited the game)",
-        );
-    },
-);
-
-Deno.test(
-    async function IGameSession_applyNextPlayerTurn_PlayerInvalidPlacement_Failure() {
+    async function IGameSession_applyPlayerTurn_PlayerInvalidPlacement_Failure() {
         const constantPlayer = makeConstantPlayer({
             playerInitial: 'A',
             seed: 0,
@@ -358,51 +426,18 @@ Deno.test(
         });
 
         const gameSession = makeGameSession({
+            gameBoard,
             players: [constantPlayer],
             timeout: 0,
         });
 
-        await assertRejects(
-            async () => {
-                await gameSession.applyNextPlayerTurn(gameBoard);
+        const playerTurn = await gameSession.computeNextPlayerTurn();
+
+        assertThrows(
+            () => {
+                gameSession.applyPlayerTurn(playerTurn);
             },
-            "bad dispatch to 'IGameSession.applyNextPlayerTurn' (player 'A' tried to place a line at invalid gameboard slot '(0, 0)')",
+            "bad members 'IPlayerTurn.x' / 'IPlayerTurn.y' in argument #0 to 'IGameBoard.placeLine' (gameboard slot at '(0, 0)' is not a spacer kind)",
         );
-    },
-);
-
-Deno.test(
-    async function IGameSession_applyNextPlayerTurn_PlayerTimeout_Failure() {
-        let timeoutIdentifier: number | null = null;
-
-        const playerA = {
-            playerInitial: 'A',
-            seed: 0,
-
-            computePlayerMove(_gameSession, _gameBoard) {
-                return new Promise((resolve, _reject) => {
-                    timeoutIdentifier = setTimeout(resolve, 99999999);
-                });
-            },
-        } satisfies IPlayer;
-
-        const gameBoard = makeGameBoard({
-            columns: 5,
-            rows: 3,
-        });
-
-        const gameSession = makeGameSession({
-            players: [playerA],
-            timeout: 10,
-        });
-
-        await assertRejects(
-            async () => {
-                await gameSession.applyNextPlayerTurn(gameBoard);
-            },
-            "bad dispatch to 'IGameSession.applyNextPlayerTurn' (player 'A' timed out during compute)",
-        );
-
-        if (timeoutIdentifier) clearTimeout(timeoutIdentifier);
     },
 );

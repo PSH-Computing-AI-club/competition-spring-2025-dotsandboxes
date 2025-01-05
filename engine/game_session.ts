@@ -57,6 +57,8 @@ export interface ITurnStartEvent {
 }
 
 export interface IGameSessionOptions {
+    readonly gameBoard: IGameBoard;
+
     readonly players: IPlayer[];
 
     readonly timeout: number;
@@ -77,11 +79,17 @@ export interface IGameSession extends IGameSessionOptions {
 
     readonly playerTurns: IPlayerTurn[];
 
-    applyNextPlayerTurn(gameBoard: IGameBoard): Promise<IPlayerTurn>;
+    applyPlayerTurn(playerTurn: IPlayerTurn): void;
+
+    computeNextPlayerTurn(): Promise<IPlayerTurn>;
 }
 
 export function makeGameSession(options: IGameSessionOptions): IGameSession {
-    const { players: initialPlayers, timeout: timeoutDuration } = options;
+    const {
+        gameBoard,
+        players: initialPlayers,
+        timeout: timeoutDuration,
+    } = options;
 
     const EVENT_PLAYER_FORFEIT = event<IPlayerForfeitEvent>();
     const EVENT_PLAYER_TIMEOUT = event<IPlayerTimeoutEvent>();
@@ -111,16 +119,57 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
         EVENT_TURN_MOVE,
         EVENT_TURN_START,
 
+        gameBoard,
         players,
         playerTurns,
         timeout: timeoutDuration,
 
-        async applyNextPlayerTurn(gameBoard) {
+        applyPlayerTurn(playerTurn) {
+            const { player, turnIndex, x, y } = playerTurn;
+
+            try {
+                gameBoard.placeLine(playerTurn);
+            } catch (error) {
+                if (error instanceof InvalidPlacementError) {
+                    EVENT_TURN_ERROR.dispatch({
+                        error,
+                        player: player,
+                        turnIndex,
+                    });
+                }
+
+                throw error;
+            }
+
+            EVENT_TURN_MOVE.dispatch({
+                player,
+                playerMove: { x, y },
+                turnIndex,
+            });
+
+            const capturesMade = gameBoard.applyCaptures();
+
+            if (capturesMade == 0) {
+                const player = turnOrderedPlayers.shift();
+
+                if (player) turnOrderedPlayers.push(player);
+            }
+
+            playerTurns.push(playerTurn);
+
+            EVENT_TURN_END.dispatch({
+                capturesMade,
+                player: player,
+                turnIndex,
+            });
+        },
+
+        async computeNextPlayerTurn() {
             const nextPlayer = turnOrderedPlayers[0];
 
             if (nextPlayer === undefined) {
                 throw new NoNextPlayerError(
-                    "bad dispatch to 'IGameSession.applyNextPlayerTurn' (no players available in 'IGameSession.players')",
+                    "bad dispatch to 'IGameSession.computeNextPlayerMove' (no players available in 'IGameSession.players')",
                 );
             }
 
@@ -147,13 +196,13 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
                     });
 
                     throw new PlayerTimeoutError(
-                        `bad dispatch to 'IGameSession.applyNextPlayerTurn' (player '${nextPlayer.playerInitial}' timed out during compute')`,
+                        `bad dispatch to 'IGameSession.computeNextPlayerMove' (player '${nextPlayer.playerInitial}' timed out during compute')`,
                         { player: nextPlayer },
                     );
                 }
 
                 const computeError = new PlayerComputeThrowError(
-                    `bad dispatch to 'IGameSession.applyNextPlayerTurn' (player '${nextPlayer.playerInitial}' threw an error during compute')`,
+                    `bad dispatch to 'IGameSession.computeNextPlayerMove' (player '${nextPlayer.playerInitial}' threw an error during compute')`,
                     {
                         // **HACK:** This could maybe not be an `Error` instance... but
                         // surely who would throw anything but!?
@@ -178,53 +227,15 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
                 });
 
                 throw new PlayerForfeitError(
-                    `bad dispatch to 'IGameSession.applyNextPlayerTurn' (player '${nextPlayer.playerInitial}' forfeited the game)`,
+                    `bad dispatch to 'IGameSession.computeNextPlayerTurn' (player '${nextPlayer.playerInitial}' forfeited the game)`,
                     { player: nextPlayer },
                 );
             }
 
-            EVENT_TURN_MOVE.dispatch({
-                player: nextPlayer,
-                playerMove,
-                turnIndex,
-            });
-
-            const playerTurn = makePlayerTurnFromPlayerMove(playerMove, {
+            return makePlayerTurnFromPlayerMove(playerMove, {
                 player: nextPlayer,
                 turnIndex,
             });
-
-            try {
-                gameBoard.placeLine(playerTurn);
-            } catch (error) {
-                if (error instanceof InvalidPlacementError) {
-                    EVENT_TURN_ERROR.dispatch({
-                        error,
-                        player: nextPlayer,
-                        turnIndex,
-                    });
-                }
-
-                throw error;
-            }
-
-            const capturesMade = gameBoard.applyCaptures();
-
-            if (capturesMade == 0) {
-                const player = turnOrderedPlayers.shift();
-
-                if (player) turnOrderedPlayers.push(player);
-            }
-
-            playerTurns.push(playerTurn);
-
-            EVENT_TURN_END.dispatch({
-                capturesMade,
-                player: nextPlayer,
-                turnIndex,
-            });
-
-            return playerTurn;
         },
     };
 }

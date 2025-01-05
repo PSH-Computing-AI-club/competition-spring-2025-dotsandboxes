@@ -40,6 +40,7 @@ Deno.test(async function IDummyPlayer_computePlayerMove_Failure() {
     });
 
     const gameSession = makeGameSession({
+        gameBoard,
         players: [dummyPlayer],
         timeout: 0,
     });
