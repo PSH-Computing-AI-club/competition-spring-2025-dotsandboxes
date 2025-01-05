@@ -79,9 +79,11 @@ export interface IGameSession extends IGameSessionOptions {
 
     readonly playerTurns: IPlayerTurn[];
 
-    applyPlayerTurn(playerTurn: IPlayerTurn): void;
+    applyPlayerTurn(playerTurn: IPlayerTurn): number;
 
     computeNextPlayerTurn(): Promise<IPlayerTurn>;
+
+    shiftTurnOrder(capturesMade: number): void;
 }
 
 export function makeGameSession(options: IGameSessionOptions): IGameSession {
@@ -149,12 +151,6 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
 
             const capturesMade = gameBoard.applyCaptures();
 
-            if (capturesMade == 0) {
-                const player = turnOrderedPlayers.shift();
-
-                if (player) turnOrderedPlayers.push(player);
-            }
-
             playerTurns.push(playerTurn);
 
             EVENT_TURN_END.dispatch({
@@ -162,6 +158,8 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
                 player: player,
                 turnIndex,
             });
+
+            return capturesMade;
         },
 
         async computeNextPlayerTurn() {
@@ -236,6 +234,14 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
                 player: nextPlayer,
                 turnIndex,
             });
+        },
+
+        shiftTurnOrder(capturesMade) {
+            if (capturesMade == 0) {
+                const player = turnOrderedPlayers.shift();
+
+                if (player) turnOrderedPlayers.push(player);
+            }
         },
     };
 }
