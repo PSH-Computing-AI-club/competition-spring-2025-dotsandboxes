@@ -10,7 +10,6 @@ import { PlayerComputeThrowError, WIN_KIND } from '../engine/mod.ts';
 
 import type { ValueOf } from '../util/mod.ts';
 
-import type { OutputKind } from './output_logger.ts';
 import { getOutputLogger, OUTPUT_KIND } from './output_logger.ts';
 
 type LevelName = Lowercase<Exclude<STDLevelName, 'NOTSET'>>;
@@ -131,8 +130,6 @@ export interface IGameLoggerOptions {
     readonly gameBoard: IGameBoard;
 
     readonly gameSession: IGameSession;
-
-    readonly outputKind: OutputKind;
 }
 
 export interface IGameLogger extends IGameLoggerOptions {
@@ -144,7 +141,7 @@ export interface IGameLogger extends IGameLoggerOptions {
 }
 
 export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
-    const { gameBoard, gameSession, outputKind } = options;
+    const { gameBoard, gameSession } = options;
     const outputLogger = getOutputLogger();
 
     const playerComputeDurations = new Map<IPlayer, number[]>(
@@ -225,7 +222,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
             const { playerTurn, x, y } = newBoardSlot;
             const { playerInitial } = playerTurn.player;
 
-            switch (outputKind) {
+            switch (outputLogger.loggerName) {
                 case OUTPUT_KIND.human:
                     outputLogger.info(
                         `Player ${playerInitial} captured the box at (${x}, ${y}).`,
@@ -252,7 +249,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
             const { player, turnIndex } = playerTurn;
             const { playerInitial } = player;
 
-            switch (outputKind) {
+            switch (outputLogger.loggerName) {
                 case OUTPUT_KIND.human: {
                     outputLogger.info(
                         `[TURN ${
@@ -282,7 +279,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
             playerThatForfeited = player;
 
-            switch (outputKind) {
+            switch (outputLogger.loggerName) {
                 case OUTPUT_KIND.human: {
                     outputLogger.error(
                         `Player ${playerInitial} forfeited the game session.`,
@@ -308,7 +305,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
             playerThatTimedout = player;
 
-            switch (outputKind) {
+            switch (outputLogger.loggerName) {
                 case OUTPUT_KIND.human: {
                     outputLogger.error(
                         `Player ${playerInitial} took too long to compute their move.`,
@@ -332,7 +329,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
             const { playerInitial } = player;
 
-            switch (outputKind) {
+            switch (outputLogger.loggerName) {
                 case OUTPUT_KIND.human: {
                     const visualizedGameBoard = gameBoard.toString();
 
@@ -364,7 +361,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
             const { message, name, stack } = error;
 
-            switch (outputKind) {
+            switch (outputLogger.loggerName) {
                 case OUTPUT_KIND.human:
                     outputLogger.warn(
                         `Player ${playerInitial} had an error while computing or performing a move:`,
@@ -395,7 +392,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
             const { playerInitial } = player;
             const { x, y } = playerMove;
 
-            switch (outputKind) {
+            switch (outputLogger.loggerName) {
                 case OUTPUT_KIND.human: {
                     const currentTimestamp = Date.now();
 
@@ -426,7 +423,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
             const { playerInitial } = player;
 
-            switch (outputKind) {
+            switch (outputLogger.loggerName) {
                 case OUTPUT_KIND.human:
                     currentTurnStartTimestamp = Date.now();
 
@@ -445,7 +442,6 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
     return {
         gameBoard,
         gameSession,
-        outputKind,
 
         destroy() {
             appliedCaptureSubscription.destroy();
@@ -461,7 +457,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
         },
 
         endSession(gameResult) {
-            switch (outputKind) {
+            switch (outputLogger.loggerName) {
                 case OUTPUT_KIND.human: {
                     const { players } = gameSession;
                     const { scores, winKind, winningPlayers } = gameResult;
@@ -531,7 +527,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
         startSession() {
             const { columns, rows } = gameBoard;
 
-            switch (outputKind) {
+            switch (outputLogger.loggerName) {
                 case OUTPUT_KIND.human: {
                     const { players } = gameSession;
                     const visualizedGameBoard = gameBoard.toString();

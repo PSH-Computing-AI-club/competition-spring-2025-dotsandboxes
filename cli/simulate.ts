@@ -1,29 +1,13 @@
 import { Command } from '@cliffy/command';
-import { resolve } from '@std/path';
-
-import {
-    computeGameResultFromGame,
-    InvalidPlacementError,
-    makeGameBoard,
-    makeGameSession,
-    makeWebWorkerPlayer,
-    PlayerComputeThrowError,
-    PlayerForfeitError,
-    PlayerTimeoutError,
-} from '../engine/mod.ts';
 
 import type { IGlobalOptions } from './global.ts';
-import { makeGameLogger } from './game_logger.ts';
 import { setupOutputLogger } from './output_logger.ts';
-
-const UTF16_CODE_LETTER_A = 65;
+import { runGameLoop } from './game_loop.ts';
 
 interface ISimulateOptions extends IGlobalOptions {
     readonly gridColumns: number;
 
     readonly gridRows: number;
-
-    readonly files: string[];
 
     readonly seed: number;
 
@@ -69,77 +53,12 @@ export const COMMAND_SIMULATE = new Command()
 
             setupOutputLogger(outputKind, outputFile);
 
-            const players = files.map((filePath, index) => {
-                const playerInitial = String.fromCharCode(
-                    UTF16_CODE_LETTER_A + index,
-                );
-
-                filePath = resolve(filePath);
-
-                return makeWebWorkerPlayer({
-                    filePath,
-                    playerInitial,
-                    seed,
-                });
-            });
-
-            const gameBoard = makeGameBoard({
-                columns: gridColumns,
-                rows: gridRows,
-            });
-
-            const gameSession = makeGameSession({
-                players,
+            await runGameLoop({
+                gridColumns,
+                gridRows,
+                files,
+                seed,
                 timeout,
             });
-
-            const gameLogger = makeGameLogger({
-                gameBoard,
-                gameSession,
-                outputKind,
-            });
-
-            await Promise.all(
-                players.map((player) =>
-                    player.initialize({
-                        gameBoard,
-                        gameSession,
-                    })
-                ),
-            );
-
-            gameLogger.startSession();
-
-            while (gameBoard.remainingBoxes > 0) {
-                try {
-                    await gameSession.applyNextPlayerTurn(
-                        gameBoard,
-                    );
-                } catch (error) {
-                    if (
-                        error instanceof InvalidPlacementError ||
-                        error instanceof PlayerComputeThrowError ||
-                        error instanceof PlayerForfeitError ||
-                        error instanceof PlayerTimeoutError
-                    ) {
-                        break;
-                    }
-
-                    throw error;
-                }
-            }
-
-            const gameResult = computeGameResultFromGame(
-                gameSession,
-                gameBoard,
-            );
-
-            gameLogger.endSession(gameResult);
-
-            await Promise.all(
-                players.map((player) => player.destroy()),
-            );
-
-            gameLogger.destroy();
         },
     );
