@@ -422,3 +422,9 @@ declare namespace Game {
 
     export const player: Engine.IPlayer;
 }
+
+// ---------- worker/player_script.ts ----------
+
+declare namespace PlayerScript {
+    export type IComputePlayerTurnCallback = () => Engine.IPlayerMove | null;
+}
