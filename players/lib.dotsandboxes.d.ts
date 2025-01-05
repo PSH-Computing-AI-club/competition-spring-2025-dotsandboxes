@@ -412,3 +412,13 @@ declare namespace Engine {
         gameBoard: IGameBoard,
     ): IGameResult;
 }
+
+// ---------- worker/game_namespace.ts ----------
+
+declare namespace Game {
+    export const board: Engine.IGameBoard;
+
+    export const session: Engine.IGameSession;
+
+    export const player: Engine.IPlayer;
+}
