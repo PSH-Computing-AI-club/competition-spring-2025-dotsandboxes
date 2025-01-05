@@ -360,6 +360,8 @@ declare namespace Engine {
     }
 
     export interface IGameSessionOptions {
+        readonly gameBoard: IGameBoard;
+
         readonly players: IPlayer[];
 
         readonly timeout: number;
@@ -380,7 +382,11 @@ declare namespace Engine {
 
         readonly playerTurns: IPlayerTurn[];
 
-        applyNextPlayerTurn(gameBoard: IGameBoard): Promise<IPlayerTurn>;
+        applyPlayerTurn(playerTurn: IPlayerTurn): number;
+
+        computeNextPlayerTurn(): Promise<IPlayerTurn>;
+
+        shiftTurnOrder(capturesMade: number): void;
     }
 
     export function makeGameSession(options: IGameSessionOptions): IGameSession;
