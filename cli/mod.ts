@@ -1,11 +1,6 @@
 import { Command } from '@cliffy/command';
 
-import type { IGlobalOptions } from './global.ts';
-import {
-    OUTPUT_KIND,
-    OUTPUT_KIND_ENUM,
-    setupOutputLogger,
-} from './output_logger.ts';
+import { OUTPUT_KIND, OUTPUT_KIND_ENUM } from './output_logger.ts';
 import { COMMAND_SIMULATE } from './simulate.ts';
 
 const IS_WINDOWS = Deno.build.os === 'windows';
@@ -25,18 +20,6 @@ await new Command()
     .globalOption(
         '--output-file [outputFile:file]',
         'Determine the file used for output.',
-    )
-    .globalAction(
-        // @ts-expect-error - **HACK**: There's currently some weirdness with cliffy's
-        // string to type parser causing types like `.outputFile` being inferred as
-        // `string | boolean` rather than just `string`.
-        //
-        // So we are manually ignoring the inferred typing to focus the actual behaviour.
-        (options: IGlobalOptions) => {
-            const { outputFile, outputKind } = options;
-
-            setupOutputLogger(outputKind, outputFile);
-        },
     )
     .command('simulate', COMMAND_SIMULATE)
     .parse(Deno.args);

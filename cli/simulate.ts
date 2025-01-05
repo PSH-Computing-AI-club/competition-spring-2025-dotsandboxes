@@ -14,6 +14,7 @@ import {
 
 import type { IGlobalOptions } from './global.ts';
 import { makeGameLogger } from './game_logger.ts';
+import { setupOutputLogger } from './output_logger.ts';
 
 const UTF16_CODE_LETTER_A = 65;
 
@@ -57,8 +58,16 @@ export const COMMAND_SIMULATE = new Command()
         //
         // So we are manually ignoring the inferred typing to focus the actual behaviour.
         async (options: ISimulateOptions, ...files: string[]) => {
-            const { gridColumns, gridRows, outputKind, seed, timeout } =
-                options;
+            const {
+                gridColumns,
+                gridRows,
+                outputFile,
+                outputKind,
+                seed,
+                timeout,
+            } = options;
+
+            setupOutputLogger(outputKind, outputFile);
 
             const players = files.map((filePath, index) => {
                 const playerInitial = String.fromCharCode(
