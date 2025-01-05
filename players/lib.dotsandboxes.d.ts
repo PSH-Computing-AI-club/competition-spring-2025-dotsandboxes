@@ -428,5 +428,8 @@ declare namespace Game {
 // ---------- worker/player_script.ts ----------
 
 declare namespace PlayerScript {
-    export type IComputePlayerMoveCallback = () => Promise<Engine.IPlayerMove | null> | Engine.IPlayerMove | null;
+    export type IComputePlayerMoveCallback = () =>
+        | Promise<Engine.IPlayerMove | null>
+        | Engine.IPlayerMove
+        | null;
 }
