@@ -25,6 +25,10 @@
 
     "lint": {
         "include": ["./"],
+        "exclude": [
+            "./players/lib.dotsandboxes.d.ts",
+            "./players/lib.stdlib.d.ts"
+        ],
 
         "rules": {
             "tags": ["recommended"],
