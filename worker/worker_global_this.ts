@@ -55,9 +55,9 @@ export interface IWorkerGlobalThis {
     readonly structuredClone: typeof structuredClone;
 
     readonly isFinite: typeof isFinite;
+    readonly isNaN: typeof isNaN;
     readonly parseFloat: typeof parseFloat;
     readonly parseInt: typeof parseInt;
-    readonly isNaN: typeof isNaN;
 }
 
 export function makeWorkerGlobalThis(
@@ -102,9 +102,9 @@ export function makeWorkerGlobalThis(
         structuredClone,
 
         isFinite,
+        isNaN,
         parseFloat,
         parseInt,
-        isNaN,
     } satisfies Omit<IWorkerGlobalThis, 'globalThis'>;
 
     Object.assign(globalThis, {
