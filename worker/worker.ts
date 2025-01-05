@@ -14,12 +14,12 @@ import {
 import { makeEngineNamespace } from './engine_namespace.ts';
 import { makeMathNamespace } from './math_namespace.ts';
 import { makeGameNamespace } from './game_namespace.ts';
-import type { IComputePlayerTurnCallback } from './player_script.ts';
+import type { IComputePlayerMoveCallback } from './player_script.ts';
 import { evaluatePlayerScript } from './player_script.ts';
 import type { IWorkerGlobalThis } from './worker_global_this.ts';
 import { makeWorkerGlobalThis } from './worker_global_this.ts';
 
-let computePlayerTurnCallback: IComputePlayerTurnCallback | null = null;
+let computePlayerMoveCallback: IComputePlayerMoveCallback | null = null;
 
 let globalThis: IWorkerGlobalThis | null = null;
 
@@ -76,11 +76,11 @@ export const WORKER_API = {
     },
 
     computePlayerMove() {
-        return computePlayerTurnCallback ? computePlayerTurnCallback() : null;
+        return computePlayerMoveCallback ? computePlayerMoveCallback() : null;
     },
 
     destroy() {
-        computePlayerTurnCallback = null;
+        computePlayerMoveCallback = null;
         globalThis = null;
     },
 
@@ -109,7 +109,7 @@ export const WORKER_API = {
             Math,
         });
 
-        computePlayerTurnCallback = await evaluatePlayerScript({
+        computePlayerMoveCallback = await evaluatePlayerScript({
             code,
             globalThis,
             timeout: 1000,
