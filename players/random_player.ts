@@ -1,7 +1,7 @@
 // Random Player randomly selects from a pool of available lines to draw.
 
-const { board: gameBoard } = Game;
 const { SLOT_KIND } = Engine;
+const { board: gameBoard } = Game;
 
 export default (() => {
     const availableSpacers = Array.from(gameBoard.walkSpacers())

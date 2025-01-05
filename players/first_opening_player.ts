@@ -1,7 +1,7 @@
 // First Opening Player finds the first line that is available for it to draw.
 
-const { board: gameBoard } = Game;
 const { SLOT_KIND } = Engine;
+const { board: gameBoard } = Game;
 
 export default (() => {
     for (const gameBoardSlot of gameBoard.walkSpacers()) {

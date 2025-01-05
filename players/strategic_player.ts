@@ -9,8 +9,8 @@
 // matching that priority. Once an available box is found, the player a random
 // available line to draw surrounding that box as its move.
 
-const { board: gameBoard } = Game;
 const { SLOT_KIND } = Engine;
+const { board: gameBoard } = Game;
 
 function sampleBoardSlots<T extends Engine.IGameBoardSlot>(
     gameBoardSlots: T[],
