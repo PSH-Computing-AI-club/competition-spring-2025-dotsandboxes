@@ -31,9 +31,6 @@ and limitations under the License.
 
 /// <reference no-default-lib="true"/>
 
-/// <reference lib="decorators" />
-/// <reference lib="decorators.legacy" />
-
 // ---------- lib.es5.d.ts ----------
 
 /////////////////////////////
