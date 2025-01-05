@@ -127,7 +127,7 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
         timeout: timeoutDuration,
 
         applyPlayerTurn(playerTurn) {
-            const { player, turnIndex, x, y } = playerTurn;
+            const { player, turnIndex } = playerTurn;
 
             try {
                 gameBoard.placeLine(playerTurn);
@@ -142,12 +142,6 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
 
                 throw error;
             }
-
-            EVENT_TURN_MOVE.dispatch({
-                player,
-                playerMove: { x, y },
-                turnIndex,
-            });
 
             const capturesMade = gameBoard.applyCaptures();
 
@@ -229,6 +223,12 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
                     { player: nextPlayer },
                 );
             }
+
+            EVENT_TURN_MOVE.dispatch({
+                player: nextPlayer,
+                playerMove,
+                turnIndex,
+            });
 
             return makePlayerTurnFromPlayerMove(playerMove, {
                 player: nextPlayer,
