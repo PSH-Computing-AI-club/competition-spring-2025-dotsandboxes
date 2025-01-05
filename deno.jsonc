@@ -41,7 +41,7 @@
         "check:format": "deno fmt --check ./",
         "check:lint": "deno lint ./",
         "check:types": "deno check ./.scripts/modules.ts",
-        "docs:build": "deno doc --html --name=\"Dots and Boxes Player Scripting Environment API\" --output=./dist/docs ./players/lib.dotsandboxes.d.ts",
+        "docs:build": "mkdir -p ./dist;deno doc --html --name=\"Dots and Boxes Player Scripting Environment API\" --output=./dist/docs ./players/lib.dotsandboxes.d.ts",
         "compile:linux": "deno compile --frozen --cached-only --allow-env --allow-read --allow-write --no-prompt --include ./worker/worker.ts -o ./dist/bin/dotsandboxes-linux ./cli/mod.ts",
         "compile:macos": "deno compile  --frozen --cached-only --allow-env --allow-read --allow-write --no-prompt --include ./worker/worker.ts -o ./dist/bin/dotsandboxes-macos ./cli/mod.ts",
         "compile:windows": "deno compile  --frozen --cached-only --allow-env --allow-read --allow-write --no-prompt --include ./worker/worker.ts -o ./dist/bin/dotsandboxes-windows.exe ./cli/mod.ts",
