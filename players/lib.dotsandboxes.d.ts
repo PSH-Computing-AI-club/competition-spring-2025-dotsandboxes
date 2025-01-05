@@ -1,19 +1,6 @@
 // ---------- worker/engine_namespace.ts ----------
 
 declare namespace Engine {
-    // ---------- util/event.ts ----------
-
-    /**
-     * Represents the callback supplied by subscribers to be called every dispatch.
-     */
-    type IEventCallback<T> = (value: T) => void;
-
-    interface IEventSubscription<T> {
-        readonly callback: IEventCallback<T>;
-
-        destroy(): void;
-    }
-
     /**
      * Represents an interface to publish event data via a singleton instance, that is compatible with Svelte Store subscriptions.
      */
@@ -29,7 +16,7 @@ declare namespace Engine {
          * @param callback
          * @returns
          */
-        subscribe(callback: IEventCallback<T>): IEventSubscription<T>;
+        subscribe(callback: Util.IEventCallback<T>): Util.IEventSubscription<T>;
     }
 
     // ---------- engine/errors.ts ----------
@@ -472,4 +459,19 @@ declare namespace PlayerScript {
         | Promise<Engine.IPlayerMove | null>
         | Engine.IPlayerMove
         | null;
+}
+
+declare namespace Util {
+    // ---------- util/event.ts ----------
+
+    /**
+     * Represents the callback supplied by subscribers to be called every dispatch.
+     */
+    type IEventCallback<T> = (value: T) => void;
+
+    interface IEventSubscription<T> {
+        readonly callback: IEventCallback<T>;
+
+        destroy(): void;
+    }
 }
