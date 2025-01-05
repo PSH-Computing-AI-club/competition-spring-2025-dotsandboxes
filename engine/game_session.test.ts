@@ -16,6 +16,7 @@ import { makeGameBoard } from './game_board.ts';
 import { SLOT_KIND } from './game_board_slot.ts';
 import { makeGameSession } from './game_session.ts';
 import type { IPlayer } from './player.ts';
+import { makePlayerTurn } from './player_turn.ts';
 
 // **TEST:** Test events
 
@@ -224,19 +225,15 @@ Deno.test(
     },
 );
 
-Deno.test(async function IGameSession_applyPlayerTurn_Success() {
-    const playerA = makeConstantPlayer({
+Deno.test(function IGameSession_applyPlayerTurn_Success() {
+    const playerA = makeDummyPlayer({
         playerInitial: 'A',
         seed: 0,
-        x: 1,
-        y: 0,
     });
 
-    const playerB = makeConstantPlayer({
+    const playerB = makeDummyPlayer({
         playerInitial: 'B',
         seed: 0,
-        x: 0,
-        y: 1,
     });
 
     const gameBoard = makeGameBoard({
@@ -250,12 +247,23 @@ Deno.test(async function IGameSession_applyPlayerTurn_Success() {
         timeout: 0,
     });
 
-    const playerTurn0 = await gameSession.computeNextPlayerTurn();
+    const playerTurn0 = makePlayerTurn({
+        player: playerA,
+        turnIndex: 0,
+
+        x: 1,
+        y: 0,
+    });
+
+    const playerTurn1 = makePlayerTurn({
+        player: playerB,
+        turnIndex: 1,
+
+        x: 0,
+        y: 1,
+    });
 
     gameSession.applyPlayerTurn(playerTurn0);
-
-    const playerTurn1 = await gameSession.computeNextPlayerTurn();
-
     gameSession.applyPlayerTurn(playerTurn1);
 
     assertArrayIncludes(
@@ -408,12 +416,10 @@ Deno.test(async function IGameSession_applyPlayerTurn_Success() {
 });
 
 Deno.test(
-    async function IGameSession_applyPlayerTurn_PlayerInvalidPlacement_Failure() {
-        const constantPlayer = makeConstantPlayer({
+    function IGameSession_applyPlayerTurn_PlayerInvalidPlacement_Failure() {
+        const dummyPlayer = makeDummyPlayer({
             playerInitial: 'A',
             seed: 0,
-            x: 0,
-            y: 0,
         });
 
         const gameBoard = makeGameBoard({
@@ -423,11 +429,17 @@ Deno.test(
 
         const gameSession = makeGameSession({
             gameBoard,
-            players: [constantPlayer],
+            players: [dummyPlayer],
             timeout: 0,
         });
 
-        const playerTurn = await gameSession.computeNextPlayerTurn();
+        const playerTurn = makePlayerTurn({
+            player: dummyPlayer,
+            turnIndex: 0,
+
+            x: 0,
+            y: 0,
+        });
 
         assertThrows(
             () => {
