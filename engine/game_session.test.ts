@@ -11,11 +11,11 @@ import { assertTypeOf } from '../util/mod.ts';
 
 import { makeConstantPlayer } from './constant_player.ts';
 import { makeDummyPlayer } from './dummy_player.ts';
-import type { IPlayer } from './player.ts';
+import { makeForfeitPlayer } from './forfeit_player.ts';
 import { makeGameBoard } from './game_board.ts';
 import { SLOT_KIND } from './game_board_slot.ts';
 import { makeGameSession } from './game_session.ts';
-import { makeForfeitPlayer } from './forfeit_player.ts';
+import type { IPlayer } from './player.ts';
 
 // **TEST:** Test events
 
