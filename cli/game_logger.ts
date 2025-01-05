@@ -9,6 +9,7 @@ import type {
 import { PlayerComputeThrowError, WIN_KIND } from '../engine/mod.ts';
 
 import type { ValueOf } from '../util/mod.ts';
+import { truncate } from '../util/mod.ts';
 
 import { getOutputLogger, OUTPUT_KIND } from './output_logger.ts';
 
@@ -150,8 +151,8 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
         }),
     );
 
-    let currentTurnComputeDuration: number = -1;
-    let currentTurnStartTimestamp: number = -1;
+    let currentTurnMoveTimestamp: number | null = null;
+    let currentTurnStartTimestamp: number | null = null;
 
     let playerThatErrored: IPlayer | null = null;
     let playerThatForfeited: IPlayer | null = null;
@@ -251,12 +252,19 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
             switch (outputLogger.loggerName) {
                 case OUTPUT_KIND.human: {
+                    const durations = playerComputeDurations.get(player);
+                    const duration = currentTurnMoveTimestamp! -
+                        currentTurnStartTimestamp!;
+
                     outputLogger.info(
                         `[TURN ${
                             turnIndex + 1
-                        }] Player ${playerInitial} placed a line at (${x}, ${y}) and took ${currentTurnComputeDuration}ms to compute.`,
+                        }] Player ${playerInitial} placed a line at (${x}, ${y}) and took ${
+                            truncate(duration, 3)
+                        }ms to compute.`,
                     );
 
+                    durations!.push(duration);
                     break;
                 }
 
@@ -394,14 +402,8 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
             switch (outputLogger.loggerName) {
                 case OUTPUT_KIND.human: {
-                    const currentTimestamp = Date.now();
+                    currentTurnMoveTimestamp = performance.now();
 
-                    currentTurnComputeDuration = currentTimestamp -
-                        currentTurnStartTimestamp;
-
-                    const durations = playerComputeDurations.get(player);
-
-                    durations!.push(currentTurnComputeDuration);
                     break;
                 }
 
@@ -425,7 +427,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
             switch (outputLogger.loggerName) {
                 case OUTPUT_KIND.human:
-                    currentTurnStartTimestamp = Date.now();
+                    currentTurnStartTimestamp = performance.now();
 
                     break;
 
