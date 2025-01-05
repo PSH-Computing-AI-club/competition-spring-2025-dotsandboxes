@@ -466,9 +466,19 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
                     for (const player of players) {
                         const { playerInitial } = player;
-
                         const playerIdentifier = player.toString();
+
+                        const durations = playerComputeDurations.get(player)!;
                         const score = scores.get(player)!;
+
+                        const averageComputeDuration = durations.length > 0
+                            ? truncate(
+                                durations.reduce((sum, duration) => {
+                                    return sum + duration;
+                                }, 0) / durations.length,
+                                3,
+                            )
+                            : 0;
 
                         if (winningPlayers.has(player)) {
                             outputLogger.info(
@@ -478,19 +488,19 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                                     winKind === WIN_KIND.multiple
                                         ? 'tie'
                                         : 'win'
-                                }).`,
+                                }) w/ an average compute time of ${averageComputeDuration}ms.`,
                             );
                         } else if (playerThatErrored === player) {
                             outputLogger.info(
-                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes (error).`,
+                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes (error) w/ an average compute time of ${averageComputeDuration}ms.`,
                             );
                         } else if (playerThatForfeited === player) {
                             outputLogger.info(
-                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes (forfeited).`,
+                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes (forfeited) w/ an average compute time of ${averageComputeDuration}ms.`,
                             );
                         } else if (playerThatTimedout === player) {
                             outputLogger.info(
-                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes (timed out).`,
+                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes (timed out) w/ an average compute time of ${averageComputeDuration}ms.`,
                             );
                         } else {
                             outputLogger.info(
@@ -500,7 +510,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                                     winKind === WIN_KIND.no_contest
                                         ? 'no contest'
                                         : 'lost'
-                                }).`,
+                                }) w/ an average compute time of ${averageComputeDuration}ms.`,
                             );
                         }
                     }
