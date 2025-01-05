@@ -1,3 +1,5 @@
+// ---------- worker/engine_namespace.ts ----------
+
 declare namespace Engine {
     // ---------- util/event.ts ----------
 
