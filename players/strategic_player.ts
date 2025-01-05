@@ -15,11 +15,8 @@ const { SLOT_KIND } = Engine;
 function sampleBoardSlots<T extends Engine.IGameBoardSlot>(
     gameBoardSlots: T[],
 ): T | null {
-    const boardSlotIndex = Math.max(
-        Math.trunc(
-            (gameBoardSlots.length - 1) * Math.random(),
-        ),
-        0,
+    const boardSlotIndex = Math.trunc(
+        (gameBoardSlots.length - 1) * Math.random(),
     );
 
     const gameBoardSlot = gameBoardSlots[boardSlotIndex];

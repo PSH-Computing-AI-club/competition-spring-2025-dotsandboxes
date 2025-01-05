@@ -13,11 +13,8 @@ export default (() => {
             },
         );
 
-    const boardSlotIndex = Math.max(
-        Math.trunc(
-            (availableSpacers.length - 1) * Math.random(),
-        ),
-        0,
+    const boardSlotIndex = Math.trunc(
+        (availableSpacers.length - 1) * Math.random(),
     );
 
     const gameBoardSlot = availableSpacers[boardSlotIndex];
