@@ -43,4 +43,4 @@ jobs:
             - name: Upload Artifacts to Release
               uses: softprops/action-gh-release@v2
               with:
-                  files: /dist/bin/*
+                  files: ./dist/bin/*
