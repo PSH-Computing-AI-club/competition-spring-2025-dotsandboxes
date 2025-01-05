@@ -62,7 +62,7 @@ export const WORKER_API = {
         // **TODO:** Handle turn rotation.
 
         const { playerInitial, playerMove, turnIndex } = options;
-        const { board: gameBoard } = globalThis!.Game;
+        const { session: gameSession } = globalThis!.Game;
 
         const player = playerLookup![playerInitial]!;
 
@@ -71,8 +71,7 @@ export const WORKER_API = {
             turnIndex,
         });
 
-        gameBoard.placeLine(playerTurn);
-        gameBoard.applyCaptures();
+        gameSession.applyPlayerTurn(playerTurn);
     },
 
     computePlayerMove() {
@@ -102,7 +101,7 @@ export const WORKER_API = {
         const player = playerLookup[playerInitial]!;
 
         const gameBoard = makeGameBoard({ columns, rows });
-        const gameSession = makeGameSession({ players, timeout: 0 });
+        const gameSession = makeGameSession({ gameBoard, players, timeout: 0 });
 
         const Engine = makeEngineNamespace();
         const Game = makeGameNamespace({ gameBoard, gameSession, player });
