@@ -22,6 +22,9 @@ export interface IWorkerGlobalThis {
 
     readonly globalThis: IWorkerGlobalThis;
 
+    readonly Infinity: typeof Infinity;
+    readonly NaN: typeof NaN;
+
     readonly Math: IMathNamespace;
 
     readonly AggregateError: typeof AggregateError;
@@ -51,6 +54,7 @@ export interface IWorkerGlobalThis {
     readonly setTimeout: typeof setTimeout;
     readonly structuredClone: typeof structuredClone;
 
+    readonly isFinite: typeof isFinite;
     readonly parseFloat: typeof parseFloat;
     readonly parseInt: typeof parseInt;
     readonly isNaN: typeof isNaN;
@@ -64,6 +68,9 @@ export function makeWorkerGlobalThis(
     const globalThis = {
         Game,
         Engine,
+
+        Infinity,
+        NaN,
 
         Math,
 
@@ -94,6 +101,7 @@ export function makeWorkerGlobalThis(
         setTimeout,
         structuredClone,
 
+        isFinite,
         parseFloat,
         parseInt,
         isNaN,
