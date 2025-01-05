@@ -415,6 +415,76 @@ Deno.test(function IGameSession_applyPlayerTurn_Success() {
     );
 });
 
+Deno.test(function IGameSession_applyPlayerTurn_capturesMade_Success() {
+    const playerA = makeDummyPlayer({
+        playerInitial: 'A',
+        seed: 0,
+    });
+
+    const playerB = makeDummyPlayer({
+        playerInitial: 'B',
+        seed: 0,
+    });
+
+    const gameBoard = makeGameBoard({
+        columns: 5,
+        rows: 3,
+    });
+
+    const gameSession = makeGameSession({
+        gameBoard,
+        players: [playerA, playerB],
+        timeout: 0,
+    });
+
+    const playerTurn0 = makePlayerTurn({
+        player: playerA,
+        turnIndex: 0,
+
+        x: 1,
+        y: 0,
+    });
+
+    const playerTurn1 = makePlayerTurn({
+        player: playerB,
+        turnIndex: 1,
+
+        x: 0,
+        y: 1,
+    });
+
+    const playerTurn2 = makePlayerTurn({
+        player: playerB,
+        turnIndex: 2,
+
+        x: 2,
+        y: 1,
+    });
+
+    const playerTurn3 = makePlayerTurn({
+        player: playerB,
+        turnIndex: 3,
+
+        x: 1,
+        y: 2,
+    });
+
+    const capturesMade0 = gameSession.applyPlayerTurn(playerTurn0);
+    const capturesMade1 = gameSession.applyPlayerTurn(playerTurn1);
+    const capturesMade2 = gameSession.applyPlayerTurn(playerTurn2);
+    const capturesMade3 = gameSession.applyPlayerTurn(playerTurn3);
+
+    assertTypeOf(capturesMade0, 'number');
+    assertTypeOf(capturesMade1, 'number');
+    assertTypeOf(capturesMade2, 'number');
+    assertTypeOf(capturesMade3, 'number');
+
+    assertEquals(capturesMade0, 0);
+    assertEquals(capturesMade1, 0);
+    assertEquals(capturesMade2, 0);
+    assertEquals(capturesMade3, 1);
+});
+
 Deno.test(
     function IGameSession_applyPlayerTurn_PlayerInvalidPlacement_Failure() {
         const dummyPlayer = makeDummyPlayer({
