@@ -7,7 +7,6 @@
 import type { IEngineNamespace } from './engine_namespace.ts';
 import type { IGameNamespace } from './game_namespace.ts';
 import type { IMathNamespace } from './math_namespace.ts';
-import type { IComputePlayerTurnCallback } from './player_script.ts';
 
 export interface IWorkerGlobalThisOptions {
     readonly Engine: IEngineNamespace;
@@ -18,8 +17,6 @@ export interface IWorkerGlobalThisOptions {
 }
 
 export interface IWorkerGlobalThis {
-    onComputePlayerTurn: IComputePlayerTurnCallback | null;
-
     readonly Game: IGameNamespace;
     readonly Engine: IEngineNamespace;
 
@@ -229,5 +226,5 @@ export function makeWorkerGlobalThis(
         window: globalThis,
     });
 
-    return Object.seal(globalThis) as IWorkerGlobalThis;
+    return Object.freeze(globalThis) as IWorkerGlobalThis;
 }

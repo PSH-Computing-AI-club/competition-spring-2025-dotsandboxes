@@ -1,7 +1,7 @@
 const { board: gameBoard } = globalThis.Game;
 const { SLOT_KIND } = globalThis.Engine;
 
-globalThis.onComputePlayerTurn = () => {
+export default () => {
     const availableSpacers = Array.from(gameBoard.walkSpacers())
         .filter(
             (gameBoardSlot) => gameBoardSlot.slotKind === SLOT_KIND.spacer,

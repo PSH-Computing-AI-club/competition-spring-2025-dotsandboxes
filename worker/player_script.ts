@@ -5,6 +5,10 @@ import { IPlayerMove } from '../engine/mod.ts';
 
 import type { IWorkerGlobalThis } from './worker_global_this.ts';
 
+interface IScriptExports {
+    readonly default?: IComputePlayerTurnCallback;
+}
+
 export type IComputePlayerTurnCallback = () => IPlayerMove;
 
 export interface IBundlePlayerScriptOptions {
@@ -40,7 +44,7 @@ export async function bundlePlayerScript(
 
 export async function evaluatePlayerScript(
     options: IEvaluatePlayerScriptOptions,
-): Promise<void> {
+): Promise<IComputePlayerTurnCallback | null> {
     const { code, globalThis, timeout } = options;
 
     const context = createContext(globalThis, {
@@ -51,5 +55,9 @@ export async function evaluatePlayerScript(
         filename: 'player.script.vm',
     });
 
-    await script.runInContext(context, { timeout });
+    const exports = await script.runInContext(context, { timeout }) as
+        | IScriptExports
+        | undefined;
+
+    return exports?.default ?? null;
 }
