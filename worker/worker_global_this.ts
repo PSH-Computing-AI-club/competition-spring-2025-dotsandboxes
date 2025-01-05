@@ -26,10 +26,8 @@ export interface IWorkerGlobalThis {
 
     readonly AggregateError: typeof AggregateError;
     readonly Error: typeof Error;
-    readonly EvalError: typeof EvalError;
     readonly RangeError: typeof RangeError;
     readonly ReferenceError: typeof ReferenceError;
-    readonly SyntaxError: typeof SyntaxError;
     readonly TypeError: typeof TypeError;
 
     readonly Array: typeof Array;
@@ -38,7 +36,6 @@ export interface IWorkerGlobalThis {
     readonly Map: typeof Map;
     readonly Number: typeof Number;
     readonly Object: typeof Object;
-    readonly Promise: typeof Promise;
     readonly Proxy: typeof Proxy;
     readonly Set: typeof Set;
     readonly String: typeof String;
@@ -72,10 +69,8 @@ export function makeWorkerGlobalThis(
 
         AggregateError,
         Error,
-        EvalError,
         RangeError,
         ReferenceError,
-        SyntaxError,
         TypeError,
 
         Array,
@@ -84,7 +79,6 @@ export function makeWorkerGlobalThis(
         Map,
         Number,
         Object,
-        Promise,
         Proxy,
         Set,
         String,
