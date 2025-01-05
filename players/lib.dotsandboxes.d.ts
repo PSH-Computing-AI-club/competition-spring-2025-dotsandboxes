@@ -114,7 +114,12 @@ declare namespace Engine {
         toString(): string;
     }
 
-    export interface IPlayer extends IPlayerOptions {}
+    export interface IPlayer extends IPlayerOptions {
+        computePlayerMove(
+            gameSession: IGameSession,
+            gameBoard: IGameBoard,
+        ): Promise<IPlayerMove | null>;
+    }
 
     export type IPlayerConstructor<
         Options extends IPlayerOptions = IPlayerOptions,
