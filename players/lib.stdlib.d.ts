@@ -21,6 +21,7 @@ and limitations under the License.
     - lib.es2015.core.d.ts
     - lib.es2015.generator.d.ts
     - lib.es2015.iterable.d.ts
+    - lib.es2015.promise.d.ts
     - lib.es2015.proxy.d.ts
     - lib.es2015.symbol.d.ts
     - lib.es2015.symbol.wellknown.d.ts
@@ -28,11 +29,13 @@ and limitations under the License.
     - lib.es2017.date.d.ts
     - lib.es2017.object.d.ts
     - lib.es2017.string.d.ts
+    - lib.es2018.promise.d.ts
     - lib.es2018.regexp.d.ts
     - lib.es2019.array.d.ts
     - lib.es2019.object.d.ts
     - lib.es2019.string.d.ts
     - lib.es2019.symbol.d.ts
+    - lib.es2020.promise.d.ts
     - lib.es2020.string.d.ts
     - lib.es2020.symbol.wellknown.d.ts
     - lib.es2021.promise.d.ts
@@ -48,6 +51,7 @@ and limitations under the License.
     - lib.es2024.collection.d.ts
     - lib.es2024.object.d.ts
     - lib.es2024.regexp.d.ts
+    - lib.es2024.promise.d.ts
     - lib.es2024.string.d.ts
     - lib.esnext.collection.d.ts
     - lib.esnext.iterator.d.ts
@@ -1630,6 +1634,76 @@ interface TypedPropertyDescriptor<T> {
     set?: (value: T) => void;
 }
 
+declare type PromiseConstructorLike = new <T>(
+    executor: (
+        resolve: (value: T | PromiseLike<T>) => void,
+        reject: (reason?: any) => void,
+    ) => void,
+) => PromiseLike<T>;
+
+interface PromiseLike<T> {
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(
+        onfulfilled?:
+            | ((value: T) => TResult1 | PromiseLike<TResult1>)
+            | undefined
+            | null,
+        onrejected?:
+            | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+            | undefined
+            | null,
+    ): PromiseLike<TResult1 | TResult2>;
+}
+
+/**
+ * Represents the completion of an asynchronous operation
+ */
+interface Promise<T> {
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(
+        onfulfilled?:
+            | ((value: T) => TResult1 | PromiseLike<TResult1>)
+            | undefined
+            | null,
+        onrejected?:
+            | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+            | undefined
+            | null,
+    ): Promise<TResult1 | TResult2>;
+
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(
+        onrejected?:
+            | ((reason: any) => TResult | PromiseLike<TResult>)
+            | undefined
+            | null,
+    ): Promise<T | TResult>;
+}
+
+/**
+ * Recursively unwraps the "awaited type" of a type. Non-promise "thenables" should resolve to `never`. This emulates the behavior of `await`.
+ */
+type Awaited<T> = T extends null | undefined ? T // special case for `null | undefined` when not in `--strictNullChecks` mode
+    : T extends object & { then(onfulfilled: infer F, ...args: infer _): any } // `await` only unwraps object types with a callable `then`. Non-object types are not unwrapped
+        ? F extends ((value: infer V, ...args: infer _) => any) // if the argument to `then` is callable, extracts the first argument
+            ? Awaited<V> // recursively unwrap the value
+        : never // the argument to `then` was not callable
+    : T; // non-object or non-thenable
+
 interface ArrayLike<T> {
     readonly length: number;
     readonly [n: number]: T;
@@ -2901,6 +2975,26 @@ interface WeakSetConstructor {
     new <T extends WeakKey = WeakKey>(iterable: Iterable<T>): WeakSet<T>;
 }
 
+interface Promise<T> {}
+
+interface PromiseConstructor {
+    /**
+     * Creates a Promise that is resolved with an array of results when all of the provided Promises
+     * resolve, or rejected when any Promise is rejected.
+     * @param values An iterable of Promises.
+     * @returns A new Promise.
+     */
+    all<T>(values: Iterable<T | PromiseLike<T>>): Promise<Awaited<T>[]>;
+
+    /**
+     * Creates a Promise that is resolved or rejected when any of the provided Promises are resolved
+     * or rejected.
+     * @param values An iterable of Promises.
+     * @returns A new Promise.
+     */
+    race<T>(values: Iterable<T | PromiseLike<T>>): Promise<Awaited<T>>;
+}
+
 interface StringIterator<T>
     extends IteratorObject<T, BuiltinIteratorReturn, unknown> {
     [Symbol.iterator](): StringIterator<T>;
@@ -2910,6 +3004,81 @@ interface String {
     /** Iterator */
     [Symbol.iterator](): StringIterator<string>;
 }
+
+// ---------- lib.es2015.promise.d.ts ----------
+
+interface PromiseConstructor {
+    /**
+     * A reference to the prototype.
+     */
+    readonly prototype: Promise<any>;
+
+    /**
+     * Creates a new Promise.
+     * @param executor A callback used to initialize the promise. This callback is passed two arguments:
+     * a resolve callback used to resolve the promise with a value or the result of another promise,
+     * and a reject callback used to reject the promise with a provided reason or error.
+     */
+    new <T>(
+        executor: (
+            resolve: (value: T | PromiseLike<T>) => void,
+            reject: (reason?: any) => void,
+        ) => void,
+    ): Promise<T>;
+
+    /**
+     * Creates a Promise that is resolved with an array of results when all of the provided Promises
+     * resolve, or rejected when any Promise is rejected.
+     * @param values An array of Promises.
+     * @returns A new Promise.
+     */
+    all<T extends readonly unknown[] | []>(
+        values: T,
+    ): Promise<{ -readonly [P in keyof T]: Awaited<T[P]> }>;
+
+    // see: lib.es2015.iterable.d.ts
+    // all<T>(values: Iterable<T | PromiseLike<T>>): Promise<Awaited<T>[]>;
+
+    /**
+     * Creates a Promise that is resolved or rejected when any of the provided Promises are resolved
+     * or rejected.
+     * @param values An array of Promises.
+     * @returns A new Promise.
+     */
+    race<T extends readonly unknown[] | []>(
+        values: T,
+    ): Promise<Awaited<T[number]>>;
+
+    // see: lib.es2015.iterable.d.ts
+    // race<T>(values: Iterable<T | PromiseLike<T>>): Promise<Awaited<T>>;
+
+    /**
+     * Creates a new rejected promise for the provided reason.
+     * @param reason The reason the promise was rejected.
+     * @returns A new rejected Promise.
+     */
+    reject<T = never>(reason?: any): Promise<T>;
+
+    /**
+     * Creates a new resolved promise.
+     * @returns A resolved promise.
+     */
+    resolve(): Promise<void>;
+    /**
+     * Creates a new resolved promise for the provided value.
+     * @param value A promise.
+     * @returns A promise whose internal state matches the provided promise.
+     */
+    resolve<T>(value: T): Promise<Awaited<T>>;
+    /**
+     * Creates a new resolved promise for the provided value.
+     * @param value A promise.
+     * @returns A promise whose internal state matches the provided promise.
+     */
+    resolve<T>(value: T | PromiseLike<T>): Promise<Awaited<T>>;
+}
+
+declare var Promise: PromiseConstructor;
 
 // ---------- lib.es2015.proxy.d.ts ----------
 
@@ -3217,6 +3386,14 @@ interface Math {
     readonly [Symbol.toStringTag]: string;
 }
 
+interface Promise<T> {
+    readonly [Symbol.toStringTag]: string;
+}
+
+interface PromiseConstructor {
+    readonly [Symbol.species]: PromiseConstructor;
+}
+
 interface RegExp {
     /**
      * Matches a string with this regular expression, and returns an array containing the results of
@@ -3451,6 +3628,21 @@ interface String {
     padEnd(maxLength: number, fillString?: string): string;
 }
 
+// ---------- lib.es2018.promise.d.ts ----------
+
+/**
+ * Represents the completion of an asynchronous operation
+ */
+interface Promise<T> {
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+}
+
 // ---------- lib.es2018.regexp.d.ts ---------
 
 interface RegExpMatchArray {
@@ -3622,6 +3814,46 @@ interface Symbol {
     readonly description: string | undefined;
 }
 
+// ---------- lib.es2020.promise.d.ts ----------
+
+interface PromiseFulfilledResult<T> {
+    status: 'fulfilled';
+    value: T;
+}
+
+interface PromiseRejectedResult {
+    status: 'rejected';
+    reason: any;
+}
+
+type PromiseSettledResult<T> =
+    | PromiseFulfilledResult<T>
+    | PromiseRejectedResult;
+
+interface PromiseConstructor {
+    /**
+     * Creates a Promise that is resolved with an array of results when all
+     * of the provided Promises resolve or reject.
+     * @param values An array of Promises.
+     * @returns A new Promise.
+     */
+    allSettled<T extends readonly unknown[] | []>(
+        values: T,
+    ): Promise<
+        { -readonly [P in keyof T]: PromiseSettledResult<Awaited<T[P]>> }
+    >;
+
+    /**
+     * Creates a Promise that is resolved with an array of results when all
+     * of the provided Promises resolve or reject.
+     * @param values An array of Promises.
+     * @returns A new Promise.
+     */
+    allSettled<T>(
+        values: Iterable<T | PromiseLike<T>>,
+    ): Promise<PromiseSettledResult<Awaited<T>>[]>;
+}
+
 // ---------- lib.es2020.string.d.ts ---------
 
 interface String {
@@ -3670,6 +3902,27 @@ interface AggregateErrorConstructor {
 }
 
 declare var AggregateError: AggregateErrorConstructor;
+
+/**
+ * Represents the completion of an asynchronous operation
+ */
+interface PromiseConstructor {
+    /**
+     * The any function returns a promise that is fulfilled by the first given promise to be fulfilled, or rejected with an AggregateError containing an array of rejection reasons if all of the given promises are rejected. It resolves all elements of the passed iterable to promises as it runs this algorithm.
+     * @param values An array or iterable of Promises.
+     * @returns A new Promise.
+     */
+    any<T extends readonly unknown[] | []>(
+        values: T,
+    ): Promise<Awaited<T[number]>>;
+
+    /**
+     * The any function returns a promise that is fulfilled by the first given promise to be fulfilled, or rejected with an AggregateError containing an array of rejection reasons if all of the given promises are rejected. It resolves all elements of the passed iterable to promises as it runs this algorithm.
+     * @param values An array or iterable of Promises.
+     * @returns A new Promise.
+     */
+    any<T>(values: Iterable<T | PromiseLike<T>>): Promise<Awaited<T>>;
+}
 
 // ---------- lib.es2021.string.d.ts ---------
 
@@ -4059,6 +4312,26 @@ interface RegExp {
      * Default is false. Read-only.
      */
     readonly unicodeSets: boolean;
+}
+
+// ---------- lib.es2024.promise.d.ts ----------
+
+interface PromiseWithResolvers<T> {
+    promise: Promise<T>;
+    resolve: (value: T | PromiseLike<T>) => void;
+    reject: (reason?: any) => void;
+}
+
+interface PromiseConstructor {
+    /**
+     * Creates a new Promise and returns it in an object, along with its resolve and reject functions.
+     * @returns An object with the properties `promise`, `resolve`, and `reject`.
+     *
+     * ```ts
+     * const { promise, resolve, reject } = Promise.withResolvers<T>();
+     * ```
+     */
+    withResolvers<T>(): PromiseWithResolvers<T>;
 }
 
 // ---------- lib.es2024.string.d.ts ---------
