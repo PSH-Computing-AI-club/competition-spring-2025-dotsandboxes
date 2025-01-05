@@ -105,4 +105,4 @@ export default (() => {
     }
 
     return null;
-}) satisfies PlayerScript.IComputePlayerTurnCallback;
+}) satisfies PlayerScript.IComputePlayerMoveCallback;
