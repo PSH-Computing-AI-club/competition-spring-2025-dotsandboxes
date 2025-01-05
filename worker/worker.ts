@@ -23,6 +23,8 @@ let computePlayerMoveCallback: IComputePlayerMoveCallback | null = null;
 
 let globalThis: IWorkerGlobalThis | null = null;
 
+let playerLookup: Record<string, IPlayer | undefined> | null = null;
+
 export interface IInitializeOptions {
     readonly code: string;
 
@@ -60,11 +62,9 @@ export const WORKER_API = {
         // **TODO:** Handle turn rotation.
 
         const { playerInitial, playerMove, turnIndex } = options;
-        const { board: gameBoard, session: gameSession } = globalThis!.Game;
+        const { board: gameBoard } = globalThis!.Game;
 
-        const player = gameSession.players.find((player) =>
-            player.playerInitial === playerInitial
-        )!;
+        const player = playerLookup![playerInitial]!;
 
         const playerTurn = makePlayerTurnFromPlayerMove(playerMove, {
             player,
@@ -82,6 +82,7 @@ export const WORKER_API = {
     destroy() {
         computePlayerMoveCallback = null;
         globalThis = null;
+        playerLookup = null;
     },
 
     async initialize(options) {
@@ -92,9 +93,13 @@ export const WORKER_API = {
             makeDummyPlayer({ playerInitial, seed })
         );
 
-        const player = players.find((player) =>
-            player.playerInitial === playerInitial
-        )!;
+        playerLookup = Object.fromEntries(players.map((player) => {
+            const { playerInitial } = player;
+
+            return [playerInitial, player];
+        }));
+
+        const player = playerLookup[playerInitial]!;
 
         const gameBoard = makeGameBoard({ columns, rows });
         const gameSession = makeGameSession({ players, timeout: 0 });
