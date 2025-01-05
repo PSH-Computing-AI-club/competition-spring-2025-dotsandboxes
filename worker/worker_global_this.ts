@@ -40,6 +40,7 @@ export interface IWorkerGlobalThis {
     readonly Map: typeof Map;
     readonly Number: typeof Number;
     readonly Object: typeof Object;
+    readonly Promise: typeof Promise;
     readonly Proxy: typeof Proxy;
     readonly Set: typeof Set;
     readonly String: typeof String;
@@ -88,6 +89,7 @@ export function makeWorkerGlobalThis(
         Map,
         Number,
         Object,
+        Promise,
         Proxy,
         Set,
         String,

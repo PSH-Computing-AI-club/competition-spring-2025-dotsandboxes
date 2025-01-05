@@ -46,7 +46,7 @@ export interface IOnTurnMoveOptions {
 }
 
 export interface IWorkerAPI {
-    computePlayerMove(): IPlayerMove | null;
+    computePlayerMove(): Promise<IPlayerMove | null> | IPlayerMove | null;
 
     destroy(): void;
 
