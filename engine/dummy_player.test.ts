@@ -45,9 +45,11 @@ Deno.test(async function IDummyPlayer_computePlayerMove_Failure() {
         timeout: 0,
     });
 
-    await assertRejects(async () => {
-        await dummyPlayer.computePlayerMove(gameSession, gameBoard);
-    }, "bad dispatch to 'IDummyPlayer.computePlayerMove' (not implemented)");
+    await assertRejects(
+        async () => {
+            await dummyPlayer.computePlayerMove(gameSession, gameBoard);
+        },
+    );
 });
 
 Deno.test(async function IDummyPlayer_toString_Success() {

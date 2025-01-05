@@ -1372,7 +1372,6 @@ Deno.test(function IGameBoard_placeLine_Failure() {
 
             gameBoard.placeLine(playerTurnThrowDot);
         },
-        "bad members 'IPlayerTurn.x' / 'IPlayerTurn.y' in argument #0 to 'IGameBoard.placeLine' (gameboard slot at '(0, 0)' is not a spacer kind)",
     );
 
     assertThrows(
@@ -1387,7 +1386,6 @@ Deno.test(function IGameBoard_placeLine_Failure() {
 
             gameBoard.placeLine(playerTurnThrowBox);
         },
-        "bad members 'IPlayerTurn.x' / 'IPlayerTurn.y' in argument #0 to 'IGameBoard.placeLine' (gameboard slot at '(1, 1)' is not a spacer kind)",
     );
 
     assertThrows(
@@ -1402,7 +1400,6 @@ Deno.test(function IGameBoard_placeLine_Failure() {
 
             gameBoard.placeLine(playerTurnThrowInitial);
         },
-        "bad members 'IPlayerTurn.x' / 'IPlayerTurn.y' in argument #0 to 'IGameBoard.placeLine' (gameboard slot at '(1, 1)' is not a spacer kind)",
     );
 
     assertThrows(
@@ -1417,7 +1414,6 @@ Deno.test(function IGameBoard_placeLine_Failure() {
 
             gameBoard.placeLine(playerTurnThrowLine);
         },
-        "bad members 'IPlayerTurn.x' / 'IPlayerTurn.y' in argument #0 to 'IGameBoard.placeLine' (gameboard slot at '(1, 0)' is not a spacer kind)",
     );
 });
 
@@ -1528,21 +1524,18 @@ Deno.test(function IGameBoard_countSurroundingLines_Failure() {
         () => {
             const _countThrowDot = gameBoard.countSurroundingLines(0, 0);
         },
-        "bad arguments #0, #1 to 'IGameBoard.countSurroundingLines' (gameboard slot at '(0, 0)' is not a box or initial kind)",
     );
 
     assertThrows(
         () => {
             const _countThrowSpacer = gameBoard.countSurroundingLines(0, 1);
         },
-        "bad arguments #0, #1 to 'IGameBoard.countSurroundingLines' (gameboard slot at '(0, 1)' is not a box or initial kind)",
     );
 
     assertThrows(
         () => {
             const _countThrowLine = gameBoard.countSurroundingLines(1, 0);
         },
-        "bad arguments #0, #1 to 'IGameBoard.countSurroundingLines' (gameboard slot at '(1, 0)' is not a box or initial kind)",
     );
 });
 
@@ -1637,7 +1630,6 @@ Deno.test(function IGameBoard_determinePriorityPlayer_Failure() {
                 0,
             );
         },
-        "bad arguments #0, #1 to 'IGameBoard.determinePriorityPlayerTurn' (gameboard slot at '(0, 0)' is not a box or initial kind)",
     );
 
     assertThrows(
@@ -1647,7 +1639,6 @@ Deno.test(function IGameBoard_determinePriorityPlayer_Failure() {
                 1,
             );
         },
-        "bad arguments #0, #1 to 'IGameBoard.determinePriorityPlayerTurn' (gameboard slot at '(0, 1)' is not a box or initial kind)",
     );
 
     assertThrows(
@@ -1657,7 +1648,6 @@ Deno.test(function IGameBoard_determinePriorityPlayer_Failure() {
                 0,
             );
         },
-        "bad arguments #0, #1 to 'IGameBoard.determinePriorityPlayerTurn' (gameboard slot at '(1, 0)' is not a box or initial kind)",
     );
 });
 

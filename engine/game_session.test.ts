@@ -132,7 +132,6 @@ Deno.test(
             async () => {
                 await gameSession.computeNextPlayerTurn();
             },
-            "bad dispatch to 'IGameSession.computeNextPlayerTurn' (no players available in 'IGameSession.players')",
         );
     },
 );
@@ -159,7 +158,6 @@ Deno.test(
             async () => {
                 await gameSession.computeNextPlayerTurn();
             },
-            "bad dispatch to 'IGameSession.computeNextPlayerTurn' (player 'D' threw an error during compute)",
         );
     },
 );
@@ -186,7 +184,6 @@ Deno.test(
             async () => {
                 await gameSession.computeNextPlayerTurn();
             },
-            "bad dispatch to 'IGameSession.computeNextPlayerTurn' (player 'A' forfeited the game)",
         );
     },
 );
@@ -221,7 +218,6 @@ Deno.test(
             async () => {
                 await gameSession.computeNextPlayerTurn();
             },
-            "bad dispatch to 'IGameSession.computeNextPlayerTurn' (player 'A' timed out during compute)",
         );
 
         if (timeoutIdentifier) clearTimeout(timeoutIdentifier);
@@ -437,7 +433,6 @@ Deno.test(
             () => {
                 gameSession.applyPlayerTurn(playerTurn);
             },
-            "bad members 'IPlayerTurn.x' / 'IPlayerTurn.y' in argument #0 to 'IGameBoard.placeLine' (gameboard slot at '(0, 0)' is not a spacer kind)",
         );
     },
 );
