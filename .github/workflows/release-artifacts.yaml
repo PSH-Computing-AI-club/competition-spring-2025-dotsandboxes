@@ -16,6 +16,9 @@ jobs:
                     - windows-2022
                     - macOS-14
 
+        permissions:
+            contents: write
+
         steps:
             - name: Clone Repository
               uses: actions/checkout@v4
