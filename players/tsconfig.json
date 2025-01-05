@@ -31,7 +31,8 @@
         "skipLibCheck": true,
 
         "types": [
-            "./lib.stdlib.d.ts"
+            "./lib.stdlib.d.ts",
+            "./lib.dotsandboxes.d.ts"
         ]
     }
 }
