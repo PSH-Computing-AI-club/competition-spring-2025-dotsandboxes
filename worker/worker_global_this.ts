@@ -103,7 +103,7 @@ export function makeWorkerGlobalThis(
         parseFloat,
         parseInt,
         isNaN,
-    } as Omit<IWorkerGlobalThis, 'globalThis'>;
+    } satisfies Omit<IWorkerGlobalThis, 'globalThis'>;
 
     Object.assign(globalThis, {
         globalThis,
