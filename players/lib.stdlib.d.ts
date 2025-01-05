@@ -1955,10 +1955,7 @@ interface Array<T> {
      */
     copyWithin(target: number, start: number, end?: number): this;
 
-    toLocaleString(
-        locales: string | string[],
-        options?: Intl.NumberFormatOptions & Intl.DateTimeFormatOptions,
-    ): string;
+    
 }
 
 interface ArrayConstructor {
@@ -2278,10 +2275,6 @@ interface ReadonlyArray<T> {
         thisArg?: any,
     ): number;
 
-    toLocaleString(
-        locales: string | string[],
-        options?: Intl.NumberFormatOptions & Intl.DateTimeFormatOptions,
-    ): string;
 }
 
 interface RegExp {
