@@ -1,5 +1,6 @@
 import { resolve } from '@std/path';
 
+import type { IPlayerTurn } from '../engine/mod.ts';
 import {
     computeGameResultFromGame,
     InvalidPlacementError,
@@ -56,6 +57,7 @@ export async function runGameLoop(options: IRunGameLoopOptions): Promise<void> {
     });
 
     const gameSession = makeGameSession({
+        gameBoard,
         players,
         timeout,
     });
@@ -77,13 +79,12 @@ export async function runGameLoop(options: IRunGameLoopOptions): Promise<void> {
     gameLogger.startSession();
 
     while (gameBoard.remainingBoxes > 0) {
+        let playerTurn: IPlayerTurn | null = null;
+
         try {
-            await gameSession.applyNextPlayerTurn(
-                gameBoard,
-            );
+            playerTurn = await gameSession.computeNextPlayerTurn();
         } catch (error) {
             if (
-                error instanceof InvalidPlacementError ||
                 error instanceof PlayerComputeThrowError ||
                 error instanceof PlayerForfeitError ||
                 error instanceof PlayerTimeoutError
@@ -93,6 +94,20 @@ export async function runGameLoop(options: IRunGameLoopOptions): Promise<void> {
 
             throw error;
         }
+
+        let capturesMade: number | null = null;
+
+        try {
+            capturesMade = gameSession.applyPlayerTurn(playerTurn);
+        } catch (error) {
+            if (error instanceof InvalidPlacementError) {
+                break;
+            }
+
+            throw error;
+        }
+
+        gameSession.shiftTurnOrder(capturesMade);
     }
 
     const gameResult = computeGameResultFromGame(
