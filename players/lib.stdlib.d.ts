@@ -3625,11 +3625,6 @@ interface ErrorConstructor {
     (message?: string, options?: ErrorOptions): Error;
 }
 
-interface EvalErrorConstructor {
-    new (message?: string, options?: ErrorOptions): EvalError;
-    (message?: string, options?: ErrorOptions): EvalError;
-}
-
 interface RangeErrorConstructor {
     new (message?: string, options?: ErrorOptions): RangeError;
     (message?: string, options?: ErrorOptions): RangeError;
@@ -3640,19 +3635,9 @@ interface ReferenceErrorConstructor {
     (message?: string, options?: ErrorOptions): ReferenceError;
 }
 
-interface SyntaxErrorConstructor {
-    new (message?: string, options?: ErrorOptions): SyntaxError;
-    (message?: string, options?: ErrorOptions): SyntaxError;
-}
-
 interface TypeErrorConstructor {
     new (message?: string, options?: ErrorOptions): TypeError;
     (message?: string, options?: ErrorOptions): TypeError;
-}
-
-interface URIErrorConstructor {
-    new (message?: string, options?: ErrorOptions): URIError;
-    (message?: string, options?: ErrorOptions): URIError;
 }
 
 interface AggregateErrorConstructor {
