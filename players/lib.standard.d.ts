@@ -14,7 +14,7 @@ and limitations under the License.
 ***************************************************************************** */
 
 /*
-    SOURCE FILES:
+    SOURCE FILES (from TypeScript Compiler distributables, node_modules/typescript/lib):
 
     - lib.es5.d.ts
     - lib.es2015.collection.d.ts
@@ -22,6 +22,35 @@ and limitations under the License.
     - lib.es2015.generator.d.ts
     - lib.es2015.iterable.d.ts
     - lib.es2015.proxy.d.ts
+    - lib.es2015.symbol.d.ts
+    - lib.es2015.symbol.wellknown.d.ts
+    - lib.es2016.array.include.d.ts
+    - lib.es2017.date.d.ts
+    - lib.es2017.object.d.ts
+    - lib.es2017.string.d.ts
+    - lib.es2018.regexp.d.ts
+    - lib.es2019.array.d.ts
+    - lib.es2019.object.d.ts
+    - lib.es2019.string.d.ts
+    - lib.es2019.symbol.d.ts
+    - lib.es2020.date.d.ts
+    - lib.es2020.number.d.ts
+    - lib.es2020.string.d.ts
+    - lib.es2021.string.d.ts
+    - lib.es2021.weakref.d.ts
+    - lib.es2022.array.d.ts
+    - lib.es2022.error.d.ts
+    - lib.es2022.object.d.ts
+    - lib.es2022.regexp.d.ts
+    - lib.es2022.string.d.ts
+    - lib.es2023.array.d.ts
+    - lib.es2023.collection.d.ts
+    - lib.es2024.collection.d.ts
+    - lib.es2024.object.d.ts
+    - lib.es2024.regexp.d.ts
+    - lib.es2024.string.d.ts
+    - lib.esnext.collection.d.ts
+    - lib.esnext.iterator.d.ts
 */
 
 /*
@@ -2883,3 +2912,1331 @@ interface ProxyConstructor {
     new <T extends object>(target: T, handler: ProxyHandler<T>): T;
 }
 declare var Proxy: ProxyConstructor;
+
+// ---------- lib.es2015.symbol.d.ts ----------
+
+interface SymbolConstructor {
+    /**
+     * A reference to the prototype.
+     */
+    readonly prototype: Symbol;
+
+    /**
+     * Returns a new unique Symbol value.
+     * @param  description Description of the new Symbol object.
+     */
+    (description?: string | number): symbol;
+
+    /**
+     * Returns a Symbol object from the global symbol registry matching the given key if found.
+     * Otherwise, returns a new symbol with this key.
+     * @param key key to search for.
+     */
+    for(key: string): symbol;
+
+    /**
+     * Returns a key from the global symbol registry matching the given Symbol if found.
+     * Otherwise, returns a undefined.
+     * @param sym Symbol to find the key for.
+     */
+    keyFor(sym: symbol): string | undefined;
+}
+
+declare var Symbol: SymbolConstructor;
+
+// ---------- lib.es2015.symbol.wellknown.d.ts ----------
+
+interface SymbolConstructor {
+    /**
+     * A method that determines if a constructor object recognizes an object as one of the
+     * constructor’s instances. Called by the semantics of the instanceof operator.
+     */
+    readonly hasInstance: unique symbol;
+
+    /**
+     * A Boolean value that if true indicates that an object should flatten to its array elements
+     * by Array.prototype.concat.
+     */
+    readonly isConcatSpreadable: unique symbol;
+
+    /**
+     * A regular expression method that matches the regular expression against a string. Called
+     * by the String.prototype.match method.
+     */
+    readonly match: unique symbol;
+
+    /**
+     * A regular expression method that replaces matched substrings of a string. Called by the
+     * String.prototype.replace method.
+     */
+    readonly replace: unique symbol;
+
+    /**
+     * A regular expression method that returns the index within a string that matches the
+     * regular expression. Called by the String.prototype.search method.
+     */
+    readonly search: unique symbol;
+
+    /**
+     * A function valued property that is the constructor function that is used to create
+     * derived objects.
+     */
+    readonly species: unique symbol;
+
+    /**
+     * A regular expression method that splits a string at the indices that match the regular
+     * expression. Called by the String.prototype.split method.
+     */
+    readonly split: unique symbol;
+
+    /**
+     * A method that converts an object to a corresponding primitive value.
+     * Called by the ToPrimitive abstract operation.
+     */
+    readonly toPrimitive: unique symbol;
+
+    /**
+     * A String value that is used in the creation of the default string description of an object.
+     * Called by the built-in method Object.prototype.toString.
+     */
+    readonly toStringTag: unique symbol;
+
+    /**
+     * An Object whose truthy properties are properties that are excluded from the 'with'
+     * environment bindings of the associated objects.
+     */
+    readonly unscopables: unique symbol;
+}
+
+interface Symbol {
+    /**
+     * Converts a Symbol object to a symbol.
+     */
+    [Symbol.toPrimitive](hint: string): symbol;
+
+    readonly [Symbol.toStringTag]: string;
+}
+
+interface Array<T> {
+    /**
+     * Is an object whose properties have the value 'true'
+     * when they will be absent when used in a 'with' statement.
+     */
+    readonly [Symbol.unscopables]: {
+        [K in keyof any[]]?: boolean;
+    };
+}
+
+interface ReadonlyArray<T> {
+    /**
+     * Is an object whose properties have the value 'true'
+     * when they will be absent when used in a 'with' statement.
+     */
+    readonly [Symbol.unscopables]: {
+        [K in keyof readonly any[]]?: boolean;
+    };
+}
+
+interface Date {
+    /**
+     * Converts a Date object to a string.
+     */
+    [Symbol.toPrimitive](hint: 'default'): string;
+    /**
+     * Converts a Date object to a string.
+     */
+    [Symbol.toPrimitive](hint: 'string'): string;
+    /**
+     * Converts a Date object to a number.
+     */
+    [Symbol.toPrimitive](hint: 'number'): number;
+    /**
+     * Converts a Date object to a string or number.
+     *
+     * @param hint The strings "number", "string", or "default" to specify what primitive to return.
+     *
+     * @throws {TypeError} If 'hint' was given something other than "number", "string", or "default".
+     * @returns A number if 'hint' was "number", a string if 'hint' was "string" or "default".
+     */
+    [Symbol.toPrimitive](hint: string): string | number;
+}
+
+interface Map<K, V> {
+    readonly [Symbol.toStringTag]: string;
+}
+
+interface WeakMap<K extends WeakKey, V> {
+    readonly [Symbol.toStringTag]: string;
+}
+
+interface Set<T> {
+    readonly [Symbol.toStringTag]: string;
+}
+
+interface WeakSet<T extends WeakKey> {
+    readonly [Symbol.toStringTag]: string;
+}
+
+interface Function {
+    /**
+     * Determines whether the given value inherits from this function if this function was used
+     * as a constructor function.
+     *
+     * A constructor function can control which objects are recognized as its instances by
+     * 'instanceof' by overriding this method.
+     */
+    [Symbol.hasInstance](value: any): boolean;
+}
+
+interface GeneratorFunction {
+    readonly [Symbol.toStringTag]: string;
+}
+
+interface Math {
+    readonly [Symbol.toStringTag]: string;
+}
+
+interface RegExp {
+    /**
+     * Matches a string with this regular expression, and returns an array containing the results of
+     * that search.
+     * @param string A string to search within.
+     */
+    [Symbol.match](string: string): RegExpMatchArray | null;
+
+    /**
+     * Replaces text in a string, using this regular expression.
+     * @param string A String object or string literal whose contents matching against
+     *               this regular expression will be replaced
+     * @param replaceValue A String object or string literal containing the text to replace for every
+     *                     successful match of this regular expression.
+     */
+    [Symbol.replace](string: string, replaceValue: string): string;
+
+    /**
+     * Replaces text in a string, using this regular expression.
+     * @param string A String object or string literal whose contents matching against
+     *               this regular expression will be replaced
+     * @param replacer A function that returns the replacement text.
+     */
+    [Symbol.replace](
+        string: string,
+        replacer: (substring: string, ...args: any[]) => string,
+    ): string;
+
+    /**
+     * Finds the position beginning first substring match in a regular expression search
+     * using this regular expression.
+     *
+     * @param string The string to search within.
+     */
+    [Symbol.search](string: string): number;
+
+    /**
+     * Returns an array of substrings that were delimited by strings in the original input that
+     * match against this regular expression.
+     *
+     * If the regular expression contains capturing parentheses, then each time this
+     * regular expression matches, the results (including any undefined results) of the
+     * capturing parentheses are spliced.
+     *
+     * @param string string value to split
+     * @param limit if not undefined, the output array is truncated so that it contains no more
+     * than 'limit' elements.
+     */
+    [Symbol.split](string: string, limit?: number): string[];
+}
+
+interface RegExpConstructor {
+    readonly [Symbol.species]: RegExpConstructor;
+}
+
+interface String {
+    /**
+     * Matches a string or an object that supports being matched against, and returns an array
+     * containing the results of that search, or null if no matches are found.
+     * @param matcher An object that supports being matched against.
+     */
+    match(
+        matcher: { [Symbol.match](string: string): RegExpMatchArray | null },
+    ): RegExpMatchArray | null;
+
+    /**
+     * Passes a string and {@linkcode replaceValue} to the `[Symbol.replace]` method on {@linkcode searchValue}. This method is expected to implement its own replacement algorithm.
+     * @param searchValue An object that supports searching for and replacing matches within a string.
+     * @param replaceValue The replacement text.
+     */
+    replace(
+        searchValue: {
+            [Symbol.replace](string: string, replaceValue: string): string;
+        },
+        replaceValue: string,
+    ): string;
+
+    /**
+     * Replaces text in a string, using an object that supports replacement within a string.
+     * @param searchValue A object can search for and replace matches within a string.
+     * @param replacer A function that returns the replacement text.
+     */
+    replace(
+        searchValue: {
+            [Symbol.replace](
+                string: string,
+                replacer: (substring: string, ...args: any[]) => string,
+            ): string;
+        },
+        replacer: (substring: string, ...args: any[]) => string,
+    ): string;
+
+    /**
+     * Finds the first substring match in a regular expression search.
+     * @param searcher An object which supports searching within a string.
+     */
+    search(searcher: { [Symbol.search](string: string): number }): number;
+
+    /**
+     * Split a string into substrings using the specified separator and return them as an array.
+     * @param splitter An object that can split a string.
+     * @param limit A value used to limit the number of elements returned in the array.
+     */
+    split(
+        splitter: { [Symbol.split](string: string, limit?: number): string[] },
+        limit?: number,
+    ): string[];
+}
+
+interface ArrayConstructor {
+    readonly [Symbol.species]: ArrayConstructor;
+}
+interface MapConstructor {
+    readonly [Symbol.species]: MapConstructor;
+}
+interface SetConstructor {
+    readonly [Symbol.species]: SetConstructor;
+}
+interface ArrayBufferConstructor {
+    readonly [Symbol.species]: ArrayBufferConstructor;
+}
+
+// ---------- lib.es2016.array.include.d.ts ---------
+
+interface Array<T> {
+    /**
+     * Determines whether an array includes a certain element, returning true or false as appropriate.
+     * @param searchElement The element to search for.
+     * @param fromIndex The position in this array at which to begin searching for searchElement.
+     */
+    includes(searchElement: T, fromIndex?: number): boolean;
+}
+
+interface ReadonlyArray<T> {
+    /**
+     * Determines whether an array includes a certain element, returning true or false as appropriate.
+     * @param searchElement The element to search for.
+     * @param fromIndex The position in this array at which to begin searching for searchElement.
+     */
+    includes(searchElement: T, fromIndex?: number): boolean;
+}
+
+// ---------- lib.es2017.date.d.ts ---------
+
+interface DateConstructor {
+    /**
+     * Returns the number of milliseconds between midnight, January 1, 1970 Universal Coordinated Time (UTC) (or GMT) and the specified date.
+     * @param year The full year designation is required for cross-century date accuracy. If year is between 0 and 99 is used, then year is assumed to be 1900 + year.
+     * @param monthIndex The month as a number between 0 and 11 (January to December).
+     * @param date The date as a number between 1 and 31.
+     * @param hours Must be supplied if minutes is supplied. A number from 0 to 23 (midnight to 11pm) that specifies the hour.
+     * @param minutes Must be supplied if seconds is supplied. A number from 0 to 59 that specifies the minutes.
+     * @param seconds Must be supplied if milliseconds is supplied. A number from 0 to 59 that specifies the seconds.
+     * @param ms A number from 0 to 999 that specifies the milliseconds.
+     */
+    UTC(
+        year: number,
+        monthIndex?: number,
+        date?: number,
+        hours?: number,
+        minutes?: number,
+        seconds?: number,
+        ms?: number,
+    ): number;
+}
+
+// ---------- lib.es2017.object.d.ts ---------
+
+interface ObjectConstructor {
+    /**
+     * Returns an array of values of the enumerable own properties of an object
+     * @param o Object that contains the properties and methods. This can be an object that you created or an existing Document Object Model (DOM) object.
+     */
+    values<T>(o: { [s: string]: T } | ArrayLike<T>): T[];
+
+    /**
+     * Returns an array of values of the enumerable own properties of an object
+     * @param o Object that contains the properties and methods. This can be an object that you created or an existing Document Object Model (DOM) object.
+     */
+    values(o: {}): any[];
+
+    /**
+     * Returns an array of key/values of the enumerable own properties of an object
+     * @param o Object that contains the properties and methods. This can be an object that you created or an existing Document Object Model (DOM) object.
+     */
+    entries<T>(o: { [s: string]: T } | ArrayLike<T>): [string, T][];
+
+    /**
+     * Returns an array of key/values of the enumerable own properties of an object
+     * @param o Object that contains the properties and methods. This can be an object that you created or an existing Document Object Model (DOM) object.
+     */
+    entries(o: {}): [string, any][];
+
+    /**
+     * Returns an object containing all own property descriptors of an object
+     * @param o Object that contains the properties and methods. This can be an object that you created or an existing Document Object Model (DOM) object.
+     */
+    getOwnPropertyDescriptors<T>(
+        o: T,
+    ): { [P in keyof T]: TypedPropertyDescriptor<T[P]> } & {
+        [x: string]: PropertyDescriptor;
+    };
+}
+
+// ---------- lib.es2017.string.d.ts ---------
+
+interface String {
+    /**
+     * Pads the current string with a given string (possibly repeated) so that the resulting string reaches a given length.
+     * The padding is applied from the start (left) of the current string.
+     *
+     * @param maxLength The length of the resulting string once the current string has been padded.
+     *        If this parameter is smaller than the current string's length, the current string will be returned as it is.
+     *
+     * @param fillString The string to pad the current string with.
+     *        If this string is too long, it will be truncated and the left-most part will be applied.
+     *        The default value for this parameter is " " (U+0020).
+     */
+    padStart(maxLength: number, fillString?: string): string;
+
+    /**
+     * Pads the current string with a given string (possibly repeated) so that the resulting string reaches a given length.
+     * The padding is applied from the end (right) of the current string.
+     *
+     * @param maxLength The length of the resulting string once the current string has been padded.
+     *        If this parameter is smaller than the current string's length, the current string will be returned as it is.
+     *
+     * @param fillString The string to pad the current string with.
+     *        If this string is too long, it will be truncated and the left-most part will be applied.
+     *        The default value for this parameter is " " (U+0020).
+     */
+    padEnd(maxLength: number, fillString?: string): string;
+}
+
+// ---------- lib.es2018.regexp.d.ts ---------
+
+interface RegExpMatchArray {
+    groups?: {
+        [key: string]: string;
+    };
+}
+
+interface RegExpExecArray {
+    groups?: {
+        [key: string]: string;
+    };
+}
+
+interface RegExp {
+    /**
+     * Returns a Boolean value indicating the state of the dotAll flag (s) used with a regular expression.
+     * Default is false. Read-only.
+     */
+    readonly dotAll: boolean;
+}
+
+// ---------- lib.es2019.array.d.ts ---------
+
+type FlatArray<Arr, Depth extends number> = {
+    done: Arr;
+    recur: Arr extends ReadonlyArray<infer InnerArr> ? FlatArray<
+            InnerArr,
+            [
+                -1,
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+            ][Depth]
+        >
+        : Arr;
+}[Depth extends -1 ? 'done' : 'recur'];
+
+interface ReadonlyArray<T> {
+    /**
+     * Calls a defined callback function on each element of an array. Then, flattens the result into
+     * a new array.
+     * This is identical to a map followed by flat with depth 1.
+     *
+     * @param callback A function that accepts up to three arguments. The flatMap method calls the
+     * callback function one time for each element in the array.
+     * @param thisArg An object to which the this keyword can refer in the callback function. If
+     * thisArg is omitted, undefined is used as the this value.
+     */
+    flatMap<U, This = undefined>(
+        callback: (
+            this: This,
+            value: T,
+            index: number,
+            array: T[],
+        ) => U | ReadonlyArray<U>,
+        thisArg?: This,
+    ): U[];
+
+    /**
+     * Returns a new array with all sub-array elements concatenated into it recursively up to the
+     * specified depth.
+     *
+     * @param depth The maximum recursion depth
+     */
+    flat<A, D extends number = 1>(
+        this: A,
+        depth?: D,
+    ): FlatArray<A, D>[];
+}
+
+interface Array<T> {
+    /**
+     * Calls a defined callback function on each element of an array. Then, flattens the result into
+     * a new array.
+     * This is identical to a map followed by flat with depth 1.
+     *
+     * @param callback A function that accepts up to three arguments. The flatMap method calls the
+     * callback function one time for each element in the array.
+     * @param thisArg An object to which the this keyword can refer in the callback function. If
+     * thisArg is omitted, undefined is used as the this value.
+     */
+    flatMap<U, This = undefined>(
+        callback: (
+            this: This,
+            value: T,
+            index: number,
+            array: T[],
+        ) => U | ReadonlyArray<U>,
+        thisArg?: This,
+    ): U[];
+
+    /**
+     * Returns a new array with all sub-array elements concatenated into it recursively up to the
+     * specified depth.
+     *
+     * @param depth The maximum recursion depth
+     */
+    flat<A, D extends number = 1>(
+        this: A,
+        depth?: D,
+    ): FlatArray<A, D>[];
+}
+
+// ---------- lib.es2019.object.d.ts ---------
+
+interface ObjectConstructor {
+    /**
+     * Returns an object created by key-value entries for properties and methods
+     * @param entries An iterable object that contains key-value entries for properties and methods.
+     */
+    fromEntries<T = any>(
+        entries: Iterable<readonly [PropertyKey, T]>,
+    ): { [k: string]: T };
+
+    /**
+     * Returns an object created by key-value entries for properties and methods
+     * @param entries An iterable object that contains key-value entries for properties and methods.
+     */
+    fromEntries(entries: Iterable<readonly any[]>): any;
+}
+
+// ---------- lib.es2019.string.d.ts ---------
+
+interface String {
+    /** Removes the trailing white space and line terminator characters from a string. */
+    trimEnd(): string;
+
+    /** Removes the leading white space and line terminator characters from a string. */
+    trimStart(): string;
+
+    /**
+     * Removes the leading white space and line terminator characters from a string.
+     * @deprecated A legacy feature for browser compatibility. Use `trimStart` instead
+     */
+    trimLeft(): string;
+
+    /**
+     * Removes the trailing white space and line terminator characters from a string.
+     * @deprecated A legacy feature for browser compatibility. Use `trimEnd` instead
+     */
+    trimRight(): string;
+}
+
+// ---------- lib.es2019.symbol.d.ts ---------
+
+interface Symbol {
+    /**
+     * Expose the [[Description]] internal slot of a symbol directly.
+     */
+    readonly description: string | undefined;
+}
+
+// ---------- lib.es2020.date.d.ts ---------
+
+interface Date {
+    /**
+     * Converts a date and time to a string by using the current or specified locale.
+     * @param locales A locale string, array of locale strings, Intl.Locale object, or array of Intl.Locale objects that contain one or more language or locale tags. If you include more than one locale string, list them in descending order of priority so that the first entry is the preferred locale. If you omit this parameter, the default locale of the JavaScript runtime is used.
+     * @param options An object that contains one or more properties that specify comparison options.
+     */
+    toLocaleString(
+        locales?: Intl.LocalesArgument,
+        options?: Intl.DateTimeFormatOptions,
+    ): string;
+
+    /**
+     * Converts a date to a string by using the current or specified locale.
+     * @param locales A locale string, array of locale strings, Intl.Locale object, or array of Intl.Locale objects that contain one or more language or locale tags. If you include more than one locale string, list them in descending order of priority so that the first entry is the preferred locale. If you omit this parameter, the default locale of the JavaScript runtime is used.
+     * @param options An object that contains one or more properties that specify comparison options.
+     */
+    toLocaleDateString(
+        locales?: Intl.LocalesArgument,
+        options?: Intl.DateTimeFormatOptions,
+    ): string;
+
+    /**
+     * Converts a time to a string by using the current or specified locale.
+     * @param locales A locale string, array of locale strings, Intl.Locale object, or array of Intl.Locale objects that contain one or more language or locale tags. If you include more than one locale string, list them in descending order of priority so that the first entry is the preferred locale. If you omit this parameter, the default locale of the JavaScript runtime is used.
+     * @param options An object that contains one or more properties that specify comparison options.
+     */
+    toLocaleTimeString(
+        locales?: Intl.LocalesArgument,
+        options?: Intl.DateTimeFormatOptions,
+    ): string;
+}
+
+// ---------- lib.es2020.number.d.ts ---------
+
+interface Number {
+    /**
+     * Converts a number to a string by using the current or specified locale.
+     * @param locales A locale string, array of locale strings, Intl.Locale object, or array of Intl.Locale objects that contain one or more language or locale tags. If you include more than one locale string, list them in descending order of priority so that the first entry is the preferred locale. If you omit this parameter, the default locale of the JavaScript runtime is used.
+     * @param options An object that contains one or more properties that specify comparison options.
+     */
+    toLocaleString(
+        locales?: Intl.LocalesArgument,
+        options?: Intl.NumberFormatOptions,
+    ): string;
+}
+
+// ---------- lib.es2020.string.d.ts ---------
+
+interface String {
+    /**
+     * Matches a string with a regular expression, and returns an iterable of matches
+     * containing the results of that search.
+     * @param regexp A variable name or string literal containing the regular expression pattern and flags.
+     */
+    matchAll(regexp: RegExp): RegExpStringIterator<RegExpExecArray>;
+
+    /** Converts all alphabetic characters to lowercase, taking into account the host environment's current locale. */
+    toLocaleLowerCase(locales?: Intl.LocalesArgument): string;
+
+    /** Returns a string where all alphabetic characters have been converted to uppercase, taking into account the host environment's current locale. */
+    toLocaleUpperCase(locales?: Intl.LocalesArgument): string;
+
+    /**
+     * Determines whether two strings are equivalent in the current or specified locale.
+     * @param that String to compare to target string
+     * @param locales A locale string or array of locale strings that contain one or more language or locale tags. If you include more than one locale string, list them in descending order of priority so that the first entry is the preferred locale. If you omit this parameter, the default locale of the JavaScript runtime is used. This parameter must conform to BCP 47 standards; see the Intl.Collator object for details.
+     * @param options An object that contains one or more properties that specify comparison options. see the Intl.Collator object for details.
+     */
+    localeCompare(
+        that: string,
+        locales?: Intl.LocalesArgument,
+        options?: Intl.CollatorOptions,
+    ): number;
+}
+
+// ---------- lib.es2021.string.d.ts ---------
+
+interface String {
+    /**
+     * Replace all instances of a substring in a string, using a regular expression or search string.
+     * @param searchValue A string to search for.
+     * @param replaceValue A string containing the text to replace for every successful match of searchValue in this string.
+     */
+    replaceAll(searchValue: string | RegExp, replaceValue: string): string;
+
+    /**
+     * Replace all instances of a substring in a string, using a regular expression or search string.
+     * @param searchValue A string to search for.
+     * @param replacer A function that returns the replacement text.
+     */
+    replaceAll(
+        searchValue: string | RegExp,
+        replacer: (substring: string, ...args: any[]) => string,
+    ): string;
+}
+
+// ---------- lib.es2021.weakref.d.ts ---------
+
+interface WeakRef<T extends WeakKey> {
+    readonly [Symbol.toStringTag]: 'WeakRef';
+
+    /**
+     * Returns the WeakRef instance's target value, or undefined if the target value has been
+     * reclaimed.
+     * In es2023 the value can be either a symbol or an object, in previous versions only object is permissible.
+     */
+    deref(): T | undefined;
+}
+
+interface WeakRefConstructor {
+    readonly prototype: WeakRef<any>;
+
+    /**
+     * Creates a WeakRef instance for the given target value.
+     * In es2023 the value can be either a symbol or an object, in previous versions only object is permissible.
+     * @param target The target value for the WeakRef instance.
+     */
+    new <T extends WeakKey>(target: T): WeakRef<T>;
+}
+
+declare var WeakRef: WeakRefConstructor;
+
+interface FinalizationRegistry<T> {
+    readonly [Symbol.toStringTag]: 'FinalizationRegistry';
+
+    /**
+     * Registers a value with the registry.
+     * In es2023 the value can be either a symbol or an object, in previous versions only object is permissible.
+     * @param target The target value to register.
+     * @param heldValue The value to pass to the finalizer for this value. This cannot be the
+     * target value.
+     * @param unregisterToken The token to pass to the unregister method to unregister the target
+     * value. If not provided, the target cannot be unregistered.
+     */
+    register(target: WeakKey, heldValue: T, unregisterToken?: WeakKey): void;
+
+    /**
+     * Unregisters a value from the registry.
+     * In es2023 the value can be either a symbol or an object, in previous versions only object is permissible.
+     * @param unregisterToken The token that was used as the unregisterToken argument when calling
+     * register to register the target value.
+     */
+    unregister(unregisterToken: WeakKey): boolean;
+}
+
+interface FinalizationRegistryConstructor {
+    readonly prototype: FinalizationRegistry<any>;
+
+    /**
+     * Creates a finalization registry with an associated cleanup callback
+     * @param cleanupCallback The callback to call after a value in the registry has been reclaimed.
+     */
+    new <T>(cleanupCallback: (heldValue: T) => void): FinalizationRegistry<T>;
+}
+
+declare var FinalizationRegistry: FinalizationRegistryConstructor;
+
+// ---------- lib.es2022.array.d.ts ---------
+
+interface Array<T> {
+    /**
+     * Returns the item located at the specified index.
+     * @param index The zero-based index of the desired code unit. A negative index will count back from the last item.
+     */
+    at(index: number): T | undefined;
+}
+
+interface ReadonlyArray<T> {
+    /**
+     * Returns the item located at the specified index.
+     * @param index The zero-based index of the desired code unit. A negative index will count back from the last item.
+     */
+    at(index: number): T | undefined;
+}
+
+// ---------- lib.es2022.error.d.ts ---------
+
+interface ErrorOptions {
+    cause?: unknown;
+}
+
+interface Error {
+    cause?: unknown;
+}
+
+interface ErrorConstructor {
+    new (message?: string, options?: ErrorOptions): Error;
+    (message?: string, options?: ErrorOptions): Error;
+}
+
+interface EvalErrorConstructor {
+    new (message?: string, options?: ErrorOptions): EvalError;
+    (message?: string, options?: ErrorOptions): EvalError;
+}
+
+interface RangeErrorConstructor {
+    new (message?: string, options?: ErrorOptions): RangeError;
+    (message?: string, options?: ErrorOptions): RangeError;
+}
+
+interface ReferenceErrorConstructor {
+    new (message?: string, options?: ErrorOptions): ReferenceError;
+    (message?: string, options?: ErrorOptions): ReferenceError;
+}
+
+interface SyntaxErrorConstructor {
+    new (message?: string, options?: ErrorOptions): SyntaxError;
+    (message?: string, options?: ErrorOptions): SyntaxError;
+}
+
+interface TypeErrorConstructor {
+    new (message?: string, options?: ErrorOptions): TypeError;
+    (message?: string, options?: ErrorOptions): TypeError;
+}
+
+interface URIErrorConstructor {
+    new (message?: string, options?: ErrorOptions): URIError;
+    (message?: string, options?: ErrorOptions): URIError;
+}
+
+interface AggregateErrorConstructor {
+    new (
+        errors: Iterable<any>,
+        message?: string,
+        options?: ErrorOptions,
+    ): AggregateError;
+    (
+        errors: Iterable<any>,
+        message?: string,
+        options?: ErrorOptions,
+    ): AggregateError;
+}
+
+// ---------- lib.es2022.object.d.ts ---------
+
+interface ObjectConstructor {
+    /**
+     * Determines whether an object has a property with the specified name.
+     * @param o An object.
+     * @param v A property name.
+     */
+    hasOwn(o: object, v: PropertyKey): boolean;
+}
+
+// ---------- lib.es2022.regexp.d.ts ---------
+
+interface RegExpMatchArray {
+    indices?: RegExpIndicesArray;
+}
+
+interface RegExpExecArray {
+    indices?: RegExpIndicesArray;
+}
+
+interface RegExpIndicesArray extends Array<[number, number]> {
+    groups?: {
+        [key: string]: [number, number];
+    };
+}
+
+interface RegExp {
+    /**
+     * Returns a Boolean value indicating the state of the hasIndices flag (d) used with a regular expression.
+     * Default is false. Read-only.
+     */
+    readonly hasIndices: boolean;
+}
+
+// ---------- lib.es2022.string.d.ts ---------
+
+interface String {
+    /**
+     * Returns a new String consisting of the single UTF-16 code unit located at the specified index.
+     * @param index The zero-based index of the desired code unit. A negative index will count back from the last item.
+     */
+    at(index: number): string | undefined;
+}
+
+// ---------- lib.es2023.array.d.ts ---------
+
+interface Array<T> {
+    /**
+     * Returns the value of the last element in the array where predicate is true, and undefined
+     * otherwise.
+     * @param predicate findLast calls predicate once for each element of the array, in descending
+     * order, until it finds one where predicate returns true. If such an element is found, findLast
+     * immediately returns that element value. Otherwise, findLast returns undefined.
+     * @param thisArg If provided, it will be used as the this value for each invocation of
+     * predicate. If it is not provided, undefined is used instead.
+     */
+    findLast<S extends T>(
+        predicate: (value: T, index: number, array: T[]) => value is S,
+        thisArg?: any,
+    ): S | undefined;
+    findLast(
+        predicate: (value: T, index: number, array: T[]) => unknown,
+        thisArg?: any,
+    ): T | undefined;
+
+    /**
+     * Returns the index of the last element in the array where predicate is true, and -1
+     * otherwise.
+     * @param predicate findLastIndex calls predicate once for each element of the array, in descending
+     * order, until it finds one where predicate returns true. If such an element is found,
+     * findLastIndex immediately returns that element index. Otherwise, findLastIndex returns -1.
+     * @param thisArg If provided, it will be used as the this value for each invocation of
+     * predicate. If it is not provided, undefined is used instead.
+     */
+    findLastIndex(
+        predicate: (value: T, index: number, array: T[]) => unknown,
+        thisArg?: any,
+    ): number;
+
+    /**
+     * Returns a copy of an array with its elements reversed.
+     */
+    toReversed(): T[];
+
+    /**
+     * Returns a copy of an array with its elements sorted.
+     * @param compareFn Function used to determine the order of the elements. It is expected to return
+     * a negative value if the first argument is less than the second argument, zero if they're equal, and a positive
+     * value otherwise. If omitted, the elements are sorted in ascending, ASCII character order.
+     * ```ts
+     * [11, 2, 22, 1].toSorted((a, b) => a - b) // [1, 2, 11, 22]
+     * ```
+     */
+    toSorted(compareFn?: (a: T, b: T) => number): T[];
+
+    /**
+     * Copies an array and removes elements and, if necessary, inserts new elements in their place. Returns the copied array.
+     * @param start The zero-based location in the array from which to start removing elements.
+     * @param deleteCount The number of elements to remove.
+     * @param items Elements to insert into the copied array in place of the deleted elements.
+     * @returns The copied array.
+     */
+    toSpliced(start: number, deleteCount: number, ...items: T[]): T[];
+
+    /**
+     * Copies an array and removes elements while returning the remaining elements.
+     * @param start The zero-based location in the array from which to start removing elements.
+     * @param deleteCount The number of elements to remove.
+     * @returns A copy of the original array with the remaining elements.
+     */
+    toSpliced(start: number, deleteCount?: number): T[];
+
+    /**
+     * Copies an array, then overwrites the value at the provided index with the
+     * given value. If the index is negative, then it replaces from the end
+     * of the array.
+     * @param index The index of the value to overwrite. If the index is
+     * negative, then it replaces from the end of the array.
+     * @param value The value to write into the copied array.
+     * @returns The copied array with the updated value.
+     */
+    with(index: number, value: T): T[];
+}
+
+interface ReadonlyArray<T> {
+    /**
+     * Returns the value of the last element in the array where predicate is true, and undefined
+     * otherwise.
+     * @param predicate findLast calls predicate once for each element of the array, in descending
+     * order, until it finds one where predicate returns true. If such an element is found, findLast
+     * immediately returns that element value. Otherwise, findLast returns undefined.
+     * @param thisArg If provided, it will be used as the this value for each invocation of
+     * predicate. If it is not provided, undefined is used instead.
+     */
+    findLast<S extends T>(
+        predicate: (value: T, index: number, array: readonly T[]) => value is S,
+        thisArg?: any,
+    ): S | undefined;
+    findLast(
+        predicate: (value: T, index: number, array: readonly T[]) => unknown,
+        thisArg?: any,
+    ): T | undefined;
+
+    /**
+     * Returns the index of the last element in the array where predicate is true, and -1
+     * otherwise.
+     * @param predicate findLastIndex calls predicate once for each element of the array, in descending
+     * order, until it finds one where predicate returns true. If such an element is found,
+     * findLastIndex immediately returns that element index. Otherwise, findLastIndex returns -1.
+     * @param thisArg If provided, it will be used as the this value for each invocation of
+     * predicate. If it is not provided, undefined is used instead.
+     */
+    findLastIndex(
+        predicate: (value: T, index: number, array: readonly T[]) => unknown,
+        thisArg?: any,
+    ): number;
+
+    /**
+     * Copies the array and returns the copied array with all of its elements reversed.
+     */
+    toReversed(): T[];
+
+    /**
+     * Copies and sorts the array.
+     * @param compareFn Function used to determine the order of the elements. It is expected to return
+     * a negative value if the first argument is less than the second argument, zero if they're equal, and a positive
+     * value otherwise. If omitted, the elements are sorted in ascending, ASCII character order.
+     * ```ts
+     * [11, 2, 22, 1].toSorted((a, b) => a - b) // [1, 2, 11, 22]
+     * ```
+     */
+    toSorted(compareFn?: (a: T, b: T) => number): T[];
+
+    /**
+     * Copies an array and removes elements while, if necessary, inserting new elements in their place, returning the remaining elements.
+     * @param start The zero-based location in the array from which to start removing elements.
+     * @param deleteCount The number of elements to remove.
+     * @param items Elements to insert into the copied array in place of the deleted elements.
+     * @returns A copy of the original array with the remaining elements.
+     */
+    toSpliced(start: number, deleteCount: number, ...items: T[]): T[];
+
+    /**
+     * Copies an array and removes elements while returning the remaining elements.
+     * @param start The zero-based location in the array from which to start removing elements.
+     * @param deleteCount The number of elements to remove.
+     * @returns A copy of the original array with the remaining elements.
+     */
+    toSpliced(start: number, deleteCount?: number): T[];
+
+    /**
+     * Copies an array, then overwrites the value at the provided index with the
+     * given value. If the index is negative, then it replaces from the end
+     * of the array
+     * @param index The index of the value to overwrite. If the index is
+     * negative, then it replaces from the end of the array.
+     * @param value The value to insert into the copied array.
+     * @returns A copy of the original array with the inserted value.
+     */
+    with(index: number, value: T): T[];
+}
+
+// ---------- lib.es2023.collection.d.ts ---------
+
+interface WeakKeyTypes {
+    symbol: symbol;
+}
+
+// ---------- lib.es2024.collection.d.ts ---------
+
+interface MapConstructor {
+    /**
+     * Groups members of an iterable according to the return value of the passed callback.
+     * @param items An iterable.
+     * @param keySelector A callback which will be invoked for each item in items.
+     */
+    groupBy<K, T>(
+        items: Iterable<T>,
+        keySelector: (item: T, index: number) => K,
+    ): Map<K, T[]>;
+}
+
+// ---------- lib.es2024.object.d.ts ---------
+
+interface ObjectConstructor {
+    /**
+     * Groups members of an iterable according to the return value of the passed callback.
+     * @param items An iterable.
+     * @param keySelector A callback which will be invoked for each item in items.
+     */
+    groupBy<K extends PropertyKey, T>(
+        items: Iterable<T>,
+        keySelector: (item: T, index: number) => K,
+    ): Partial<Record<K, T[]>>;
+}
+
+// ---------- lib.es2024.regexp.d.ts ---------
+
+interface RegExp {
+    /**
+     * Returns a Boolean value indicating the state of the unicodeSets flag (v) used with a regular expression.
+     * Default is false. Read-only.
+     */
+    readonly unicodeSets: boolean;
+}
+
+// ---------- lib.es2024.string.d.ts ---------
+
+interface String {
+    /**
+     * Returns true if all leading surrogates and trailing surrogates appear paired and in order.
+     */
+    isWellFormed(): boolean;
+
+    /**
+     * Returns a string where all lone or out-of-order surrogates have been replaced by the Unicode replacement character (U+FFFD).
+     */
+    toWellFormed(): string;
+}
+
+// ---------- lib.esnext.collection.d.ts ---------
+
+interface ReadonlySetLike<T> {
+    /**
+     * Despite its name, returns an iterator of the values in the set-like.
+     */
+    keys(): Iterator<T>;
+    /**
+     * @returns a boolean indicating whether an element with the specified value exists in the set-like or not.
+     */
+    has(value: T): boolean;
+    /**
+     * @returns the number of (unique) elements in the set-like.
+     */
+    readonly size: number;
+}
+
+interface Set<T> {
+    /**
+     * @returns a new Set containing all the elements in this Set and also all the elements in the argument.
+     */
+    union<U>(other: ReadonlySetLike<U>): Set<T | U>;
+    /**
+     * @returns a new Set containing all the elements which are both in this Set and in the argument.
+     */
+    intersection<U>(other: ReadonlySetLike<U>): Set<T & U>;
+    /**
+     * @returns a new Set containing all the elements in this Set which are not also in the argument.
+     */
+    difference<U>(other: ReadonlySetLike<U>): Set<T>;
+    /**
+     * @returns a new Set containing all the elements which are in either this Set or in the argument, but not in both.
+     */
+    symmetricDifference<U>(other: ReadonlySetLike<U>): Set<T | U>;
+    /**
+     * @returns a boolean indicating whether all the elements in this Set are also in the argument.
+     */
+    isSubsetOf(other: ReadonlySetLike<unknown>): boolean;
+    /**
+     * @returns a boolean indicating whether all the elements in the argument are also in this Set.
+     */
+    isSupersetOf(other: ReadonlySetLike<unknown>): boolean;
+    /**
+     * @returns a boolean indicating whether this Set has no elements in common with the argument.
+     */
+    isDisjointFrom(other: ReadonlySetLike<unknown>): boolean;
+}
+
+interface ReadonlySet<T> {
+    /**
+     * @returns a new Set containing all the elements in this Set and also all the elements in the argument.
+     */
+    union<U>(other: ReadonlySetLike<U>): Set<T | U>;
+    /**
+     * @returns a new Set containing all the elements which are both in this Set and in the argument.
+     */
+    intersection<U>(other: ReadonlySetLike<U>): Set<T & U>;
+    /**
+     * @returns a new Set containing all the elements in this Set which are not also in the argument.
+     */
+    difference<U>(other: ReadonlySetLike<U>): Set<T>;
+    /**
+     * @returns a new Set containing all the elements which are in either this Set or in the argument, but not in both.
+     */
+    symmetricDifference<U>(other: ReadonlySetLike<U>): Set<T | U>;
+    /**
+     * @returns a boolean indicating whether all the elements in this Set are also in the argument.
+     */
+    isSubsetOf(other: ReadonlySetLike<unknown>): boolean;
+    /**
+     * @returns a boolean indicating whether all the elements in the argument are also in this Set.
+     */
+    isSupersetOf(other: ReadonlySetLike<unknown>): boolean;
+    /**
+     * @returns a boolean indicating whether this Set has no elements in common with the argument.
+     */
+    isDisjointFrom(other: ReadonlySetLike<unknown>): boolean;
+}
+
+// ---------- lib.esnext.iterator.d.ts ---------
+
+// Abstract type that allows us to mark `next` as `abstract`
+declare abstract class Iterator<T, TResult = undefined, TNext = unknown> { // eslint-disable-line @typescript-eslint/no-unsafe-declaration-merging
+    abstract next(value?: TNext): IteratorResult<T, TResult>;
+}
+
+// Merge all members of `IteratorObject<T>` into `Iterator<T>`
+interface Iterator<T, TResult, TNext>
+    extends globalThis.IteratorObject<T, TResult, TNext> {}
+
+// Capture the `Iterator` constructor in a type we can use in the `extends` clause of `IteratorConstructor`.
+type IteratorObjectConstructor = typeof Iterator;
+
+declare global {
+    // Global `IteratorObject<T, TReturn, TNext>` interface that can be augmented by polyfills
+    interface IteratorObject<T, TReturn, TNext> {
+        /**
+         * Returns this iterator.
+         */
+        [Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
+
+        /**
+         * Creates an iterator whose values are the result of applying the callback to the values from this iterator.
+         * @param callbackfn A function that accepts up to two arguments to be used to transform values from the underlying iterator.
+         */
+        map<U>(
+            callbackfn: (value: T, index: number) => U,
+        ): IteratorObject<U, undefined, unknown>;
+
+        /**
+         * Creates an iterator whose values are those from this iterator for which the provided predicate returns true.
+         * @param predicate A function that accepts up to two arguments to be used to test values from the underlying iterator.
+         */
+        filter<S extends T>(
+            predicate: (value: T, index: number) => value is S,
+        ): IteratorObject<S, undefined, unknown>;
+
+        /**
+         * Creates an iterator whose values are those from this iterator for which the provided predicate returns true.
+         * @param predicate A function that accepts up to two arguments to be used to test values from the underlying iterator.
+         */
+        filter(
+            predicate: (value: T, index: number) => unknown,
+        ): IteratorObject<T, undefined, unknown>;
+
+        /**
+         * Creates an iterator whose values are the values from this iterator, stopping once the provided limit is reached.
+         * @param limit The maximum number of values to yield.
+         */
+        take(limit: number): IteratorObject<T, undefined, unknown>;
+
+        /**
+         * Creates an iterator whose values are the values from this iterator after skipping the provided count.
+         * @param count The number of values to drop.
+         */
+        drop(count: number): IteratorObject<T, undefined, unknown>;
+
+        /**
+         * Creates an iterator whose values are the result of applying the callback to the values from this iterator and then flattening the resulting iterators or iterables.
+         * @param callback A function that accepts up to two arguments to be used to transform values from the underlying iterator into new iterators or iterables to be flattened into the result.
+         */
+        flatMap<U>(
+            callback: (
+                value: T,
+                index: number,
+            ) =>
+                | Iterator<U, unknown, undefined>
+                | Iterable<U, unknown, undefined>,
+        ): IteratorObject<U, undefined, unknown>;
+
+        /**
+         * Calls the specified callback function for all the elements in this iterator. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
+         * @param callbackfn A function that accepts up to three arguments. The reduce method calls the callbackfn function one time for each element in the iterator.
+         * @param initialValue If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of a value from the iterator.
+         */
+        reduce(
+            callbackfn: (
+                previousValue: T,
+                currentValue: T,
+                currentIndex: number,
+            ) => T,
+        ): T;
+        reduce(
+            callbackfn: (
+                previousValue: T,
+                currentValue: T,
+                currentIndex: number,
+            ) => T,
+            initialValue: T,
+        ): T;
+
+        /**
+         * Calls the specified callback function for all the elements in this iterator. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
+         * @param callbackfn A function that accepts up to three arguments. The reduce method calls the callbackfn function one time for each element in the iterator.
+         * @param initialValue If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of a value from the iterator.
+         */
+        reduce<U>(
+            callbackfn: (
+                previousValue: U,
+                currentValue: T,
+                currentIndex: number,
+            ) => U,
+            initialValue: U,
+        ): U;
+
+        /**
+         * Creates a new array from the values yielded by this iterator.
+         */
+        toArray(): T[];
+
+        /**
+         * Performs the specified action for each element in the iterator.
+         * @param callbackfn  A function that accepts up to two arguments. forEach calls the callbackfn function one time for each element in the iterator.
+         */
+        forEach(callbackfn: (value: T, index: number) => void): void;
+
+        /**
+         * Determines whether the specified callback function returns true for any element of this iterator.
+         * @param predicate A function that accepts up to two arguments. The some method calls
+         * the predicate function for each element in this iterator until the predicate returns a value
+         * true, or until the end of the iterator.
+         */
+        some(predicate: (value: T, index: number) => unknown): boolean;
+
+        /**
+         * Determines whether all the members of this iterator satisfy the specified test.
+         * @param predicate A function that accepts up to two arguments. The every method calls
+         * the predicate function for each element in this iterator until the predicate returns
+         * false, or until the end of this iterator.
+         */
+        every(predicate: (value: T, index: number) => unknown): boolean;
+
+        /**
+         * Returns the value of the first element in this iterator where predicate is true, and undefined
+         * otherwise.
+         * @param predicate find calls predicate once for each element of this iterator, in
+         * order, until it finds one where predicate returns true. If such an element is found, find
+         * immediately returns that element value. Otherwise, find returns undefined.
+         */
+        find<S extends T>(
+            predicate: (value: T, index: number) => value is S,
+        ): S | undefined;
+        find(predicate: (value: T, index: number) => unknown): T | undefined;
+
+        readonly [Symbol.toStringTag]: string;
+    }
+
+    // Global `IteratorConstructor` interface that can be augmented by polyfills
+    interface IteratorConstructor extends IteratorObjectConstructor {
+        /**
+         * Creates a native iterator from an iterator or iterable object.
+         * Returns its input if the input already inherits from the built-in Iterator class.
+         * @param value An iterator or iterable object to convert a native iterator.
+         */
+        from<T>(
+            value:
+                | Iterator<T, unknown, undefined>
+                | Iterable<T, unknown, undefined>,
+        ): IteratorObject<T, undefined, unknown>;
+    }
+
+    var Iterator: IteratorConstructor;
+}
