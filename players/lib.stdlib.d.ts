@@ -34,6 +34,8 @@ and limitations under the License.
     - lib.es2019.string.d.ts
     - lib.es2019.symbol.d.ts
     - lib.es2020.string.d.ts
+    - lib.es2020.symbol.wellknown.d.ts
+    - lib.es2021.promise.d.ts
     - lib.es2021.string.d.ts
     - lib.es2021.weakref.d.ts
     - lib.es2022.array.d.ts
@@ -3509,6 +3511,44 @@ interface String {
      */
     matchAll(regexp: RegExp): RegExpStringIterator<RegExpExecArray>;
 }
+
+// ---------- lib.es2020.symbol.wellknown.d.ts ---------
+
+interface SymbolConstructor {
+    /**
+     * A regular expression method that matches the regular expression against a string. Called
+     * by the String.prototype.matchAll method.
+     */
+    readonly matchAll: unique symbol;
+}
+
+interface RegExpStringIterator<T>
+    extends IteratorObject<T, BuiltinIteratorReturn, unknown> {
+    [Symbol.iterator](): RegExpStringIterator<T>;
+}
+
+interface RegExp {
+    /**
+     * Matches a string with this regular expression, and returns an iterable of matches
+     * containing the results of that search.
+     * @param string A string to search within.
+     */
+    [Symbol.matchAll](str: string): RegExpStringIterator<RegExpMatchArray>;
+}
+
+// ---------- lib.es2021.promise.d.ts ---------
+
+interface AggregateError extends Error {
+    errors: any[];
+}
+
+interface AggregateErrorConstructor {
+    new (errors: Iterable<any>, message?: string): AggregateError;
+    (errors: Iterable<any>, message?: string): AggregateError;
+    readonly prototype: AggregateError;
+}
+
+declare var AggregateError: AggregateErrorConstructor;
 
 // ---------- lib.es2021.string.d.ts ---------
 
