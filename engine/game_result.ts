@@ -6,8 +6,6 @@ import type { IGameSession } from './game_session.ts';
 import type { IPlayer } from './player.ts';
 
 export const WIN_KIND = {
-    undefined: 'WIN_UNDEFINED',
-
     no_contest: 'WIN_NO_CONTEST',
 
     singular: 'WIN_SINGULAR',
