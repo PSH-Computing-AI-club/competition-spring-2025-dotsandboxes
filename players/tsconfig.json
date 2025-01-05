@@ -25,7 +25,13 @@
         "suppressImplicitAnyIndexErrors": false,
         "useUnknownInCatchVariables": true,
 
+        "noEmit": true,
+
         "noLib": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+
+        "types": [
+            "./lib.standard.d.ts"
+        ]
     }
 }
