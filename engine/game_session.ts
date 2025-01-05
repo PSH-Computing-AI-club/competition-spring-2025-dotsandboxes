@@ -204,7 +204,7 @@ export function makeGameSession(options: IGameSessionOptions): IGameSession {
                 );
 
                 EVENT_TURN_ERROR.dispatch({
-                    error: computeError,
+                    error: error as Error,
                     player: nextPlayer,
                     turnIndex,
                 });

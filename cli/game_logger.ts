@@ -358,12 +358,9 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
     const turnErrorSubscription = gameSession.EVENT_TURN_ERROR
         .subscribe((event) => {
-            const { player, turnIndex } = event;
-            let { error } = event;
+            const { error, player, turnIndex } = event;
 
             const { playerInitial } = player;
-
-            if (error instanceof PlayerComputeThrowError) ({ error } = error);
 
             playerThatErrored = player;
 
