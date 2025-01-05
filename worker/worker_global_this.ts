@@ -36,6 +36,7 @@ export interface IWorkerGlobalThis {
     readonly Array: typeof Array;
     readonly Boolean: typeof Boolean;
     readonly Date: typeof Date;
+    readonly RegExp: typeof RegExp;
     readonly Map: typeof Map;
     readonly Number: typeof Number;
     readonly Object: typeof Object;
@@ -83,6 +84,7 @@ export function makeWorkerGlobalThis(
         Array,
         Boolean,
         Date,
+        RegExp,
         Map,
         Number,
         Object,
