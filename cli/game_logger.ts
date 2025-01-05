@@ -464,11 +464,13 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
                     for (const player of players) {
                         const { playerInitial } = player;
+
+                        const playerIdentifier = player.toString();
                         const score = scores.get(player)!;
 
                         if (winningPlayers.has(player)) {
                             outputLogger.info(
-                                `Player ${playerInitial} has ${score} ${
+                                `Player ${playerInitial} [${playerIdentifier}] has ${score} ${
                                     score > 1 ? 'boxes' : 'box'
                                 } (${
                                     winKind === WIN_KIND.multiple
@@ -478,19 +480,19 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                             );
                         } else if (playerThatErrored === player) {
                             outputLogger.info(
-                                `Player ${playerInitial} has -1 boxes (error).`,
+                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes (error).`,
                             );
                         } else if (playerThatForfeited === player) {
                             outputLogger.info(
-                                `Player ${playerInitial} has -1 boxes (forfeited).`,
+                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes (forfeited).`,
                             );
                         } else if (playerThatTimedout === player) {
                             outputLogger.info(
-                                `Player ${playerInitial} has -1 boxes (timed out).`,
+                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes (timed out).`,
                             );
                         } else {
                             outputLogger.info(
-                                `Player ${playerInitial} has ${score} ${
+                                `Player ${playerInitial} [${playerIdentifier}] has ${score} ${
                                     score > 1 ? 'boxes' : 'box'
                                 } (${
                                     winKind === WIN_KIND.no_contest
