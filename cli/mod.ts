@@ -13,13 +13,13 @@ await new Command()
     .description('Game engine for simulating Dots and Boxes game sessions.')
     .globalType('OutputKind', OUTPUT_KIND_ENUM)
     .globalOption(
+        '--output-file [outputFile:file]',
+        'Determine the file used for output.',
+    )
+    .globalOption(
         '--output-kind [outputKind:OutputKind]',
         'Determine the format used for output.',
         { default: OUTPUT_KIND.human },
-    )
-    .globalOption(
-        '--output-file [outputFile:file]',
-        'Determine the file used for output.',
     )
     .command('simulate', COMMAND_SIMULATE)
     .parse(Deno.args);
