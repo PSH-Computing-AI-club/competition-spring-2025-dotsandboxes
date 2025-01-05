@@ -9,7 +9,7 @@ interface IScriptExports {
     readonly default?: IComputePlayerTurnCallback;
 }
 
-export type IComputePlayerTurnCallback = () => IPlayerMove;
+export type IComputePlayerTurnCallback = () => IPlayerMove | null;
 
 export interface IBundlePlayerScriptOptions {
     readonly root: string | URL;
