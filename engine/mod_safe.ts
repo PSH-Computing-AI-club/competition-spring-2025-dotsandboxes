@@ -1,4 +1,7 @@
+export * from './constant_player.ts';
+export * from './dummy_player.ts';
 export * from './errors.ts';
+export * from './forfeit_player.ts';
 export * from './game_board.ts';
 export * from './game_board_slot.ts';
 export * from './game_result.ts';

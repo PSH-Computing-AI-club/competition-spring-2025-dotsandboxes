@@ -413,6 +413,40 @@ declare namespace Engine {
         gameSession: IGameSession,
         gameBoard: IGameBoard,
     ): IGameResult;
+
+    // ---------- engine/constant_player.ts ----------
+
+    export interface IConstantPlayerOptions extends IPlayerOptions {
+        readonly x: number;
+
+        readonly y: number;
+    }
+
+    export type IConstantPlayer = IPlayer & IConstantPlayerOptions;
+
+    export function makeConstantPlayer(
+        options: IConstantPlayerOptions,
+    ): IConstantPlayer;
+
+    // ---------- engine/dummy_player.ts ----------
+
+    export type IDummyPlayerOptions = IPlayerOptions;
+
+    export type IDummyPlayer = IPlayer;
+
+    export function makeDummyPlayer(
+        options: IDummyPlayerOptions,
+    ): IDummyPlayer;
+
+    // ---------- engine/forfeit_player.ts ----------
+
+    export type IForfeitPlayerOptions = IPlayerOptions;
+
+    export type IForfeitPlayer = IPlayer;
+
+    export function makeForfeitPlayer(
+        options: IForfeitPlayerOptions,
+    ): IForfeitPlayer;
 }
 
 // ---------- worker/game_namespace.ts ----------
