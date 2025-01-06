@@ -6,7 +6,7 @@
         "keyofStringsOnly": false,
         "noErrorTruncation": false,
         "noFallthroughCasesInSwitch": false,
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "noUnusedLocals": false,
         "noUnusedParameters": false,
         "noUncheckedIndexedAccess": false,
