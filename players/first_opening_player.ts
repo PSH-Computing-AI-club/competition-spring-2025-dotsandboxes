@@ -4,17 +4,26 @@ const { SLOT_KIND } = Engine;
 const { board: gameBoard } = Game;
 
 export default (() => {
-    for (const gameBoardSlot of gameBoard.walkSpacers()) {
-        const { slotKind } = gameBoardSlot;
+    const gameBoardSlot = gameBoard
+        .walkSpacers()
+        .filter(
+            (gameBoardSlot) => {
+                const { slotKind } = gameBoardSlot;
 
-        if (slotKind === SLOT_KIND.spacer) {
-            const { x, y } = gameBoardSlot;
+                return slotKind === SLOT_KIND.spacer;
+            },
+        )
+        .take(1)
+        .next()
+        .value ?? null;
 
-            return {
-                x,
-                y,
-            };
-        }
+    if (gameBoardSlot !== null) {
+        const { x, y } = gameBoardSlot;
+
+        return {
+            x,
+            y,
+        };
     }
 
     return null;
