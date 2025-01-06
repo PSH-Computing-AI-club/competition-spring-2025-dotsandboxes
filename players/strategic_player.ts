@@ -6,8 +6,8 @@
 // - Boxes with 2 surrounding lines.
 //
 // Each priority of boxes is checked in order for if there are available boxes
-// matching that priority. Once an available box is found, the player a random
-// available line to draw surrounding that box as its move.
+// matching that priority. Once an available box is found, the player picks
+// a random available line to draw surrounding that box as its move.
 
 const { SLOT_KIND } = Engine;
 const { board: gameBoard } = Game;
