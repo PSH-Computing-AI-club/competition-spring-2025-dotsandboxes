@@ -30,23 +30,25 @@ function findPrioritySpacer(
 
     const priorityBoxSlot = sampleArray(priorityBoxSlots);
 
-    if (priorityBoxSlot === null) return null;
+    if (priorityBoxSlot !== null) {
+        const { grid } = gameBoard;
+        const { x, y } = priorityBoxSlot;
 
-    const { grid } = gameBoard;
-    const { x, y } = priorityBoxSlot;
+        const sideSpacerSlots = [
+            grid[y - 1][x],
+            grid[y + 1][x],
+            grid[y][x - 1],
+            grid[y][x + 1],
+        ].filter((gameBoardSlot) => {
+            const { slotKind } = gameBoardSlot;
 
-    const sideSpacerSlots = [
-        grid[y - 1][x],
-        grid[y + 1][x],
-        grid[y][x - 1],
-        grid[y][x + 1],
-    ].filter((gameBoardSlot) => {
-        const { slotKind } = gameBoardSlot;
+            return slotKind === SLOT_KIND.spacer;
+        });
 
-        return slotKind === SLOT_KIND.spacer;
-    });
+        return sampleArray(sideSpacerSlots);
+    }
 
-    return sampleArray(sideSpacerSlots);
+    return null;
 }
 
 export default (() => {
