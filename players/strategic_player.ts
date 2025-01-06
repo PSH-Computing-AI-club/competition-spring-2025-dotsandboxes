@@ -12,16 +12,12 @@
 const { SLOT_KIND } = Engine;
 const { board: gameBoard } = Game;
 
-function sampleBoardSlots<T extends Engine.IGameBoardSlot>(
-    gameBoardSlots: T[],
-): T | null {
-    const boardSlotIndex = Math.trunc(
-        (gameBoardSlots.length - 1) * Math.random(),
+function sampleArray<T>(array: T[]): T | null {
+    const elementIndex = Math.trunc(
+        (array.length - 1) * Math.random(),
     );
 
-    const gameBoardSlot = gameBoardSlots[boardSlotIndex];
-
-    return gameBoardSlot ?? null;
+    return array[elementIndex] ?? null;
 }
 
 function prioritizeBoxSlot(
@@ -38,7 +34,7 @@ function prioritizeBoxSlot(
         },
     );
 
-    const priorityBoxSlot = sampleBoardSlots(priorityBoxSlots);
+    const priorityBoxSlot = sampleArray(priorityBoxSlots);
 
     if (priorityBoxSlot === null) return null;
 
@@ -56,7 +52,7 @@ function prioritizeBoxSlot(
         return slotKind === SLOT_KIND.spacer;
     });
 
-    return sampleBoardSlots(sideSpacerSlots);
+    return sampleArray(sideSpacerSlots);
 }
 
 export default (() => {
