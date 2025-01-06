@@ -138,6 +138,8 @@ export interface IGameLogger {
 
     endSession(gameResult: IGameResult): void;
 
+    initializePlayerError(player: IPlayer, error: Error): void;
+
     startSession(): void;
 }
 
@@ -528,6 +530,35 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
                     break;
                 }
+            }
+        },
+
+        initializePlayerError(player, error) {
+            const { message, name, stack } = error;
+            const { playerInitial } = player;
+
+            playersThatErrored.add(player);
+
+            switch (outputLogger.loggerName) {
+                case OUTPUT_KIND.human:
+                    outputLogger.warn(
+                        `Player ${playerInitial} had an error while initializing:`,
+                    );
+
+                    if (stack) outputLogger.error(stack);
+                    else outputLogger.error(`${name}: ${message}`);
+
+                    break;
+
+                case OUTPUT_KIND.jsonl:
+                    logGameRecord('info', MESSAGE_KIND.playerError, {
+                        errorName: name,
+                        errorMessage: message,
+                        errorStack: stack,
+                        playerInitial,
+                    });
+
+                    break;
             }
         },
 

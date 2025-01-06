@@ -68,47 +68,62 @@ export async function runGameLoop(options: IRunGameLoopOptions): Promise<void> {
         seed,
     });
 
-    await Promise.all(
-        players.map((player) =>
-            player.initialize({
-                gameBoard,
-                gameSession,
-            })
-        ),
-    );
+    let hadPlayerError: boolean = false;
 
     gameLogger.startSession();
 
-    while (gameBoard.remainingBoxes > 0) {
-        let playerTurn: IPlayerTurn | null = null;
+    await Promise.all(
+        players.map(async (player) => {
+            try {
+                await player.initialize({
+                    gameBoard,
+                    gameSession,
+                });
+            } catch (error) {
+                hadPlayerError = true;
 
-        try {
-            playerTurn = await gameSession.computeNextPlayerTurn();
-        } catch (error) {
-            if (
-                error instanceof PlayerComputeThrowError ||
-                error instanceof PlayerForfeitError ||
-                error instanceof PlayerTimeoutError
-            ) {
-                break;
+                gameLogger.initializePlayerError(
+                    player,
+                    // **HACK:** This could maybe not be an `Error` instance... but
+                    // surely who would throw anything but!?
+                    error as Error,
+                );
+            }
+        }),
+    );
+
+    if (!hadPlayerError) {
+        while (gameBoard.remainingBoxes > 0) {
+            let playerTurn: IPlayerTurn | null = null;
+
+            try {
+                playerTurn = await gameSession.computeNextPlayerTurn();
+            } catch (error) {
+                if (
+                    error instanceof PlayerComputeThrowError ||
+                    error instanceof PlayerForfeitError ||
+                    error instanceof PlayerTimeoutError
+                ) {
+                    break;
+                }
+
+                throw error;
             }
 
-            throw error;
-        }
+            let capturesMade: number | null = null;
 
-        let capturesMade: number | null = null;
+            try {
+                capturesMade = gameSession.applyPlayerTurn(playerTurn);
+            } catch (error) {
+                if (error instanceof InvalidPlacementError) {
+                    break;
+                }
 
-        try {
-            capturesMade = gameSession.applyPlayerTurn(playerTurn);
-        } catch (error) {
-            if (error instanceof InvalidPlacementError) {
-                break;
+                throw error;
             }
 
-            throw error;
+            gameSession.shiftTurnOrder(capturesMade);
         }
-
-        gameSession.shiftTurnOrder(capturesMade);
     }
 
     const gameResult = computeGameResultFromGame(
