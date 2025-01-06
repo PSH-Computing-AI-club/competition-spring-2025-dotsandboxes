@@ -65,6 +65,7 @@ export async function runGameLoop(options: IRunGameLoopOptions): Promise<void> {
     const gameLogger = makeGameLogger({
         gameBoard,
         gameSession,
+        seed,
     });
 
     await Promise.all(

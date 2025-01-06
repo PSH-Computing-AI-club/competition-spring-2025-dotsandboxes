@@ -131,6 +131,8 @@ export interface IGameLoggerOptions {
     readonly gameBoard: IGameBoard;
 
     readonly gameSession: IGameSession;
+
+    readonly seed: number;
 }
 
 export interface IGameLogger extends IGameLoggerOptions {
@@ -142,7 +144,7 @@ export interface IGameLogger extends IGameLoggerOptions {
 }
 
 export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
-    const { gameBoard, gameSession } = options;
+    const { gameBoard, gameSession, seed } = options;
     const outputLogger = getOutputLogger();
 
     const playerComputeDurations = new Map<IPlayer, number[]>(
@@ -441,6 +443,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
     return {
         gameBoard,
         gameSession,
+        seed,
 
         destroy() {
             appliedCaptureSubscription.destroy();
@@ -544,15 +547,11 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                     const visualizedGameBoard = gameBoard.toString();
 
                     outputLogger.info(
-                        `Simulating Dots and Boxes game session on a ${rows}x${columns} game board:`,
+                        'Simulating Dots and Boxes game session.\n',
                     );
 
-                    outputLogger.info('\n' + visualizedGameBoard + '\n');
-                    outputLogger.info(
-                        'The following players are participating:',
-                    );
-
-                    outputLogger.info('\n');
+                    outputLogger.info(`Seed: ${seed}`);
+                    outputLogger.info('Players:\n');
 
                     for (const player of players) {
                         const { playerInitial } = player;
@@ -563,7 +562,11 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                         );
                     }
 
-                    outputLogger.info('\n');
+                    outputLogger.info('');
+
+                    outputLogger.info(`${columns}x${rows} Game Board:`);
+                    outputLogger.info('\n' + visualizedGameBoard + '\n');
+
                     break;
                 }
 
