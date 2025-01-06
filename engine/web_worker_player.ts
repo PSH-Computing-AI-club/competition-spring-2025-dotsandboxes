@@ -7,7 +7,11 @@ import type { IWorkerAPI } from '../worker/mod.ts';
 import { bundlePlayerScript } from '../worker/mod.ts';
 
 import type { IGameBoard } from './game_board.ts';
-import type { IGameSession, ITurnMoveEvent } from './game_session.ts';
+import type {
+    IGameSession,
+    ITurnMoveEvent,
+    ITurnStartEvent,
+} from './game_session.ts';
 import type { IPlayer, IPlayerConstructor, IPlayerOptions } from './player.ts';
 
 const { AlreadyExists, BadResource } = Deno.errors;
@@ -33,9 +37,13 @@ export const makeWebWorkerPlayer =
         const { filePath, playerInitial, seed } = options;
 
         let remote: Remote<IWorkerAPI> | null = null;
+        let worker: Worker | null = null;
+
         let turnMoveSubscription: IEventSubscription<ITurnMoveEvent> | null =
             null;
-        let worker: Worker | null = null;
+
+        let turnStartSubscription: IEventSubscription<ITurnStartEvent> | null =
+            null;
 
         function onTurnMove(event: ITurnMoveEvent): void {
             if (!remote) {
@@ -54,6 +62,22 @@ export const makeWebWorkerPlayer =
             });
         }
 
+        function onTurnStart(event: ITurnStartEvent): void {
+            if (!remote) {
+                throw new BadResource(
+                    "bad dispatch to 'onTurnStart' (worker RPC wrapper was not previously initialized)",
+                );
+            }
+
+            const { player, turnIndex } = event;
+            const { playerInitial } = player;
+
+            remote.onTurnStart({
+                playerInitial,
+                turnIndex,
+            });
+        }
+
         return {
             playerInitial,
             seed,
@@ -66,11 +90,15 @@ export const makeWebWorkerPlayer =
                 }
 
                 turnMoveSubscription!.destroy();
+                turnStartSubscription!.destroy();
+
                 await remote!.destroy();
                 worker.terminate();
 
-                remote = null;
                 turnMoveSubscription = null;
+                turnStartSubscription = null;
+
+                remote = null;
                 worker = null;
             },
 
@@ -118,9 +146,11 @@ export const makeWebWorkerPlayer =
                     rows,
                 });
 
-                turnMoveSubscription = gameSession.EVENT_TURN_MOVE.subscribe(
-                    onTurnMove,
-                );
+                turnMoveSubscription = gameSession
+                    .EVENT_TURN_MOVE.subscribe(onTurnMove);
+
+                turnStartSubscription = gameSession
+                    .EVENT_TURN_START.subscribe(onTurnStart);
             },
 
             computePlayerMove() {

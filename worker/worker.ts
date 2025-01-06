@@ -47,6 +47,12 @@ export interface IOnTurnMoveOptions {
     readonly turnIndex: number;
 }
 
+export interface IOnTurnStartOptions {
+    readonly playerInitial: string;
+
+    readonly turnIndex: number;
+}
+
 export interface IWorkerAPI {
     computePlayerMove(): Promise<IPlayerMove | null> | IPlayerMove | null;
 
@@ -55,12 +61,12 @@ export interface IWorkerAPI {
     initialize(options: IInitializeOptions): Promise<void>;
 
     onTurnMove(options: IOnTurnMoveOptions): void;
+
+    onTurnStart(options: IOnTurnStartOptions): void;
 }
 
 export const WORKER_API = {
     onTurnMove(options) {
-        // **TODO:** Handle turn rotation.
-
         const { playerInitial, playerMove, turnIndex } = options;
         const { session: gameSession } = globalThis!.Game;
 
@@ -72,6 +78,18 @@ export const WORKER_API = {
         });
 
         gameSession.applyPlayerTurn(playerTurn);
+    },
+
+    onTurnStart(options) {
+        const { playerInitial, turnIndex } = options;
+        const { session: gameSession } = globalThis!.Game;
+
+        const player = playerLookup![playerInitial]!;
+
+        gameSession.EVENT_TURN_START.dispatch({
+            player,
+            turnIndex,
+        });
     },
 
     computePlayerMove() {
