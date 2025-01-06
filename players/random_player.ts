@@ -1,15 +1,9 @@
 // Random Player randomly selects from a pool of available lines to draw.
 
+import { sampleArray } from './common.ts';
+
 const { SLOT_KIND } = Engine;
 const { board: gameBoard } = Game;
-
-function sampleArray<T>(array: T[]): T | null {
-    const elementIndex = Math.trunc(
-        (array.length - 1) * Math.random(),
-    );
-
-    return array[elementIndex] ?? null;
-}
 
 export default (() => {
     const availableSpacers = gameBoard

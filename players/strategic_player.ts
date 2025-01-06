@@ -9,16 +9,10 @@
 // matching that priority. Once an available box is found, the player picks
 // a random available line to draw surrounding that box as its move.
 
+import { sampleArray } from './common.ts';
+
 const { SLOT_KIND } = Engine;
 const { board: gameBoard } = Game;
-
-function sampleArray<T>(array: T[]): T | null {
-    const elementIndex = Math.trunc(
-        (array.length - 1) * Math.random(),
-    );
-
-    return array[elementIndex] ?? null;
-}
 
 function findPrioritySpacer(
     gameBoardSlots: Engine.IBoxBoardSlot[],
