@@ -20,7 +20,7 @@ function sampleArray<T>(array: T[]): T | null {
     return array[elementIndex] ?? null;
 }
 
-function prioritizeBoxSlot(
+function findPrioritySpacer(
     gameBoardSlots: Engine.IBoxBoardSlot[],
     ...priorityLineCounts: number[]
 ): Engine.IGameBoardSlot | null {
@@ -67,9 +67,9 @@ export default (() => {
         )
         .toArray();
 
-    const gameBoardSlot = prioritizeBoxSlot(availableSpacers, 3) ??
-        prioritizeBoxSlot(availableSpacers, 1, 0) ??
-        prioritizeBoxSlot(availableSpacers, 2);
+    const gameBoardSlot = findPrioritySpacer(availableSpacers, 3) ??
+        findPrioritySpacer(availableSpacers, 1, 0) ??
+        findPrioritySpacer(availableSpacers, 2);
 
     if (gameBoardSlot !== null) {
         const { x, y } = gameBoardSlot;
