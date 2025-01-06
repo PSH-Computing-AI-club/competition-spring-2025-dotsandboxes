@@ -67,32 +67,12 @@ export default (() => {
         )
         .toArray();
 
-    const firstPrioritySpacer = prioritizeBoxSlot(availableSpacers, 3);
+    const gameBoardSlot = prioritizeBoxSlot(availableSpacers, 3) ??
+        prioritizeBoxSlot(availableSpacers, 1, 0) ??
+        prioritizeBoxSlot(availableSpacers, 2);
 
-    if (firstPrioritySpacer !== null) {
-        const { x, y } = firstPrioritySpacer;
-
-        return {
-            x,
-            y,
-        };
-    }
-
-    const secondPrioritySpacer = prioritizeBoxSlot(availableSpacers, 1, 0);
-
-    if (secondPrioritySpacer !== null) {
-        const { x, y } = secondPrioritySpacer;
-
-        return {
-            x,
-            y,
-        };
-    }
-
-    const thirdPrioritySpacer = prioritizeBoxSlot(availableSpacers, 2);
-
-    if (thirdPrioritySpacer !== null) {
-        const { x, y } = thirdPrioritySpacer;
+    if (gameBoardSlot !== null) {
+        const { x, y } = gameBoardSlot;
 
         return {
             x,
