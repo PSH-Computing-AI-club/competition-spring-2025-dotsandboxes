@@ -3,6 +3,14 @@
 const { SLOT_KIND } = Engine;
 const { board: gameBoard } = Game;
 
+function sampleArray<T>(array: T[]): T | null {
+    const elementIndex = Math.trunc(
+        (array.length - 1) * Math.random(),
+    );
+
+    return array[elementIndex] ?? null;
+}
+
 export default (() => {
     const availableSpacers = Array.from(gameBoard.walkSpacers())
         .filter(
@@ -13,13 +21,9 @@ export default (() => {
             },
         );
 
-    const boardSlotIndex = Math.trunc(
-        (availableSpacers.length - 1) * Math.random(),
-    );
+    const gameBoardSlot = sampleArray(availableSpacers);
 
-    const gameBoardSlot = availableSpacers[boardSlotIndex];
-
-    if (gameBoardSlot !== undefined) {
+    if (gameBoardSlot !== null) {
         const { x, y } = gameBoardSlot;
 
         return {
