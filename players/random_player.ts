@@ -12,14 +12,16 @@ function sampleArray<T>(array: T[]): T | null {
 }
 
 export default (() => {
-    const availableSpacers = Array.from(gameBoard.walkSpacers())
+    const availableSpacers = gameBoard
+        .walkSpacers()
         .filter(
             (gameBoardSlot) => {
                 const { slotKind } = gameBoardSlot;
 
                 return slotKind === SLOT_KIND.spacer;
             },
-        );
+        )
+        .toArray();
 
     const gameBoardSlot = sampleArray(availableSpacers);
 
