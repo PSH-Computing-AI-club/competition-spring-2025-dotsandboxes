@@ -61,7 +61,7 @@ export default () => {
         .toArray();
 
     const gameBoardSlot = findPrioritySpacer(availableSpacers, 3) ??
-        findPrioritySpacer(availableSpacers, 1, 0) ??
+        findPrioritySpacer(availableSpacers, 0, 1) ??
         findPrioritySpacer(availableSpacers, 2);
 
     if (gameBoardSlot !== null) {
