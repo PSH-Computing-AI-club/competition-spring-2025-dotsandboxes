@@ -1,9 +1,7 @@
 // Common utility functions are found here.
 
 export function sampleArray<T>(array: T[]): T | null {
-    const elementIndex = Math.trunc(
-        (array.length - 1) * Math.random(),
-    );
+    const elementIndex = Math.trunc(Math.random() * array.length);
 
     return array[elementIndex] ?? null;
 }
