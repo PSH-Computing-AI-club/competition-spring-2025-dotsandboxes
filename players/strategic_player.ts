@@ -56,7 +56,8 @@ function prioritizeBoxSlot(
 }
 
 export default (() => {
-    const availableSpacers = gameBoard.walkBoxes()
+    const availableSpacers = gameBoard
+        .walkBoxes()
         .filter(
             (gameBoardSlot) => {
                 const { slotKind } = gameBoardSlot;
