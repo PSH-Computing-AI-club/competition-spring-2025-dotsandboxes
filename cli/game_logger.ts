@@ -574,7 +574,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                         'Simulating Dots and Boxes game session.\n',
                     );
 
-                    outputLogger.info(`Seed: ${seed}`);
+                    outputLogger.info(`Seed: ${seed}\n`);
                     outputLogger.info('Players:\n');
 
                     for (const player of players) {
