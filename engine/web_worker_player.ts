@@ -83,23 +83,25 @@ export const makeWebWorkerPlayer =
             seed,
 
             async destroy() {
-                if (!worker) {
-                    throw new BadResource(
-                        "bad dispatch to 'IWebWorkerPlayer.destroy' (worker was not previously initialized)",
-                    );
+                if (turnMoveSubscription) {
+                    turnMoveSubscription.destroy();
+                    turnMoveSubscription = null;
                 }
 
-                turnMoveSubscription!.destroy();
-                turnStartSubscription!.destroy();
+                if (turnStartSubscription) {
+                    turnStartSubscription.destroy();
+                    turnStartSubscription = null;
+                }
 
-                await remote!.destroy();
-                worker.terminate();
+                if (remote) {
+                    await remote.destroy();
+                    remote = null;
+                }
 
-                turnMoveSubscription = null;
-                turnStartSubscription = null;
-
-                remote = null;
-                worker = null;
+                if (worker) {
+                    worker.terminate();
+                    worker = null;
+                }
             },
 
             async initialize(options) {
