@@ -1,17 +1,11 @@
 {
     "compilerOptions": {
-        "allowImportingTsExtensions": true,
         "allowUnreachableCode": false,
         "allowUnusedLabels": false,
         "checkJs": true,
         "keyofStringsOnly": false,
         "noErrorTruncation": false,
         "noFallthroughCasesInSwitch": false,
-        "noImplicitAny": true,
-        "noImplicitOverride": true,
-        "noImplicitReturns": false,
-        "noImplicitThis": true,
-        "noStrictGenericChecks": false,
         "noUnusedLocals": false,
         "noUnusedParameters": false,
         "noUncheckedIndexedAccess": false,
