@@ -31,7 +31,7 @@ function findPrioritySpacer(gameBoardSlots, ...priorityLineCounts) {
         const { grid } = gameBoard;
         const { x, y } = priorityBoxSlot;
 
-        const sideSpacerSlots = [
+        const adjacentSpacerSlots = [
             grid[y - 1][x],
             grid[y + 1][x],
             grid[y][x - 1],
@@ -42,7 +42,7 @@ function findPrioritySpacer(gameBoardSlots, ...priorityLineCounts) {
             return slotKind === SLOT_KIND.spacer;
         });
 
-        return sampleArray(sideSpacerSlots);
+        return sampleArray(adjacentSpacerSlots);
     }
 
     return null;
