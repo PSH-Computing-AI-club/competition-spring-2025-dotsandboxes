@@ -135,7 +135,7 @@ export interface IGameLoggerOptions {
     readonly seed: number;
 }
 
-export interface IGameLogger extends IGameLoggerOptions {
+export interface IGameLogger {
     destroy(): void;
 
     endSession(gameResult: IGameResult): void;
@@ -441,10 +441,6 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
         });
 
     return {
-        gameBoard,
-        gameSession,
-        seed,
-
         destroy() {
             appliedCaptureSubscription.destroy();
             placedLineSubscription.destroy();
