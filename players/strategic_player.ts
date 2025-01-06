@@ -23,7 +23,7 @@ function sampleArray<T>(array: T[]): T | null {
 function findPrioritySpacer(
     gameBoardSlots: Engine.IBoxBoardSlot[],
     ...priorityLineCounts: number[]
-): Engine.IGameBoardSlot | null {
+): Engine.ISpacerBoardSlot | null {
     const priorityBoxSlots = gameBoardSlots.filter(
         (gameBoardSlot) => {
             const { x, y } = gameBoardSlot;
