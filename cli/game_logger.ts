@@ -20,6 +20,8 @@ export const MESSAGE_KIND = {
 
     placedLine: 'MESSAGE_PLACED_LINE',
 
+    playerError: 'MESSAGE_PLAYER_ERROR',
+
     playerForfeit: 'MESSAGE_PLAYER_FORFEIT',
 
     playerTimeout: 'MESSAGE_PLAYER_TIMEOUT',
@@ -29,8 +31,6 @@ export const MESSAGE_KIND = {
     sessionStart: 'MESSAGE_SESSION_START',
 
     turnEnd: 'MESSAGE_TURN_END',
-
-    turnError: 'MESSAGE_TURN_ERROR',
 
     turnMove: 'MESSAGE_TURN_MOVE',
 
@@ -53,6 +53,16 @@ export interface IPlacedLineArgs {
     readonly x: number;
 
     readonly y: number;
+}
+
+export interface IPlayerErrorArgs {
+    readonly playerInitial: string;
+
+    readonly errorName: string;
+
+    readonly errorMessage: string;
+
+    readonly errorStack?: string;
 }
 
 export interface IPlayerForfeitArgs {
@@ -87,18 +97,6 @@ export interface ITurnEndArgs {
     readonly turnIndex: number;
 }
 
-export interface ITurnErrorArgs {
-    readonly playerInitial: string;
-
-    readonly errorName: string;
-
-    readonly errorMessage: string;
-
-    readonly errorStack?: string;
-
-    readonly turnIndex: number;
-}
-
 export interface ITurnMoveArgs {
     readonly playerInitial: string;
 
@@ -123,7 +121,7 @@ export type IGameLogArgs =
     | ISessionEndArgs
     | ISessionStartArgs
     | ITurnEndArgs
-    | ITurnErrorArgs
+    | IPlayerErrorArgs
     | ITurnMoveArgs
     | ITurnStartArgs;
 
@@ -156,7 +154,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
     let currentTurnMoveTimestamp: number | null = null;
     let currentTurnStartTimestamp: number | null = null;
 
-    let playerThatErrored: IPlayer | null = null;
+    const playersThatErrored: Set<IPlayer> = new Set();
     let playerThatForfeited: IPlayer | null = null;
     let playerThatTimedout: IPlayer | null = null;
 
@@ -169,6 +167,11 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
         levelName: LevelName,
         messageKind: typeof MESSAGE_KIND['placedLine'],
         args: IPlacedLineArgs,
+    ): void;
+    function logGameRecord(
+        levelName: LevelName,
+        messageKind: typeof MESSAGE_KIND['playerError'],
+        args: IPlayerErrorArgs,
     ): void;
     function logGameRecord(
         levelName: LevelName,
@@ -194,11 +197,6 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
         levelName: LevelName,
         messageKind: typeof MESSAGE_KIND['turnEnd'],
         args: ITurnEndArgs,
-    ): void;
-    function logGameRecord(
-        levelName: LevelName,
-        messageKind: typeof MESSAGE_KIND['turnError'],
-        args: ITurnErrorArgs,
     ): void;
     function logGameRecord(
         levelName: LevelName,
@@ -360,11 +358,11 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
 
     const turnErrorSubscription = gameSession.EVENT_TURN_ERROR
         .subscribe((event) => {
-            const { error, player, turnIndex } = event;
+            const { error, player } = event;
 
             const { playerInitial } = player;
 
-            playerThatErrored = player;
+            playersThatErrored.add(player);
 
             const { message, name, stack } = error;
 
@@ -380,12 +378,11 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                     break;
 
                 case OUTPUT_KIND.jsonl:
-                    logGameRecord('info', MESSAGE_KIND.turnError, {
+                    logGameRecord('info', MESSAGE_KIND.playerError, {
                         errorName: name,
                         errorMessage: message,
                         errorStack: stack,
                         playerInitial,
-                        turnIndex,
                     });
 
                     break;
@@ -486,7 +483,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                                         : 'win'
                                 }).`,
                             );
-                        } else if (playerThatErrored === player) {
+                        } else if (playersThatErrored.has(player)) {
                             outputLogger.info(
                                 `Player ${playerInitial} [${playerIdentifier}] has -1 boxes w/ an average compute time of ${averageComputeDuration}ms (error).`,
                             );
