@@ -3,7 +3,7 @@
         "allowImportingTsExtensions": true,
         "allowUnreachableCode": false,
         "allowUnusedLabels": false,
-        "checkJs": false,
+        "checkJs": true,
         "keyofStringsOnly": false,
         "noErrorTruncation": false,
         "noFallthroughCasesInSwitch": false,
