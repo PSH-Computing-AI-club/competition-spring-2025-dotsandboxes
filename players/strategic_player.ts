@@ -56,13 +56,15 @@ function prioritizeBoxSlot(
 }
 
 export default (() => {
-    const availableSpacers = Array.from(gameBoard.walkBoxes()).filter(
-        (gameBoardSlot) => {
-            const { slotKind } = gameBoardSlot;
+    const availableSpacers = gameBoard.walkBoxes()
+        .filter(
+            (gameBoardSlot) => {
+                const { slotKind } = gameBoardSlot;
 
-            return slotKind === SLOT_KIND.box;
-        },
-    );
+                return slotKind === SLOT_KIND.box;
+            },
+        )
+        .toArray();
 
     const firstPrioritySpacer = prioritizeBoxSlot(availableSpacers, 3);
 
