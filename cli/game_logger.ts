@@ -481,33 +481,33 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                             outputLogger.info(
                                 `Player ${playerInitial} [${playerIdentifier}] has ${score} ${
                                     score > 1 ? 'boxes' : 'box'
-                                } (${
+                                } w/ an average compute time of ${averageComputeDuration}ms (${
                                     winKind === WIN_KIND.multiple
                                         ? 'tie'
                                         : 'win'
-                                }) w/ an average compute time of ${averageComputeDuration}ms.`,
+                                }).`,
                             );
                         } else if (playerThatErrored === player) {
                             outputLogger.info(
-                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes (error) w/ an average compute time of ${averageComputeDuration}ms.`,
+                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes w/ an average compute time of ${averageComputeDuration}ms (error).`,
                             );
                         } else if (playerThatForfeited === player) {
                             outputLogger.info(
-                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes (forfeited) w/ an average compute time of ${averageComputeDuration}ms.`,
+                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes w/ an average compute time of ${averageComputeDuration}ms (forfeited).`,
                             );
                         } else if (playerThatTimedout === player) {
                             outputLogger.info(
-                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes (timed out) w/ an average compute time of ${averageComputeDuration}ms.`,
+                                `Player ${playerInitial} [${playerIdentifier}] has -1 boxes w/ an average compute time of ${averageComputeDuration}ms (timed out).`,
                             );
                         } else {
                             outputLogger.info(
                                 `Player ${playerInitial} [${playerIdentifier}] has ${score} ${
                                     score > 1 ? 'boxes' : 'box'
-                                } (${
+                                } w/ an average compute time of ${averageComputeDuration}ms (${
                                     winKind === WIN_KIND.no_contest
                                         ? 'no contest'
                                         : 'lost'
-                                }) w/ an average compute time of ${averageComputeDuration}ms.`,
+                                }).`,
                             );
                         }
                     }
