@@ -1,5 +1,6 @@
-import { createContext, Script } from 'node:vm';
 import { bundle } from '@deno/emit';
+import { createContext, Script } from 'node:vm';
+import { fromFileUrl } from '@std/path';
 
 import { IPlayerMove } from '../engine/mod.ts';
 
@@ -18,8 +19,14 @@ export interface IBundlePlayerScriptOptions {
     readonly root: string | URL;
 }
 
+export interface IBundlePlayerScriptResult {
+    readonly bundle: string;
+
+    readonly sourceMap: string;
+}
+
 export interface IEvaluatePlayerScriptOptions {
-    readonly code: string;
+    readonly bundle: string;
 
     readonly globalThis: IWorkerGlobalThis;
 
@@ -28,33 +35,45 @@ export interface IEvaluatePlayerScriptOptions {
 
 export async function bundlePlayerScript(
     options: IBundlePlayerScriptOptions,
-): Promise<string> {
+): Promise<IBundlePlayerScriptResult> {
     const { root } = options;
 
-    const { code } = await bundle(root, {
+    const { code, map } = await bundle(root, {
         allowRemote: false,
         minify: true,
         type: 'classic',
 
         compilerOptions: {
-            inlineSourceMap: true,
-            inlineSources: true,
+            sourceMap: true,
         },
     });
 
-    return code;
+    const sourceMap = JSON.parse(map!);
+
+    sourceMap.sources = sourceMap
+        .sources
+        .map((fileURL: string) => {
+            const url = new URL(fileURL);
+
+            return fromFileUrl(url);
+        });
+
+    return {
+        bundle: code,
+        sourceMap: JSON.stringify(sourceMap),
+    };
 }
 
 export async function evaluatePlayerScript(
     options: IEvaluatePlayerScriptOptions,
 ): Promise<IComputePlayerMoveCallback | null> {
-    const { code, globalThis, timeout } = options;
+    const { bundle, globalThis, timeout } = options;
 
     const context = createContext(globalThis, {
         name: 'IWorkerGlobalThis',
     }) as IWorkerGlobalThis;
 
-    const script = new Script(code, {
+    const script = new Script(bundle, {
         filename: 'player.script.vm',
     });
 

@@ -1,4 +1,4 @@
-import { basename, dirname, extname } from '@std/path';
+import { basename, dirname, extname, resolve } from '@std/path';
 import type { Remote } from '@workers/caplink';
 import { wrap } from '@workers/caplink';
 
@@ -34,7 +34,8 @@ export interface IWebWorkerPlayer extends IPlayer {
 
 export const makeWebWorkerPlayer =
     ((options: IWebWorkerPlayerOptions): IWebWorkerPlayer => {
-        const { filePath, playerInitial, seed } = options;
+        const { playerInitial, seed } = options;
+        const filePath = resolve(options.filePath);
 
         let remote: Remote<IWorkerAPI> | null = null;
         let worker: Worker | null = null;
@@ -113,7 +114,7 @@ export const makeWebWorkerPlayer =
 
                 const { gameBoard, gameSession } = options;
 
-                const code = await bundlePlayerScript({
+                const { bundle, sourceMap } = await bundlePlayerScript({
                     root: filePath,
                 });
 
@@ -140,11 +141,13 @@ export const makeWebWorkerPlayer =
                 remote = wrap<IWorkerAPI>(worker);
 
                 await remote.initialize({
-                    code,
+                    bundle,
                     columns,
+                    filePath,
                     playerInitial,
                     playerInitials,
                     seed,
+                    sourceMap,
                     rows,
                 });
 

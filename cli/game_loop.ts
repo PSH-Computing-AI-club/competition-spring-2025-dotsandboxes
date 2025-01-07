@@ -1,5 +1,3 @@
-import { resolve } from '@std/path';
-
 import type { IPlayerTurn } from '../engine/mod.ts';
 import {
     computeGameResultFromGame,
@@ -41,8 +39,6 @@ export async function runGameLoop(options: IRunGameLoopOptions): Promise<void> {
         const playerInitial = String.fromCharCode(
             UTF16_CODE_LETTER_A + index,
         );
-
-        filePath = resolve(filePath);
 
         return makeWebWorkerPlayer({
             filePath,

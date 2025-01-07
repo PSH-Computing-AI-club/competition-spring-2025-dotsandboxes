@@ -1,6 +1,7 @@
 /// <reference no-default-lib="true" />
 /// <reference lib="deno.worker" />
 
+import { install } from 'npm:source-map-support';
 import { expose } from '@workers/caplink';
 
 import type { IPlayer, IPlayerMove } from '../engine/mod.ts';
@@ -21,20 +22,43 @@ import { makeWorkerGlobalThis } from './worker_global_this.ts';
 
 let computePlayerMoveCallback: IComputePlayerMoveCallback | null = null;
 
+let filePath: string | null = null;
+
 let globalThis: IWorkerGlobalThis | null = null;
 
 let playerLookup: Record<string, IPlayer | undefined> | null = null;
 
+let sourceMap: string | null = null;
+
+install({
+    environment: 'browser',
+
+    retrieveSourceMap(source: string) {
+        if (source === 'player.script.vm') {
+            return {
+                url: filePath,
+                map: sourceMap,
+            };
+        }
+
+        return null;
+    },
+});
+
 export interface IInitializeOptions {
-    readonly code: string;
+    readonly bundle: string;
 
     readonly columns: number;
+
+    readonly filePath: string;
 
     readonly playerInitial: string;
 
     readonly playerInitials: string[];
 
     readonly seed: number;
+
+    readonly sourceMap: string;
 
     readonly rows: number;
 }
@@ -98,13 +122,23 @@ export const WORKER_API = {
 
     destroy() {
         computePlayerMoveCallback = null;
+        filePath = null;
         globalThis = null;
         playerLookup = null;
+        sourceMap = null;
     },
 
     async initialize(options) {
-        const { code, columns, playerInitial, playerInitials, rows, seed } =
-            options;
+        const {
+            bundle,
+            columns,
+            playerInitial,
+            playerInitials,
+            rows,
+            seed,
+        } = options;
+
+        ({ filePath, sourceMap } = options);
 
         const players: IPlayer[] = playerInitials.map((playerInitial) =>
             makeDummyPlayer({ playerInitial, seed })
@@ -132,7 +166,7 @@ export const WORKER_API = {
         });
 
         computePlayerMoveCallback = await evaluatePlayerScript({
-            code,
+            bundle,
             globalThis,
             timeout: 1000,
         });
