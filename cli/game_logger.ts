@@ -374,8 +374,8 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                         `Player ${playerInitial} had an error while computing or performing a move:`,
                     );
 
-                    if (stack) outputLogger.error(stack);
-                    else outputLogger.error(`${name}: ${message}`);
+                    if (stack) outputLogger.error(`\n${stack}\n`);
+                    else outputLogger.error(`\n${name}: ${message}\n`);
 
                     break;
 
@@ -545,8 +545,8 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                         `Player ${playerInitial} had an error while initializing:`,
                     );
 
-                    if (stack) outputLogger.error(stack);
-                    else outputLogger.error(`${name}: ${message}`);
+                    if (stack) outputLogger.error(`\n${stack}\n`);
+                    else outputLogger.error(`\n${name}: ${message}\n`);
 
                     break;
 
