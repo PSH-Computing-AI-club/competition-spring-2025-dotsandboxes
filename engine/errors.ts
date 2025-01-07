@@ -53,6 +53,7 @@ export class InvalidQueryError extends Error {
         this.y = y;
     }
 }
+
 export class NoNextPlayerError extends Error {
     constructor(message: string, options?: ErrorOptions) {
         super(message, options);
