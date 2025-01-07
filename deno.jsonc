@@ -25,10 +25,6 @@
 
     "lint": {
         "include": ["./"],
-        "exclude": [
-            "./players/lib.dotsandboxes.d.ts",
-            "./players/lib.stdlib.d.ts"
-        ],
 
         "rules": {
             "tags": ["recommended"],
@@ -36,11 +32,15 @@
         }
     },
 
+    "exclude": [
+        "./players/lib.stdlib.d.ts"
+    ],
+
     "tasks": {
         "check": "deno task check:format;deno task check:types;deno task check:lint",
         "check:format": "deno fmt --check ./",
         "check:lint": "deno lint ./",
-        "check:types": "deno check ./.scripts/modules.ts",
+        "check:types": "deno check ./",
         "docs:build": "mkdir -p ./dist;deno doc --html --name=\"Dots and Boxes Player Scripting Environment API\" --output=./dist/docs ./players/lib.dotsandboxes.d.ts",
         "compile:linux": "deno compile --frozen --cached-only --allow-env --allow-net --allow-read --allow-write --no-prompt --include ./worker/worker.ts -o ./dist/bin/dotsandboxes-linux ./cli/mod.ts",
         "compile:macos": "deno compile  --frozen --cached-only --allow-env --allow-net --allow-read --allow-write --no-prompt --include ./worker/worker.ts -o ./dist/bin/dotsandboxes-macos ./cli/mod.ts",
