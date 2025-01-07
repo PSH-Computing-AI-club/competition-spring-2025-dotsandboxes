@@ -26,7 +26,8 @@
         "jsr:@std/text@~1.0.7": "1.0.9",
         "jsr:@workers/caplink@^0.0.5": "0.0.5",
         "jsr:@workers/typed-event-target@1": "1.0.0",
-        "npm:@types/node@*": "22.5.4"
+        "npm:@types/node@*": "22.5.4",
+        "npm:source-map-support@*": "0.5.21"
     },
     "jsr": {
         "@cliffy/command@1.0.0-rc.7": {
@@ -150,6 +151,19 @@
             "dependencies": [
                 "undici-types"
             ]
+        },
+        "buffer-from@1.1.2": {
+            "integrity": "sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ=="
+        },
+        "source-map-support@0.5.21": {
+            "integrity": "sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==",
+            "dependencies": [
+                "buffer-from",
+                "source-map"
+            ]
+        },
+        "source-map@0.6.1": {
+            "integrity": "sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g=="
         },
         "undici-types@6.19.8": {
             "integrity": "sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw=="

@@ -8,3 +8,5 @@ import '@std/log';
 import '@std/path';
 import '@std/random';
 import '@workers/caplink';
+
+import 'npm:source-map-support';
