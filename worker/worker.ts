@@ -78,7 +78,7 @@ export interface IOnTurnStartOptions {
 }
 
 export interface IWorkerAPI {
-    computePlayerMove(): Promise<IPlayerMove | null> | IPlayerMove | null;
+    computePlayerMove(): Promise<IPlayerMove | null>;
 
     destroy(): void;
 
@@ -116,8 +116,22 @@ export const WORKER_API = {
         });
     },
 
-    computePlayerMove() {
-        return computePlayerMoveCallback ? computePlayerMoveCallback() : null;
+    async computePlayerMove() {
+        if (!computePlayerMoveCallback) {
+            throw ReferenceError(
+                "bad dispatch to 'WORKER_API.computePlayerMove' (player callback not defined)",
+            );
+        }
+
+        const move = await computePlayerMoveCallback();
+
+        if (move === undefined) {
+            throw TypeError(
+                "bad dispatch to 'WORKER_API.computePlayerMove' (player callback returned 'undefined')",
+            );
+        }
+
+        return computePlayerMoveCallback();
     },
 
     destroy() {
