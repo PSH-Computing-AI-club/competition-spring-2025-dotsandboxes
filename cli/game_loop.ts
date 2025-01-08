@@ -12,7 +12,7 @@ import {
 
 import { makeGameLogger } from './game_logger.ts';
 
-const UTF16_CODE_LETTER_A = 65;
+const UTF16_CODE_LETTER_A = 'A'.charCodeAt(0);
 
 interface IRunGameLoopOptions {
     readonly gridColumns: number;
