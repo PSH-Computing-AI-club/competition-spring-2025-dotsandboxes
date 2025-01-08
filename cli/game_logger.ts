@@ -86,6 +86,8 @@ export interface ISessionStartArgs {
         readonly playerInitial: string;
     }[];
 
+    readonly seed: number;
+
     readonly rows: number;
 }
 
@@ -690,6 +692,7 @@ export function makeGameLogger(options: IGameLoggerOptions): IGameLogger {
                     logGameRecord('info', MESSAGE_KIND.sessionStart, {
                         columns,
                         rows,
+                        seed,
                         players,
                     });
 
