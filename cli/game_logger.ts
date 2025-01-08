@@ -125,6 +125,88 @@ export type IGameLogArgs =
     | ITurnMoveArgs
     | ITurnStartArgs;
 
+export interface IBaseMessage {
+    readonly args: IGameLogArgs;
+
+    readonly datetime: string;
+
+    readonly level: Uppercase<LevelName>;
+
+    readonly message: MessageKind;
+}
+
+export interface IAppliedCaptureMessage extends IBaseMessage {
+    readonly args: IAppliedCaptureArgs;
+
+    readonly message: typeof MESSAGE_KIND.appliedCapture;
+}
+
+export interface IPlacedLineMessage extends IBaseMessage {
+    readonly args: IPlacedLineArgs;
+
+    readonly message: typeof MESSAGE_KIND.placedLine;
+}
+
+export interface IPlayerErrorMessage extends IBaseMessage {
+    readonly args: IPlayerErrorArgs;
+
+    readonly message: typeof MESSAGE_KIND.playerError;
+}
+
+export interface IPlayerForfeitMessage extends IBaseMessage {
+    readonly args: IPlayerForfeitArgs;
+
+    readonly message: typeof MESSAGE_KIND.playerForfeit;
+}
+
+export interface IPlayerTimeoutMessage extends IBaseMessage {
+    readonly args: IPlayerTimeoutArgs;
+
+    readonly message: typeof MESSAGE_KIND.playerTimeout;
+}
+
+export interface ISessionEndMessage extends IBaseMessage {
+    readonly args: ISessionEndArgs;
+
+    readonly message: typeof MESSAGE_KIND.sessionEnd;
+}
+
+export interface ISessionStartMessage extends IBaseMessage {
+    readonly args: ISessionStartArgs;
+
+    readonly message: typeof MESSAGE_KIND.sessionStart;
+}
+
+export interface ITurnEndMessage extends IBaseMessage {
+    readonly args: ITurnEndArgs;
+
+    readonly message: typeof MESSAGE_KIND.turnEnd;
+}
+
+export interface ITurnMoveMessage extends IBaseMessage {
+    readonly args: ITurnMoveArgs;
+
+    readonly message: typeof MESSAGE_KIND.turnMove;
+}
+
+export interface ITurnStartMessage extends IBaseMessage {
+    readonly args: ITurnStartArgs;
+
+    readonly message: typeof MESSAGE_KIND.turnStart;
+}
+
+export type IGameLogMessage =
+    | IAppliedCaptureMessage
+    | IPlacedLineMessage
+    | IPlayerForfeitMessage
+    | IPlayerTimeoutMessage
+    | ISessionEndMessage
+    | ISessionStartMessage
+    | ITurnEndMessage
+    | IPlayerErrorMessage
+    | ITurnMoveMessage
+    | ITurnStartMessage;
+
 export interface IGameLoggerOptions {
     readonly gameBoard: IGameBoard;
 
