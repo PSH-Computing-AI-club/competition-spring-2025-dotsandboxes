@@ -51,7 +51,7 @@ export const COMMAND_SIMULATE = new Command()
                 timeout,
             } = options;
 
-            setupOutputLogger(outputKind, outputFile);
+            await setupOutputLogger(outputKind, outputFile);
 
             await runGameLoop({
                 gridColumns,

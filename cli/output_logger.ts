@@ -7,6 +7,7 @@ import {
     getLogger,
     setup,
 } from '@std/log';
+import { dirname } from '@std/path';
 
 import { ValueOf } from '../util/mod.ts';
 
@@ -28,10 +29,16 @@ export function getOutputLogger(): Logger {
     return getLogger(CONFIGURED_LOGGER);
 }
 
-export function setupOutputLogger(
+export async function setupOutputLogger(
     outputKind: OutputKind,
     fileName?: string,
-): void {
+): Promise<void> {
+    if (fileName !== undefined) {
+        const directoryPath = dirname(fileName);
+
+        await Deno.mkdir(directoryPath, { recursive: true });
+    }
+
     switch (outputKind) {
         case OUTPUT_KIND.human:
             setup({
