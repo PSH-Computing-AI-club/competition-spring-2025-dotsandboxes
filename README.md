@@ -38,6 +38,8 @@ Commands:
 
 ### Simulate
 
+> **NOTE:** You need internet access for the first time you run a simulation so [`deno_emit`](https://github.com/denoland/deno_emit) can download its payload.
+
 ```shell
 $ dotsandboxes simulate --help
 
