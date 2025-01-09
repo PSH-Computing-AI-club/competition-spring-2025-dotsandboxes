@@ -1,4 +1,4 @@
-<center>
+<div align="center">
 
 ![logo](./.assets/logo.png)
 
@@ -6,7 +6,7 @@
 
 Scripting runtime for simulating game sessions of Dots and Boxes.
 
-</center>
+</div>
 
 ## Installation
 
