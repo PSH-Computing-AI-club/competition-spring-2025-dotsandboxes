@@ -3,10 +3,9 @@
 
 import '@cliffy/command';
 import '@deno/emit';
+import 'source-map-support';
 import '@std/assert';
 import '@std/log';
 import '@std/path';
 import '@std/random';
 import '@workers/caplink';
-
-import 'npm:source-map-support';

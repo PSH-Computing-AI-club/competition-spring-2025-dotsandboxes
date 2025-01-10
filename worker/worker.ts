@@ -1,7 +1,7 @@
 /// <reference no-default-lib="true" />
 /// <reference lib="deno.worker" />
 
-import { install } from 'npm:source-map-support';
+import { install } from 'source-map-support';
 import { expose } from '@workers/caplink';
 
 import type { IPlayer, IPlayerMove } from '../engine/mod.ts';
