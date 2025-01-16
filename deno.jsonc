@@ -6,6 +6,7 @@
         "@std/log": "jsr:@std/log@^0.224.12",
         "@std/path": "jsr:@std/path@^1.0.8",
         "@std/random": "jsr:@std/random@^0.1.0",
+        "@types/node": "npm:@types/node@^22.10.7",
         "@workers/caplink": "jsr:@workers/caplink@^0.0.5",
         "source-map-support": "npm:source-map-support@^0.5.21"
     },

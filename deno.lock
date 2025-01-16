@@ -26,6 +26,7 @@
         "jsr:@std/text@~1.0.7": "1.0.9",
         "jsr:@workers/caplink@^0.0.5": "0.0.5",
         "jsr:@workers/typed-event-target@1": "1.0.0",
+        "npm:@types/node@^22.10.7": "22.10.7",
         "npm:source-map-support@~0.5.21": "0.5.21"
     },
     "jsr": {
@@ -145,6 +146,12 @@
         }
     },
     "npm": {
+        "@types/node@22.10.7": {
+            "integrity": "sha512-V09KvXxFiutGp6B7XkpaDXlNadZxrzajcY50EuoLIpQ6WWYCSvf19lVIazzfIzQvhUN2HjX12spLojTnhuKlGg==",
+            "dependencies": [
+                "undici-types"
+            ]
+        },
         "buffer-from@1.1.2": {
             "integrity": "sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ=="
         },
@@ -157,6 +164,9 @@
         },
         "source-map@0.6.1": {
             "integrity": "sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g=="
+        },
+        "undici-types@6.20.0": {
+            "integrity": "sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg=="
         }
     },
     "workspace": {
@@ -168,6 +178,7 @@
             "jsr:@std/path@^1.0.8",
             "jsr:@std/random@0.1",
             "jsr:@workers/caplink@^0.0.5",
+            "npm:@types/node@^22.10.7",
             "npm:source-map-support@~0.5.21"
         ]
     }
