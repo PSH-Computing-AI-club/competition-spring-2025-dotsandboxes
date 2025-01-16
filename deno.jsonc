@@ -6,7 +6,7 @@
         "@std/log": "jsr:@std/log@^0.224.12",
         "@std/path": "jsr:@std/path@^1.0.8",
         "@std/random": "jsr:@std/random@^0.1.0",
-        "@types/node": "npm:@types/node@^22.10.7",
+        "@types/node": "npm:@types/node@22.5.4",
         "@workers/caplink": "jsr:@workers/caplink@^0.0.5",
         "source-map-support": "npm:source-map-support@^0.5.21"
     },
@@ -45,8 +45,8 @@
         "check:types": "deno check ./",
         "docs:build": "mkdir -p ./dist;deno doc --html --name=\"Dots and Boxes Player Scripting Environment API\" --output=./dist/docs ./players/lib.dotsandboxes.d.ts",
         "compile:linux": "deno compile --frozen --cached-only --allow-env --allow-net --allow-read --allow-write --no-prompt --include ./worker/worker.ts -o ./dist/bin/dotsandboxes-linux ./cli/mod.ts",
-        "compile:macos": "deno compile  --frozen --cached-only --allow-env --allow-net --allow-read --allow-write --no-prompt --include ./worker/worker.ts -o ./dist/bin/dotsandboxes-macos ./cli/mod.ts",
-        "compile:windows": "deno compile  --frozen --cached-only --allow-env --allow-net --allow-read --allow-write --no-prompt --include ./worker/worker.ts -o ./dist/bin/dotsandboxes-windows.exe ./cli/mod.ts",
+        "compile:macos": "deno compile --frozen --cached-only --allow-env --allow-net --allow-read --allow-write --no-prompt --include ./worker/worker.ts -o ./dist/bin/dotsandboxes-macos ./cli/mod.ts",
+        "compile:windows": "deno compile --frozen --cached-only --allow-env --allow-net --allow-read --allow-write --no-prompt --include ./worker/worker.ts -o ./dist/bin/dotsandboxes-windows.exe ./cli/mod.ts",
         "deps:cache": "deno cache ./.scripts/deps.ts",
         "format": "deno fmt ./",
         "test": "deno test --allow-all"
