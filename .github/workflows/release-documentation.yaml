@@ -1,4 +1,4 @@
-name: release-documentation
+name: Release Documentation
 
 on:
     release:
