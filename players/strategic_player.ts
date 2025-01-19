@@ -52,7 +52,7 @@ function findPrioritySpacer(
 }
 
 export default (() => {
-    const availableSpacers = gameBoard
+    const availableBoxes = gameBoard
         .walkBoxes()
         .filter(
             (gameBoardSlot) => {
@@ -63,9 +63,9 @@ export default (() => {
         )
         .toArray();
 
-    const gameBoardSlot = findPrioritySpacer(availableSpacers, 3) ??
-        findPrioritySpacer(availableSpacers, 0, 1) ??
-        findPrioritySpacer(availableSpacers, 2);
+    const gameBoardSlot = findPrioritySpacer(availableBoxes, 3) ??
+        findPrioritySpacer(availableBoxes, 0, 1) ??
+        findPrioritySpacer(availableBoxes, 2);
 
     if (gameBoardSlot !== null) {
         const { x, y } = gameBoardSlot;
