@@ -27,3 +27,22 @@ export function sampleArray<T>(array: T[]): T | null {
 
     return array[elementIndex] ?? null;
 }
+
+export function shuffleArray<T extends unknown[]>(array: T): T {
+    const shallowClone = [...array] as T;
+
+    for (let index = 0; index < shallowClone.length - 1; index++) {
+        const randomDelta = Math.trunc(
+            Math.random() * (shallowClone.length - index),
+        );
+
+        const randomIndex = index + randomDelta;
+
+        [shallowClone[index], shallowClone[randomIndex]] = [
+            shallowClone[randomIndex],
+            shallowClone[index],
+        ];
+    }
+
+    return shallowClone;
+}

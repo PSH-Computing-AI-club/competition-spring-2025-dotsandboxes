@@ -25,3 +25,22 @@ export function sampleArray(array) {
 
     return array[elementIndex] ?? null;
 }
+
+export function shuffleArray(array) {
+    const shallowClone = [...array];
+
+    for (let index = 0; index < shallowClone.length - 1; index++) {
+        const randomDelta = Math.trunc(
+            Math.random() * (shallowClone.length - index),
+        );
+
+        const randomIndex = index + randomDelta;
+
+        [shallowClone[index], shallowClone[randomIndex]] = [
+            shallowClone[randomIndex],
+            shallowClone[index],
+        ];
+    }
+
+    return shallowClone;
+}
