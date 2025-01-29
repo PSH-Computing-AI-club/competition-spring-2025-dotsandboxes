@@ -9,7 +9,7 @@
 // matching that priority. Once an available box is found, the player picks
 // a random available line to draw surrounding that box as its move.
 
-import { sampleArray } from './common.js';
+import { getAdjacentSpacerSlots, sampleArray } from './common.js';
 
 const { SLOT_KIND } = Engine;
 const { board: gameBoard } = Game;
@@ -28,19 +28,7 @@ function findPrioritySpacer(gameBoardSlots, ...priorityLineCounts) {
     const priorityBoxSlot = sampleArray(priorityBoxSlots);
 
     if (priorityBoxSlot !== null) {
-        const { grid } = gameBoard;
-        const { x, y } = priorityBoxSlot;
-
-        const adjacentSpacerSlots = [
-            grid[y - 1][x],
-            grid[y + 1][x],
-            grid[y][x - 1],
-            grid[y][x + 1],
-        ].filter((gameBoardSlot) => {
-            const { slotKind } = gameBoardSlot;
-
-            return slotKind === SLOT_KIND.spacer;
-        });
+        const adjacentSpacerSlots = getAdjacentSpacerSlots(priorityBoxSlot);
 
         return sampleArray(adjacentSpacerSlots);
     }
