@@ -1,5 +1,7 @@
 {
     "compilerOptions": {
+        "target": "ES2015",
+        "moduleResolution": "bundler",
         "allowJs": true,
         "allowImportingTsExtensions": true,
         "allowUnreachableCode": false,
@@ -16,7 +18,6 @@
         "noUnusedLocals": false,
         "noUnusedParameters": false,
         "noUncheckedIndexedAccess": false,
-        "resolveJsonModule": true,
         "strict": true,
         "strictBindCallApply": true,
         "strictFunctionTypes": true,
