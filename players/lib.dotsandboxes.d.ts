@@ -305,21 +305,63 @@ declare namespace Engine {
 
     // ---------- engine/player.ts ----------
 
+    /**
+     * Represents options passed to {@link Engine.IPlayerConstructor}.
+     *
+     * @category Engine
+     */
     export interface IPlayerOptions {
+        /**
+         * Represents the initial character assigned to the
+         * {@link IPlayer} instance.
+         */
         readonly playerInitial: string;
 
+        /**
+         * Represents the seed the {@link IPlayer} instance
+         * should configure their random number generator with.
+         */
         readonly seed: number;
 
+        /**
+         * Represents a "stringification" function that serializes
+         * the {@link IPlayer} instance into a human-readable string.
+         */
         toString(): string;
     }
 
+    /**
+     * Represents a common interface for AI Players to implement. This
+     * allows the game engine to communicate with AI Players using
+     * a strict specification without edge cases.
+     *
+     * @category Engine
+     */
     export interface IPlayer extends IPlayerOptions {
+        /**
+         * The callback function for AI Players that passes them
+         * the current game state so they can return a computed move.
+         *
+         * @param gameSession
+         * @param gameBoard
+         * @returns The move that the {@link IPlayer} instance computed.
+         */
         computePlayerMove(
             gameSession: IGameSession,
             gameBoard: IGameBoard,
         ): Promise<IPlayerMove | null>;
     }
 
+    /**
+     * Represents a common interface for AI Players to implement. This
+     * allows for the game engine to construct AI Players without having
+     * to implement edge cases.
+     *
+     * @category Engine
+     *
+     * @param options Options to configure {@link IPlayer}.
+     * @returns The configured {@link IPlayer}.
+     */
     export type IPlayerConstructor<
         Options extends IPlayerOptions = IPlayerOptions,
         Player extends IPlayer = IPlayer,
