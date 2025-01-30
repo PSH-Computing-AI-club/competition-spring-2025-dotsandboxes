@@ -836,6 +836,8 @@ declare namespace Engine {
     /**
      * Returns a new instance of {@link Engine.IForfeitPlayer}.
      *
+     * > **NOTE**: This function implements {@link Engine.IPlayerConstructor}.
+     *
      * @category Engine
      *
      * @param options Options to configure {@link Engine.IForfeitPlayer}.
