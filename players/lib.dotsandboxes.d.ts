@@ -1,8 +1,29 @@
-// ---------- worker/engine_namespace.ts ----------
+/**
+ * Hello World
+ *
+ * @showCategories
+ * @module
+ */
 
-declare namespace Engine {
+/**
+ * Utility Global APIs
+ *
+ * @category Util
+ */
+declare namespace Util {
+    // ---------- util/event.ts ----------
+
     /**
-     * Represents an interface to publish event data via a singleton instance, that is compatible with Svelte Store subscriptions.
+     * Represents the callback supplied by subscribers to be called every dispatch.
+     *
+     * @category Util
+     */
+    type IEventCallback<T> = (value: T) => void;
+
+    /**
+     * Represents an interface to publish event data via a singleton instance.
+     *
+     * @category Util
      */
     interface IEvent<T> {
         /**
@@ -16,8 +37,28 @@ declare namespace Engine {
          * @param callback
          * @returns
          */
-        subscribe(callback: Util.IEventCallback<T>): Util.IEventSubscription<T>;
+        subscribe(callback: IEventCallback<T>): IEventSubscription<T>;
     }
+
+    /**
+     * Represents an inteface for a subscribed event callback that can be destroyed.
+     *
+     * @category Util
+     */
+    interface IEventSubscription<T> {
+        readonly callback: IEventCallback<T>;
+
+        destroy(): void;
+    }
+}
+
+/**
+ * Game Engine Global APIs
+ *
+ * @category Engine
+ */
+declare namespace Engine {
+    // ---------- worker/engine_namespace.ts ----------
 
     // ---------- engine/errors.ts ----------
 
@@ -253,9 +294,9 @@ declare namespace Engine {
     }
 
     export interface IGameBoard extends IGameBoardOptions {
-        readonly EVENT_APPLIED_CAPTURE: IEvent<IAppliedCaptureEvent>;
+        readonly EVENT_APPLIED_CAPTURE: Util.IEvent<IAppliedCaptureEvent>;
 
-        readonly EVENT_PLACED_LINE: IEvent<IPlacedLineEvent>;
+        readonly EVENT_PLACED_LINE: Util.IEvent<IPlacedLineEvent>;
 
         readonly boxesClaimed: number;
 
@@ -355,17 +396,17 @@ declare namespace Engine {
     }
 
     export interface IGameSession extends IGameSessionOptions {
-        readonly EVENT_PLAYER_FORFEIT: IEvent<IPlayerForfeitEvent>;
+        readonly EVENT_PLAYER_FORFEIT: Util.IEvent<IPlayerForfeitEvent>;
 
-        readonly EVENT_PLAYER_TIMEOUT: IEvent<IPlayerTimeoutEvent>;
+        readonly EVENT_PLAYER_TIMEOUT: Util.IEvent<IPlayerTimeoutEvent>;
 
-        readonly EVENT_TURN_END: IEvent<ITurnEndEvent>;
+        readonly EVENT_TURN_END: Util.IEvent<ITurnEndEvent>;
 
-        readonly EVENT_TURN_ERROR: IEvent<ITurnErrorEvent>;
+        readonly EVENT_TURN_ERROR: Util.IEvent<ITurnErrorEvent>;
 
-        readonly EVENT_TURN_MOVE: IEvent<ITurnMoveEvent>;
+        readonly EVENT_TURN_MOVE: Util.IEvent<ITurnMoveEvent>;
 
-        readonly EVENT_TURN_START: IEvent<ITurnStartEvent>;
+        readonly EVENT_TURN_START: Util.IEvent<ITurnStartEvent>;
 
         readonly playerTurns: IPlayerTurn[];
 
@@ -376,32 +417,113 @@ declare namespace Engine {
         shiftTurnOrder(capturesMade: number): void;
     }
 
+    /**
+     * Returns a new {@link Engine.IGameSession} instance.
+     *
+     * @category Engine
+     *
+     * @param options Options to {@link Engine.IGameSession}.
+     * @returns The configured {@link Engine.IGameSession} instance.
+     */
     export function makeGameSession(options: IGameSessionOptions): IGameSession;
 
     // ---------- engine/game_result.ts ----------
 
+    /**
+     * Represents an enumeration of all possible win kind identifiers
+     * there are.
+     *
+     * @enum
+     * @category Engine
+     */
     export const WIN_KIND: {
+        /**
+         * Represents that no players in a Dots and Boxes game scored
+         * any points.
+         *
+         * > **NOTE**: This could be due to players forfeiting or
+         * > stalemating.
+         */
         readonly no_contest: 'WIN_NO_CONTEST';
+
+        /**
+         * Represents that a single player won the Dots and Boxes game.
+         */
         readonly singular: 'WIN_SINGULAR';
+
+        /**
+         * Represents the multiple players won a Dots and Boxes game.
+         *
+         * > **NOTE**: This is due to the highest score calculated
+         * > was by multiple players.
+         */
         readonly multiple: 'WIN_MULTIPLE';
     };
 
+    /**
+     * Represents a string union of all possible win kind identifiers
+     * there are.
+     *
+     * @category Engine
+     */
     export type WinKind = 'WIN_NO_CONTEST' | 'WIN_SINGULAR' | 'WIN_MULTIPLE';
 
+    /**
+     * Represents options passed to {@link Engine.makeGameResult}.
+     *
+     * @category Engine
+     */
     export interface IGameResultOptions {
+        /**
+         * Represents a mapping of players and their current scores.
+         */
         readonly scores: ReadonlyMap<IPlayer, number>;
     }
 
+    /**
+     * Represents the computed scoring result of a game state.
+     *
+     * @category Engine
+     */
     export interface IGameResult extends IGameResultOptions {
+        /**
+         * Represents the highest score found in {@link Engine.IGameResultOptions.scores}.
+         */
         readonly highestScore: number;
 
+        /**
+         * Represents what kind of win condition that was computed
+         * from the scores found in {@link Engine.IGameResultOptions.scores}.
+         */
         readonly winKind: WinKind;
 
+        /**
+         * Represents a set containing the players who has the
+         * highest scores found in {@link Engine.IGameResultOptions.scores}.
+         */
         readonly winningPlayers: ReadonlySet<IPlayer>;
     }
 
+    /**
+     * Returns a new instance of {@link Engine.IGameResult}.
+     *
+     * @category Engine
+     *
+     * @param options Options to configure {@link Engine.IGameResult}.
+     * @returns The configured {@link Engine.IGameResult} instance.
+     */
     export function makeGameResult(options: IGameResultOptions): IGameResult;
 
+    /**
+     * Returns a computed scoring result of a Dots and Boxes given any game
+     * session and game board.
+     *
+     * @category Engine
+     *
+     * @param gameSession {@link Engine.IGameSession} instance to pull data from.
+     * @param gameBoard {@link Engine.IGameBoard} instance to pull data from.
+     * @returns The configured {@link Engine.IGameResult} instance.
+     */
     export function computeGameResultFromGame(
         gameSession: IGameSession,
         gameBoard: IGameBoard,
@@ -409,69 +531,152 @@ declare namespace Engine {
 
     // ---------- engine/constant_player.ts ----------
 
+    /**
+     * Represents the options passed to {@link Engine.makeConstantPlayer}.
+     *
+     * @category Engine
+     */
     export interface IConstantPlayerOptions extends IPlayerOptions {
+        /**
+         * Represents the x-coordinate that the {@link Engine.IConstantPlayer}
+         * will always compute.
+         */
         readonly x: number;
 
+        /**
+         * Represents the y-coordinate that the {@link Engine.IConstantPlayer}
+         * will always compute.
+         */
         readonly y: number;
     }
 
+    /**
+     * Represents an AI Player that always returns a move at a specific
+     * set of coordinates when it is their turn to compute a move.
+     *
+     * @category Engine
+     */
     export type IConstantPlayer = IPlayer & IConstantPlayerOptions;
 
+    /**
+     * Returns a new instance of {@link Engine.IConstantPlayer}.
+     *
+     * @category Engine
+     *
+     * @param options Options to configure {@link Engine.IConstantPlayer}.
+     * @returns The configured {@link Engine.IConstantPlayer} instance.
+     */
     export function makeConstantPlayer(
         options: IConstantPlayerOptions,
     ): IConstantPlayer;
 
     // ---------- engine/dummy_player.ts ----------
 
+    /**
+     * Represents the options passed to {@link Engine.makeDummyPlayer}.
+     *
+     * @category Engine
+     */
     export type IDummyPlayerOptions = IPlayerOptions;
 
+    /**
+     * Represents an AI Player that always throws an error when it is
+     * their turn to compute a move.
+     *
+     * @category Engine
+     */
     export type IDummyPlayer = IPlayer;
 
+    /**
+     * Returns a new instance of {@link Engine.IDummyPlayer}.
+     *
+     * @category Engine
+     *
+     * @param options Options to configure {@link Engine.IDummyPlayer}.
+     * @returns The configured {@link Engine.IDummyPlayer} instance.
+     */
     export function makeDummyPlayer(
         options: IDummyPlayerOptions,
     ): IDummyPlayer;
 
     // ---------- engine/forfeit_player.ts ----------
 
+    /**
+     * Represents the options passed to {@link Engine.makeForfeitPlayer}.
+     *
+     * @category Engine
+     */
     export type IForfeitPlayerOptions = IPlayerOptions;
 
+    /**
+     * Represents an AI Player that always forfeits when it is
+     * their turn to compute a move.
+     *
+     * @category Engine
+     */
     export type IForfeitPlayer = IPlayer;
 
+    /**
+     * Returns a new instance of {@link Engine.IForfeitPlayer}.
+     *
+     * @category Engine
+     *
+     * @param options Options to configure {@link Engine.IForfeitPlayer}.
+     * @returns The configured {@link Engine.IForfeitPlayer} instance.
+     */
     export function makeForfeitPlayer(
         options: IForfeitPlayerOptions,
     ): IForfeitPlayer;
 }
 
-// ---------- worker/game_namespace.ts ----------
-
+/**
+ * Game State Global Singletons
+ *
+ * @category Game
+ */
 declare namespace Game {
+    // ---------- worker/game_namespace.ts ----------
+
+    /**
+     * Represents the {@link Engine.IGameBoard} singleton that
+     * is reflective of the current game state.
+     *
+     * @category Game
+     */
     export const board: Engine.IGameBoard;
 
+    /**
+     * Represents the {@link Engine.IGameSession} singleton that
+     * is reflective of the current game state.
+     *
+     * @category Game
+     */
     export const session: Engine.IGameSession;
 
+    /**
+     * Represents the {@link Engine.IPlayer} singleton that the game engine
+     * uses to track your AI Player's moves.
+     *
+     * @category Game
+     */
     export const player: Engine.IPlayer;
 }
 
-// ---------- worker/player_script.ts ----------
-
+/**
+ * Player Scripting Environment Meta Global APIs
+ *
+ * @category PlayerScript
+ */
 declare namespace PlayerScript {
+    // ---------- worker/player_script.ts ----------
+
+    /**
+     * Represents the compute callback returned by custom AI players.
+     *
+     * @category PlayerScript
+     */
     export type IComputePlayerMoveCallback = () =>
         | Promise<Engine.IPlayerMove | null>
         | Engine.IPlayerMove
         | null;
-}
-
-declare namespace Util {
-    // ---------- util/event.ts ----------
-
-    /**
-     * Represents the callback supplied by subscribers to be called every dispatch.
-     */
-    type IEventCallback<T> = (value: T) => void;
-
-    interface IEventSubscription<T> {
-        readonly callback: IEventCallback<T>;
-
-        destroy(): void;
-    }
 }
