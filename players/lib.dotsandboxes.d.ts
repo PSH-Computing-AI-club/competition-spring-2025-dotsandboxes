@@ -732,6 +732,8 @@ declare namespace Engine {
     /**
      * Returns a new instance of {@link Engine.IConstantPlayer}.
      *
+     * > **NOTE**: This function implements {@link Engine.IPlayerConstructor}.
+     *
      * @category Engine
      *
      * @param options Options to configure {@link Engine.IConstantPlayer}.
@@ -760,6 +762,8 @@ declare namespace Engine {
 
     /**
      * Returns a new instance of {@link Engine.IDummyPlayer}.
+     *
+     * > **NOTE**: This function implements {@link Engine.IPlayerConstructor}.
      *
      * @category Engine
      *
