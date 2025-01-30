@@ -1,7 +1,18 @@
 /**
- * Hello World
+ * ## API Reference
+ *
+ * To begin using this API Reference click on a category of APIs
+ * listed on the left sidebar or at the bottom of this page.
+ *
+ * ## AI Player Scripting Help
+ *
+ * For general documentation on how to script your AI Player visit
+ * the [AI Player Scripting FAQs](https://github.com/PSH-Computing-AI-club/competition-spring-2025/blob/main/ai-player-scripting.md).
+ *
+ * ## API Categories
  *
  * @showCategories
+ *
  * @module
  */
 
