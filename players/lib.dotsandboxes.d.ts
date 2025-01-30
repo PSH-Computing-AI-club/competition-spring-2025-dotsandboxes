@@ -73,70 +73,230 @@ declare namespace Engine {
 
     // ---------- engine/errors.ts ----------
 
+    /**
+     * Represents options passed to {@link Engine.InvalidPlacementError}.
+     *
+     * @category Engine
+     */
     export interface InvalidPlacementErrorOptions extends ErrorOptions {
+        /**
+         * Represents the {@link Engine.IPlayerTurn} instance that
+         * triggered the error instance being thrown.
+         */
         readonly playerTurn: IPlayerTurn;
     }
 
+    /**
+     * Represents options passed to {@link Engine.InvalidQueryError}.
+     *
+     * @category Engine
+     */
     export interface InvalidQueryErrorOptions extends ErrorOptions {
+        /**
+         * Represents the x-coordinate that triggered the error
+         * instance being thrown.
+         */
         readonly x: number;
 
+        /**
+         * Represents the y-coordinate that trigger the error
+         * instance being thrown.
+         */
         readonly y: number;
     }
 
+    /**
+     * Represents options passed to {@link Engine.PlayerComputeThrowError}.
+     *
+     * @category Engine
+     */
     export interface PlayerComputeThrowErrorOptions extends ErrorOptions {
+        /**
+         * Represents the error thrown by the {@link Engine.IPlayer}
+         * instance.
+         */
         readonly error: Error;
 
+        /**
+         * Represents the {@link Engine.IPlayer} instance that threw
+         * an error during compute.
+         */
         readonly player: IPlayer;
     }
 
+    /**
+     * Represents options passed to {@link Engine.PlayerForfeitError}.
+     *
+     * @category Engine
+     */
     export interface PlayerForfeitErrorOptions extends ErrorOptions {
+        /**
+         * Represents the {@link Engine.IPlayer} instance that returned
+         * `null` during their move computation.
+         */
         readonly player: IPlayer;
     }
 
+    /**
+     * Represents options passed to {@link Engine.PlayerTimeoutError}.
+     *
+     * @category Engine
+     */
     export interface PlayerTimeoutErrorOptions extends ErrorOptions {
+        /**
+         * Represents the {@link Engine.IPlayer} instance that did
+         * not compute its move within the {@link Engine.IGameSessionOptions.timeout}
+         * configured timelimit.
+         */
         readonly player: IPlayer;
     }
 
+    /**
+     * Represents when an invalid x-y coordinate pair is used to
+     * make a move.
+     *
+     * @category Engine
+     */
     export class InvalidPlacementError extends Error {
+        /**
+         * Represents the {@link Engine.IPlayerTurn} instance that
+         * triggered the error instance being thrown.
+         */
         readonly playerTurn: IPlayerTurn;
 
+        /**
+         * Constructor for {@link Engine.InvalidPlacementError}.
+         *
+         * @param message Message the error will print to console.
+         * @param options Options to configure {@link Engine.InvalidPlacementError}.
+         */
         constructor(message: string, options: InvalidPlacementErrorOptions);
     }
 
+    /**
+     * Represents when an invalid x-y coordinate pair is used to
+     * query the current game state.
+     *
+     * @category Engine
+     */
     export class InvalidQueryError extends Error {
+        /**
+         * Represents the x-coordinate that triggered the error
+         * instance being thrown.
+         */
         readonly x: number;
 
+        /**
+         * Represents the y-coordinate that triggered the error
+         * instance being thrown.
+         */
         readonly y: number;
 
+        /**
+         * Constructor for {@link Engine.InvalidQueryError}.
+         *
+         * @param message Message the error will print to console.
+         * @param options Options to configure {@link Engine.InvalidQueryError}.
+         */
         constructor(message: string, options: InvalidQueryErrorOptions);
     }
+
+    /**
+     * Represents when the game state tries to select the next
+     * {@link IPlayer} instance to compute a move and none are
+     * found.
+     *
+     * @category Engine
+     */
     export class NoNextPlayerError extends Error {
+        /**
+         * Constructor for {@link Engine.NoNextPlayerError}.
+         *
+         * @param message Message the error will print to console.
+         * @param options Options to configure {@link Engine.NoNextPlayerError}.
+         */
         constructor(message: string, options?: ErrorOptions);
     }
 
+    /**
+     * Represents when an {@link Engine.IPlayer} instance that threw
+     * an error when its {@link Engine.IPlayer.computeMove} was called.
+     *
+     * @category Engine
+     */
     export class PlayerComputeThrowError extends Error {
+        /**
+         * Represents the error thrown by the {@link Engine.IPlayer}
+         * instance.
+         */
         readonly error: Error;
 
+        /**
+         * Represents the {@link Engine.IPlayer} instance that threw
+         * an error during compute.
+         */
         readonly player: IPlayer;
 
+        /**
+         * Constructor for {@link Engine.PlayerComputeThrowError}.
+         *
+         * @param message Message the error will print to console.
+         * @param options Options to configure {@link Engine.PlayerComputeThrowError}.
+         */
         constructor(
             message: string,
             options: PlayerComputeThrowErrorOptions,
         );
     }
 
+    /**
+     * Represents when an {@link Engine.IPlayer} instance that
+     * returned a `null` value when its {@link Engine.IPlayer.computeMove}
+     * was called.
+     *
+     * @category Engine
+     */
     export class PlayerForfeitError extends Error {
+        /**
+         * Represents the {@link Engine.IPlayer} instance that returned
+         * `null` during their move computation.
+         */
         readonly player: IPlayer;
 
+        /**
+         * Constructor for {@link Engine.PlayerForfeitError}.
+         *
+         * @param message Message the error will print to console.
+         * @param options Options to configure {@link Engine.PlayerForfeitError}.
+         */
         constructor(
             message: string,
             options: PlayerForfeitErrorOptions,
         );
     }
 
+    /**
+     * Represents when an {@link Engine.IPlayer} instance that did
+     * not compute its move within the {@link Engine.IGameSessionOptions.timeout}
+     * configured timelimit when its {@link Engine.IPlayer.computeMove}
+     * was called.
+     *
+     * @category Engine
+     */
     export class PlayerTimeoutError extends Error {
+        /**
+         * Represents the {@link Engine.IPlayer} instance that did
+         * not compute its move within the {@link Engine.IGameSessionOptions.timeout}
+         * configured timelimit.
+         */
         readonly player: IPlayer;
 
+        /**
+         * Constructor for {@link Engine.PlayerTimeoutError}.
+         *
+         * @param message Message the error will print to console.
+         * @param options Options to configure {@link Engine.PlayerTimeoutError}.
+         */
         constructor(
             message: string,
             options: PlayerTimeoutErrorOptions,
@@ -550,13 +710,13 @@ declare namespace Engine {
     export interface IConstantPlayerOptions extends IPlayerOptions {
         /**
          * Represents the x-coordinate that the {@link Engine.IConstantPlayer}
-         * will always compute.
+         * instance will always compute.
          */
         readonly x: number;
 
         /**
          * Represents the y-coordinate that the {@link Engine.IConstantPlayer}
-         * will always compute.
+         * instance will always compute.
          */
         readonly y: number;
     }
