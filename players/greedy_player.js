@@ -2,7 +2,7 @@
 // captures it. If there is no boxes that meets that criteria, then the player
 // picks a random available move.
 
-import { getAdjacentSpacerSlots, sampleArray } from './common.ts';
+import { getAdjacentSpacerSlots, sampleArray } from './common.js';
 
 const { SLOT_KIND } = Engine;
 const { board: gameBoard } = Game;
