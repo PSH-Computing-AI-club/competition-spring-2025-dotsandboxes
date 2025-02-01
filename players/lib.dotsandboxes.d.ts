@@ -318,14 +318,14 @@ declare namespace Engine {
         readonly playerInitial: string;
 
         /**
-         * Represents the seed the {@link IPlayer} instance
+         * Represents the seed the {@link Engine.IPlayer} instance
          * should configure their random number generator with.
          */
         readonly seed: number;
 
         /**
          * Represents a "stringification" function that serializes
-         * the {@link IPlayer} instance into a human-readable string.
+         * the {@link Engine.IPlayer} instance into a human-readable string.
          */
         toString(): string;
     }
@@ -344,7 +344,7 @@ declare namespace Engine {
          *
          * @param gameSession
          * @param gameBoard
-         * @returns The move that the {@link IPlayer} instance computed.
+         * @returns The move that the {@link Engine.IPlayer} instance computed.
          */
         computePlayerMove(
             gameSession: IGameSession,
@@ -359,8 +359,8 @@ declare namespace Engine {
      *
      * @category Engine
      *
-     * @param options Options to configure {@link IPlayer}.
-     * @returns The configured {@link IPlayer}.
+     * @param options Options to configure {@link Engine.IPlayer}.
+     * @returns The configured {@link Engine.IPlayer}.
      */
     export type IPlayerConstructor<
         Options extends IPlayerOptions = IPlayerOptions,
@@ -403,10 +403,10 @@ declare namespace Engine {
     export function isLegalMove(x: number, y: number): boolean;
 
     /**
-     * Returns a new instance of {@link IPlayerMove}.
+     * Returns a new instance of {@link Engine.IPlayerMove}.
      *
-     * @param options Options to configure {@link IPlayerMove}.
-     * @returns The configured {@link IPlayerMove}.
+     * @param options Options to configure {@link Engine.IPlayerMove}.
+     * @returns The configured {@link Engine.IPlayerMove}.
      */
     export function makePlayerMove(options: IPlayerMove): IPlayerMove;
 
