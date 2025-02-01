@@ -396,6 +396,8 @@ declare namespace Engine {
      * > **IMPORTANT**: This function does _NOT_ check if the coordinate
      * > pair already had a line draw at the location.
      *
+     * @category Engine
+     *
      * @param x The x-coordinate to check.
      * @param y The y-coordinate to check.
      * @returns If the coordinates are a legal move.
@@ -404,6 +406,8 @@ declare namespace Engine {
 
     /**
      * Returns a new instance of {@link Engine.IPlayerMove}.
+     *
+     * @category Engine
      *
      * @param options Options to configure {@link Engine.IPlayerMove}.
      * @returns The configured {@link Engine.IPlayerMove}.
