@@ -1257,6 +1257,14 @@ declare namespace Engine {
  * Game State Global Singletons
  *
  * @category Game
+ *
+ * @example
+ *
+ * ```javascript
+ * const board = Game.board;
+ *
+ * ... do something w/ board singleton ...
+ * ```
  */
 declare namespace Game {
     // ---------- worker/game_namespace.ts ----------
@@ -1266,6 +1274,24 @@ declare namespace Game {
      * is reflective of the current game state.
      *
      * @category Game
+     *
+     * @example
+     *
+     * ```javascript
+     * // Cache the singleton for future usage below.
+     * const grid = Game.board.grid;
+     *
+     * export default () => {
+     *     // Create a move using the state of the grid.
+     *     const move = ... calculate move w/ grid ...;
+     *
+     *     // Return the xy-pair coordinates of the calculated move.
+     *     return {
+     *         x: move.x,
+     *         y: move.y
+     *     };
+     * };
+     * ```
      */
     export const board: Engine.IGameBoard;
 
@@ -1274,6 +1300,39 @@ declare namespace Game {
      * is reflective of the current game state.
      *
      * @category Game
+     *
+     * @example
+     *
+     * ```javascript
+     * // Cache the singletons for future usage below.
+     * const me = Game.player;
+     * const turns = Game.session.playerTurns;
+     *
+     * export default () => {
+     *     // Predefine a move variable we will assign below.
+     *     let move;
+     *
+     *     if (turns.length === 0) {
+     *         // No opening moves have been made yet, so let's use a
+     *         // specific strategy for that case.
+     *         move = ...compute a move...;
+     *     } else if (turns[0].player === me) {
+     *         // An opening move was made and our player made it. So,
+     *         // let's use different strategy.
+     *         move = ...compute a move...;
+     *     } else {
+     *         // An opening move was made but our player _did not_
+     *         // make it. So, again, let's use another strategy.
+     *         move = ...compute a move...;
+     *     }
+     *
+     *     // Return the xy-pair coordinates of the calculated move.
+     *     return {
+     *         x: move.x,
+     *         y: move.y
+     *     };
+     * };
+     * ```
      */
     export const session: Engine.IGameSession;
 
@@ -1282,6 +1341,60 @@ declare namespace Game {
      * uses to track your AI Player's moves.
      *
      * @category Game
+     *
+     * @example
+     *
+     * ```javascript
+     * // Cache the engine APIs for future usage below.
+     * const SLOT_KIND = Engine.SLOT_KIND;
+     *
+     * // Cache the singletons for future usage below.
+     * const board = Game.board;
+     * const me = Game.player;
+     *
+     * export default () => {
+     *     // Define some variables to track scores.
+     *     let myScore = 0;
+     *     let opponentScore = 0;
+     *
+     *     // `IGameBoard.walkBoxes` uses an optimized traversal algorithm. So,
+     *     // let's use that method instead looping `IGameBoard.grid` w/ for-loops.
+     *     for (const box of board.walkBoxes()) {
+     *         // We only want boxes that have already been captured.
+     *         if (box.slotKind === SLOT_KIND.box) {
+     *             continue;
+     *         }
+     *
+     *         // If the `IPlayerTurn` instance associated with the box game
+     *         // board grid slot matches out player, then we will increment
+     *         // our tracked score.
+     *         //
+     *         // Otherwise, that means an opponent(s) scored points.
+     *         if (box.playerTurn.player === me) {
+     *             myScore = myScore + 1;
+     *         } else {
+     *             opponentScore = opponentScore + 1;
+     *         }
+     *     }
+     *
+     *     // Predefine a move variable we will assign below.
+     *     let move;
+     *
+     *     // We might use different strategies depending on if the
+     *     // opponent(s) are ahead in the match.
+     *     if (myScore < opponentScore) {
+     *         move = ...compute a move...;
+     *     } else {
+     *         move = ...compute a move;
+     *     }
+     *
+     *     // Return the xy-pair coordinates of the calculated move.
+     *     return {
+     *         x: move.x,
+     *         y: move.y
+     *     };
+     * };
+     * ```
      */
     export const player: Engine.IPlayer;
 }
