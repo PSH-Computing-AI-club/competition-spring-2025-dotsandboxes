@@ -371,14 +371,43 @@ declare namespace Engine {
 
     // ---------- engine/player_move.ts ----------
 
+    /**
+     * Represents a move computed by an AI Player.
+     *
+     * @category Engine
+     */
     export interface IPlayerMove {
+        /**
+         * Represents the x-coordinate the AI Player tried to draw a
+         * line at.
+         */
         readonly x: number;
 
+        /**
+         * Represents the x-coordinate the AI Player tried to draw a
+         * line at.
+         */
         readonly y: number;
     }
 
+    /**
+     * Returns if the supplied x-y coordinate pair is a legal move.
+     *
+     * > **IMPORTANT**: This function does _NOT_ check if the coordinate
+     * > pair already had a line draw at the location.
+     *
+     * @param x The x-coordinate to check.
+     * @param y The y-coordinate to check.
+     * @returns If the coordinates are a legal move.
+     */
     export function isLegalMove(x: number, y: number): boolean;
 
+    /**
+     * Returns a new instance of {@link IPlayerMove}.
+     *
+     * @param options Options to configure {@link IPlayerMove}.
+     * @returns The configured {@link IPlayerMove}.
+     */
     export function makePlayerMove(options: IPlayerMove): IPlayerMove;
 
     // ---------- engine/player_turn.ts ----------
