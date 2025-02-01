@@ -74,20 +74,20 @@ declare namespace Engine {
     // ---------- engine/errors.ts ----------
 
     /**
-     * Represents options passed to {@link Engine.InvalidPlacementError}.
+     * Represents options passed to {@linkcode Engine.InvalidPlacementError}.
      *
      * @category Engine
      */
     export interface InvalidPlacementErrorOptions extends ErrorOptions {
         /**
-         * Represents the {@link Engine.IPlayerTurn} instance that
+         * Represents the {@linkcode Engine.IPlayerTurn} instance that
          * triggered the error instance being thrown.
          */
         readonly playerTurn: IPlayerTurn;
     }
 
     /**
-     * Represents options passed to {@link Engine.InvalidQueryError}.
+     * Represents options passed to {@linkcode Engine.InvalidQueryError}.
      *
      * @category Engine
      */
@@ -106,46 +106,46 @@ declare namespace Engine {
     }
 
     /**
-     * Represents options passed to {@link Engine.PlayerComputeThrowError}.
+     * Represents options passed to {@linkcode Engine.PlayerComputeThrowError}.
      *
      * @category Engine
      */
     export interface PlayerComputeThrowErrorOptions extends ErrorOptions {
         /**
-         * Represents the error thrown by the {@link Engine.IPlayer}
+         * Represents the error thrown by the {@linkcode Engine.IPlayer}
          * instance.
          */
         readonly error: Error;
 
         /**
-         * Represents the {@link Engine.IPlayer} instance that threw
+         * Represents the {@linkcode Engine.IPlayer} instance that threw
          * an error during compute.
          */
         readonly player: IPlayer;
     }
 
     /**
-     * Represents options passed to {@link Engine.PlayerForfeitError}.
+     * Represents options passed to {@linkcode Engine.PlayerForfeitError}.
      *
      * @category Engine
      */
     export interface PlayerForfeitErrorOptions extends ErrorOptions {
         /**
-         * Represents the {@link Engine.IPlayer} instance that returned
+         * Represents the {@linkcode Engine.IPlayer} instance that returned
          * `null` during their move computation.
          */
         readonly player: IPlayer;
     }
 
     /**
-     * Represents options passed to {@link Engine.PlayerTimeoutError}.
+     * Represents options passed to {@linkcode Engine.PlayerTimeoutError}.
      *
      * @category Engine
      */
     export interface PlayerTimeoutErrorOptions extends ErrorOptions {
         /**
-         * Represents the {@link Engine.IPlayer} instance that did
-         * not compute its move within the {@link Engine.IGameSessionOptions.timeout}
+         * Represents the {@linkcode Engine.IPlayer} instance that did
+         * not compute its move within the {@linkcode Engine.IGameSessionOptions.timeout}
          * configured timelimit.
          */
         readonly player: IPlayer;
@@ -159,16 +159,16 @@ declare namespace Engine {
      */
     export class InvalidPlacementError extends Error {
         /**
-         * Represents the {@link Engine.IPlayerTurn} instance that
+         * Represents the {@linkcode Engine.IPlayerTurn} instance that
          * triggered the error instance being thrown.
          */
         readonly playerTurn: IPlayerTurn;
 
         /**
-         * Constructor for {@link Engine.InvalidPlacementError}.
+         * Constructor for {@linkcode Engine.InvalidPlacementError}.
          *
          * @param message Message the error will print to console.
-         * @param options Options to configure {@link Engine.InvalidPlacementError}.
+         * @param options Options to configure {@linkcode Engine.InvalidPlacementError}.
          */
         constructor(message: string, options: InvalidPlacementErrorOptions);
     }
@@ -193,55 +193,55 @@ declare namespace Engine {
         readonly y: number;
 
         /**
-         * Constructor for {@link Engine.InvalidQueryError}.
+         * Constructor for {@linkcode Engine.InvalidQueryError}.
          *
          * @param message Message the error will print to console.
-         * @param options Options to configure {@link Engine.InvalidQueryError}.
+         * @param options Options to configure {@linkcode Engine.InvalidQueryError}.
          */
         constructor(message: string, options: InvalidQueryErrorOptions);
     }
 
     /**
      * Represents when the game state tries to select the next
-     * {@link IPlayer} instance to compute a move and none are
+     * {@linkcode IPlayer} instance to compute a move and none are
      * found.
      *
      * @category Engine
      */
     export class NoNextPlayerError extends Error {
         /**
-         * Constructor for {@link Engine.NoNextPlayerError}.
+         * Constructor for {@linkcode Engine.NoNextPlayerError}.
          *
          * @param message Message the error will print to console.
-         * @param options Options to configure {@link Engine.NoNextPlayerError}.
+         * @param options Options to configure {@linkcode Engine.NoNextPlayerError}.
          */
         constructor(message: string, options?: ErrorOptions);
     }
 
     /**
-     * Represents when an {@link Engine.IPlayer} instance that threw
-     * an error when its {@link Engine.IPlayer.computeMove} was called.
+     * Represents when an {@linkcode Engine.IPlayer} instance that threw
+     * an error when its {@linkcode Engine.IPlayer.computeMove} was called.
      *
      * @category Engine
      */
     export class PlayerComputeThrowError extends Error {
         /**
-         * Represents the error thrown by the {@link Engine.IPlayer}
+         * Represents the error thrown by the {@linkcode Engine.IPlayer}
          * instance.
          */
         readonly error: Error;
 
         /**
-         * Represents the {@link Engine.IPlayer} instance that threw
+         * Represents the {@linkcode Engine.IPlayer} instance that threw
          * an error during compute.
          */
         readonly player: IPlayer;
 
         /**
-         * Constructor for {@link Engine.PlayerComputeThrowError}.
+         * Constructor for {@linkcode Engine.PlayerComputeThrowError}.
          *
          * @param message Message the error will print to console.
-         * @param options Options to configure {@link Engine.PlayerComputeThrowError}.
+         * @param options Options to configure {@linkcode Engine.PlayerComputeThrowError}.
          */
         constructor(
             message: string,
@@ -250,24 +250,24 @@ declare namespace Engine {
     }
 
     /**
-     * Represents when an {@link Engine.IPlayer} instance that
-     * returned a `null` value when its {@link Engine.IPlayer.computeMove}
+     * Represents when an {@linkcode Engine.IPlayer} instance that
+     * returned a `null` value when its {@linkcode Engine.IPlayer.computeMove}
      * was called.
      *
      * @category Engine
      */
     export class PlayerForfeitError extends Error {
         /**
-         * Represents the {@link Engine.IPlayer} instance that returned
+         * Represents the {@linkcode Engine.IPlayer} instance that returned
          * `null` during their move computation.
          */
         readonly player: IPlayer;
 
         /**
-         * Constructor for {@link Engine.PlayerForfeitError}.
+         * Constructor for {@linkcode Engine.PlayerForfeitError}.
          *
          * @param message Message the error will print to console.
-         * @param options Options to configure {@link Engine.PlayerForfeitError}.
+         * @param options Options to configure {@linkcode Engine.PlayerForfeitError}.
          */
         constructor(
             message: string,
@@ -276,26 +276,26 @@ declare namespace Engine {
     }
 
     /**
-     * Represents when an {@link Engine.IPlayer} instance that did
-     * not compute its move within the {@link Engine.IGameSessionOptions.timeout}
-     * configured timelimit when its {@link Engine.IPlayer.computeMove}
+     * Represents when an {@linkcode Engine.IPlayer} instance that did
+     * not compute its move within the {@linkcode Engine.IGameSessionOptions.timeout}
+     * configured timelimit when its {@linkcode Engine.IPlayer.computeMove}
      * was called.
      *
      * @category Engine
      */
     export class PlayerTimeoutError extends Error {
         /**
-         * Represents the {@link Engine.IPlayer} instance that did
-         * not compute its move within the {@link Engine.IGameSessionOptions.timeout}
+         * Represents the {@linkcode Engine.IPlayer} instance that did
+         * not compute its move within the {@linkcode Engine.IGameSessionOptions.timeout}
          * configured timelimit.
          */
         readonly player: IPlayer;
 
         /**
-         * Constructor for {@link Engine.PlayerTimeoutError}.
+         * Constructor for {@linkcode Engine.PlayerTimeoutError}.
          *
          * @param message Message the error will print to console.
-         * @param options Options to configure {@link Engine.PlayerTimeoutError}.
+         * @param options Options to configure {@linkcode Engine.PlayerTimeoutError}.
          */
         constructor(
             message: string,
@@ -306,26 +306,26 @@ declare namespace Engine {
     // ---------- engine/player.ts ----------
 
     /**
-     * Represents options passed to {@link Engine.IPlayerConstructor}.
+     * Represents options passed to {@linkcode Engine.IPlayerConstructor}.
      *
      * @category Engine
      */
     export interface IPlayerOptions {
         /**
          * Represents the initial character assigned to the
-         * {@link IPlayer} instance.
+         * {@linkcode IPlayer} instance.
          */
         readonly playerInitial: string;
 
         /**
-         * Represents the seed the {@link Engine.IPlayer} instance
+         * Represents the seed the {@linkcode Engine.IPlayer} instance
          * should configure their random number generator with.
          */
         readonly seed: number;
 
         /**
          * Represents a "stringification" function that serializes
-         * the {@link Engine.IPlayer} instance into a human-readable string.
+         * the {@linkcode Engine.IPlayer} instance into a human-readable string.
          */
         toString(): string;
     }
@@ -344,7 +344,7 @@ declare namespace Engine {
          *
          * @param gameSession
          * @param gameBoard
-         * @returns The move that the {@link Engine.IPlayer} instance computed.
+         * @returns The move that the {@linkcode Engine.IPlayer} instance computed.
          */
         computePlayerMove(
             gameSession: IGameSession,
@@ -359,8 +359,8 @@ declare namespace Engine {
      *
      * @category Engine
      *
-     * @param options Options to configure {@link Engine.IPlayer}.
-     * @returns The configured {@link Engine.IPlayer}.
+     * @param options Options to configure {@linkcode Engine.IPlayer}.
+     * @returns The configured {@linkcode Engine.IPlayer}.
      */
     export type IPlayerConstructor<
         Options extends IPlayerOptions = IPlayerOptions,
@@ -405,16 +405,16 @@ declare namespace Engine {
     export function isLegalMove(x: number, y: number): boolean;
 
     /**
-     * Returns a new instance of {@link Engine.IPlayerMove}.
+     * Returns a new instance of {@linkcode Engine.IPlayerMove}.
      *
      * @category Engine
      *
      * @throws [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)
-     * if configured {@link Engine.IPlayerMove.x} and {@link Engine.IPlayerMove.y}
-     * fields are not of {@link Engine.SLOT_KIND.spacer} kind.
+     * if configured {@linkcode Engine.IPlayerMove.x} and {@linkcode Engine.IPlayerMove.y}
+     * fields are not of {@linkcode Engine.SLOT_KIND.spacer} kind.
      *
-     * @param options Options to configure {@link Engine.IPlayerMove}.
-     * @returns The configured {@link Engine.IPlayerMove}.
+     * @param options Options to configure {@linkcode Engine.IPlayerMove}.
+     * @returns The configured {@linkcode Engine.IPlayerMove}.
      */
     export function makePlayerMove(options: IPlayerMove): IPlayerMove;
 
@@ -668,12 +668,12 @@ declare namespace Engine {
     }
 
     /**
-     * Returns a new {@link Engine.IGameSession} instance.
+     * Returns a new {@linkcode Engine.IGameSession} instance.
      *
      * @category Engine
      *
-     * @param options Options to {@link Engine.IGameSession}.
-     * @returns The configured {@link Engine.IGameSession} instance.
+     * @param options Options to {@linkcode Engine.IGameSession}.
+     * @returns The configured {@linkcode Engine.IGameSession} instance.
      */
     export function makeGameSession(options: IGameSessionOptions): IGameSession;
 
@@ -719,7 +719,7 @@ declare namespace Engine {
     export type WinKind = 'WIN_NO_CONTEST' | 'WIN_SINGULAR' | 'WIN_MULTIPLE';
 
     /**
-     * Represents options passed to {@link Engine.makeGameResult}.
+     * Represents options passed to {@linkcode Engine.makeGameResult}.
      *
      * @category Engine
      */
@@ -737,30 +737,30 @@ declare namespace Engine {
      */
     export interface IGameResult extends IGameResultOptions {
         /**
-         * Represents the highest score found in {@link Engine.IGameResultOptions.scores}.
+         * Represents the highest score found in {@linkcode Engine.IGameResultOptions.scores}.
          */
         readonly highestScore: number;
 
         /**
          * Represents what kind of win condition that was computed
-         * from the scores found in {@link Engine.IGameResultOptions.scores}.
+         * from the scores found in {@linkcode Engine.IGameResultOptions.scores}.
          */
         readonly winKind: WinKind;
 
         /**
          * Represents a set containing the players who has the
-         * highest scores found in {@link Engine.IGameResultOptions.scores}.
+         * highest scores found in {@linkcode Engine.IGameResultOptions.scores}.
          */
         readonly winningPlayers: ReadonlySet<IPlayer>;
     }
 
     /**
-     * Returns a new instance of {@link Engine.IGameResult}.
+     * Returns a new instance of {@linkcode Engine.IGameResult}.
      *
      * @category Engine
      *
-     * @param options Options to configure {@link Engine.IGameResult}.
-     * @returns The configured {@link Engine.IGameResult} instance.
+     * @param options Options to configure {@linkcode Engine.IGameResult}.
+     * @returns The configured {@linkcode Engine.IGameResult} instance.
      */
     export function makeGameResult(options: IGameResultOptions): IGameResult;
 
@@ -770,9 +770,9 @@ declare namespace Engine {
      *
      * @category Engine
      *
-     * @param gameSession {@link Engine.IGameSession} instance to pull data from.
-     * @param gameBoard {@link Engine.IGameBoard} instance to pull data from.
-     * @returns The configured {@link Engine.IGameResult} instance.
+     * @param gameSession {@linkcode Engine.IGameSession} instance to pull data from.
+     * @param gameBoard {@linkcode Engine.IGameBoard} instance to pull data from.
+     * @returns The configured {@linkcode Engine.IGameResult} instance.
      */
     export function computeGameResultFromGame(
         gameSession: IGameSession,
@@ -782,19 +782,19 @@ declare namespace Engine {
     // ---------- engine/constant_player.ts ----------
 
     /**
-     * Represents the options passed to {@link Engine.makeConstantPlayer}.
+     * Represents the options passed to {@linkcode Engine.makeConstantPlayer}.
      *
      * @category Engine
      */
     export interface IConstantPlayerOptions extends IPlayerOptions {
         /**
-         * Represents the x-coordinate that the {@link Engine.IConstantPlayer}
+         * Represents the x-coordinate that the {@linkcode Engine.IConstantPlayer}
          * instance will always compute.
          */
         readonly x: number;
 
         /**
-         * Represents the y-coordinate that the {@link Engine.IConstantPlayer}
+         * Represents the y-coordinate that the {@linkcode Engine.IConstantPlayer}
          * instance will always compute.
          */
         readonly y: number;
@@ -809,14 +809,14 @@ declare namespace Engine {
     export type IConstantPlayer = IPlayer & IConstantPlayerOptions;
 
     /**
-     * Returns a new instance of {@link Engine.IConstantPlayer}.
+     * Returns a new instance of {@linkcode Engine.IConstantPlayer}.
      *
-     * > **NOTE**: This function implements {@link Engine.IPlayerConstructor}.
+     * > **NOTE**: This function implements {@linkcode Engine.IPlayerConstructor}.
      *
      * @category Engine
      *
-     * @param options Options to configure {@link Engine.IConstantPlayer}.
-     * @returns The configured {@link Engine.IConstantPlayer} instance.
+     * @param options Options to configure {@linkcode Engine.IConstantPlayer}.
+     * @returns The configured {@linkcode Engine.IConstantPlayer} instance.
      */
     export function makeConstantPlayer(
         options: IConstantPlayerOptions,
@@ -825,7 +825,7 @@ declare namespace Engine {
     // ---------- engine/dummy_player.ts ----------
 
     /**
-     * Represents the options passed to {@link Engine.makeDummyPlayer}.
+     * Represents the options passed to {@linkcode Engine.makeDummyPlayer}.
      *
      * @category Engine
      */
@@ -840,14 +840,14 @@ declare namespace Engine {
     export type IDummyPlayer = IPlayer;
 
     /**
-     * Returns a new instance of {@link Engine.IDummyPlayer}.
+     * Returns a new instance of {@linkcode Engine.IDummyPlayer}.
      *
-     * > **NOTE**: This function implements {@link Engine.IPlayerConstructor}.
+     * > **NOTE**: This function implements {@linkcode Engine.IPlayerConstructor}.
      *
      * @category Engine
      *
-     * @param options Options to configure {@link Engine.IDummyPlayer}.
-     * @returns The configured {@link Engine.IDummyPlayer} instance.
+     * @param options Options to configure {@linkcode Engine.IDummyPlayer}.
+     * @returns The configured {@linkcode Engine.IDummyPlayer} instance.
      */
     export function makeDummyPlayer(
         options: IDummyPlayerOptions,
@@ -856,7 +856,7 @@ declare namespace Engine {
     // ---------- engine/forfeit_player.ts ----------
 
     /**
-     * Represents the options passed to {@link Engine.makeForfeitPlayer}.
+     * Represents the options passed to {@linkcode Engine.makeForfeitPlayer}.
      *
      * @category Engine
      */
@@ -871,14 +871,14 @@ declare namespace Engine {
     export type IForfeitPlayer = IPlayer;
 
     /**
-     * Returns a new instance of {@link Engine.IForfeitPlayer}.
+     * Returns a new instance of {@linkcode Engine.IForfeitPlayer}.
      *
-     * > **NOTE**: This function implements {@link Engine.IPlayerConstructor}.
+     * > **NOTE**: This function implements {@linkcode Engine.IPlayerConstructor}.
      *
      * @category Engine
      *
-     * @param options Options to configure {@link Engine.IForfeitPlayer}.
-     * @returns The configured {@link Engine.IForfeitPlayer} instance.
+     * @param options Options to configure {@linkcode Engine.IForfeitPlayer}.
+     * @returns The configured {@linkcode Engine.IForfeitPlayer} instance.
      */
     export function makeForfeitPlayer(
         options: IForfeitPlayerOptions,
@@ -894,7 +894,7 @@ declare namespace Game {
     // ---------- worker/game_namespace.ts ----------
 
     /**
-     * Represents the {@link Engine.IGameBoard} singleton that
+     * Represents the {@linkcode Engine.IGameBoard} singleton that
      * is reflective of the current game state.
      *
      * @category Game
@@ -902,7 +902,7 @@ declare namespace Game {
     export const board: Engine.IGameBoard;
 
     /**
-     * Represents the {@link Engine.IGameSession} singleton that
+     * Represents the {@linkcode Engine.IGameSession} singleton that
      * is reflective of the current game state.
      *
      * @category Game
@@ -910,7 +910,7 @@ declare namespace Game {
     export const session: Engine.IGameSession;
 
     /**
-     * Represents the {@link Engine.IPlayer} singleton that the game engine
+     * Represents the {@linkcode Engine.IPlayer} singleton that the game engine
      * uses to track your AI Player's moves.
      *
      * @category Game
