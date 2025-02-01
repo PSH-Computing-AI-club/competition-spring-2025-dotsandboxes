@@ -9,9 +9,12 @@
  * For general documentation on how to script your AI Player visit
  * the [AI Player Scripting FAQs](https://github.com/PSH-Computing-AI-club/competition-spring-2025/blob/main/ai-player-scripting.md).
  *
- * ## API Categories
+ * ## Global APIs
  *
- * @showCategories
+ * - {@linkcode Engine}
+ * - {@linkcode Game}
+ *
+ * ## All Available Namespaces + Types
  *
  * @module
  */
