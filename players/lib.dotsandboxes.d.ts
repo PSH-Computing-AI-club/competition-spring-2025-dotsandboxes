@@ -974,75 +974,470 @@ declare namespace Engine {
 
     // ---------- engine/game_session.ts ----------
 
+    /**
+     * Represents the event details dispatched to
+     * {@linkcode Engine.IGameSession.EVENT_PLAYER_FORFEIT} callbacks.
+     *
+     * @category Engine
+     */
     export interface IPlayerForfeitEvent {
+        /**
+         * Represents the {@linkcode Engine.IPlayer} instance that the
+         * dispatched event pertains to.
+         */
         readonly player: IPlayer;
 
+        /**
+         * Represents the turn index that the dispatched event pertains
+         * to.
+         */
         readonly turnIndex: number;
     }
 
+    /**
+     * Represents the event details dispatched to
+     * {@linkcode Engine.IGameSession.EVENT_PLAYER_TIMEOUT} callbacks.
+     *
+     * @category Engine
+     */
     export interface IPlayerTimeoutEvent {
+        /**
+         * Represents the {@linkcode Engine.IPlayer} instance that the
+         * dispatched event pertains to.
+         */
         readonly player: IPlayer;
 
+        /**
+         * Represents the turn index that the dispatched event pertains
+         * to.
+         */
         readonly turnIndex: number;
     }
 
+    /**
+     * Represents the event details dispatched to
+     * {@linkcode Engine.IGameSession.EVENT_TURN_ERROR} callbacks.
+     *
+     * @category Engine
+     */
     export interface ITurnErrorEvent {
+        /**
+         * Represents the runtime error instance thrown by the AI player.
+         */
         readonly error: Error;
 
+        /**
+         * Represents the {@linkcode Engine.IPlayer} instance that the
+         * dispatched event pertains to.
+         */
         readonly player: IPlayer;
 
+        /**
+         * Represents the turn index that the dispatched event pertains
+         * to.
+         */
         readonly turnIndex: number;
     }
 
+    /**
+     * Represents the event details dispatched to
+     * {@linkcode Engine.IGameSession.EVENT_TURN_END} callbacks.
+     *
+     * @category Engine
+     */
     export interface ITurnEndEvent {
+        /**
+         * Represents the amount of empty boxes the AI player captured from
+         * the move they made.
+         *
+         * > **NOTE**: An AI player can only ever capture one or two empty
+         * > boxes per-turn.
+         * >
+         * > They can however chain multiple turns to get more captures.
+         */
         readonly capturesMade: number;
 
+        /**
+         * Represents the {@linkcode Engine.IPlayer} instance that the
+         * dispatched event pertains to.
+         */
         readonly player: IPlayer;
 
+        /**
+         * Represents the turn index that the dispatched event pertains
+         * to.
+         */
         readonly turnIndex: number;
     }
 
+    /**
+     * Represents the event details dispatched to
+     * {@linkcode Engine.IGameSession.EVENT_TURN_MOVE} callbacks.
+     *
+     * @category Engine
+     */
     export interface ITurnMoveEvent {
+        /**
+         * Represents the {@linkcode Engine.IPlayer} instance that the
+         * dispatched event pertains to.
+         */
         readonly player: IPlayer;
 
+        /**
+         * Represents the {@linkcode Engine.IPlayerMove} instance that the
+         * AI player computed.
+         */
         readonly playerMove: IPlayerMove;
 
+        /**
+         * Represents the turn index that the dispatched event pertains
+         * to.
+         */
         readonly turnIndex: number;
     }
 
+    /**
+     * Represents the event details dispatched to
+     * {@linkcode Engine.IGameSession.EVENT_TURN_START} callbacks.
+     *
+     * @category Engine
+     */
     export interface ITurnStartEvent {
+        /**
+         * Represents the {@linkcode Engine.IPlayer} instance that the
+         * dispatched event pertains to.
+         */
         readonly player: IPlayer;
 
+        /**
+         * Represents the turn index that the dispatched event pertains
+         * to.
+         */
         readonly turnIndex: number;
     }
 
+    /**
+     * Represents the options passed to {@linkcode Engine.makeGameSession}.
+     *
+     * @category Engine
+     */
     export interface IGameSessionOptions {
+        /**
+         * Represents the {@linkcode Engine.IGameBoard} engine that the
+         * {@linkcode Engine.IGameSession} is being configured to manage.
+         */
         readonly gameBoard: IGameBoard;
 
+        /**
+         * Represents the AI players who will be managed by the
+         * {@linkcode Engine.IGameSession} instance.
+         */
         readonly players: IPlayer[];
 
+        /**
+         * Represents the maximum amount of milliseconds that AI players
+         * managed by the {@linkcode Engine.IGameSession} instance have
+         * to compute their moves when {@linkcode Engine.computeNextPlayerTurn}
+         * is called.
+         */
         readonly timeout: number;
     }
 
+    /**
+     * Represents the game state manager that handles turn order and player
+     * interaction.
+     *
+     * @category Engine
+     */
     export interface IGameSession extends IGameSessionOptions {
+        /**
+         * Represents an event fired when an AI Player forefeits.
+         *
+         * @event
+         *
+         * > **NOTE**: When this event is fired the game is terminated.
+         *
+         * @example
+         *
+         * ```javascript
+         * // Subscribe to the event with a callback;
+         * Game.session
+         *     .EVENT_PLAYER_FORFEIT
+         *     .subscribe((event) => {
+         *         // Retrieve the player who forfeited.
+         *         const playerWhoForfeited = event.player;
+         *
+         *         ... do something with this information ...
+         *     });
+         * ```
+         */
         readonly EVENT_PLAYER_FORFEIT: Util.IEvent<IPlayerForfeitEvent>;
 
+        /**
+         * Represents an event fired when an AI Player fails to compute
+         * their move in the configured {@linkcode Engine.IGameSessionOptions.timeout}.
+         *
+         * @event
+         *
+         * > **NOTE**: When this event is fired the game is terminated.
+         *
+         * @example
+         *
+         * ```javascript
+         * // Subscribe to the event with a callback.
+         * Game.session
+         *     .EVENT_PLAYER_TIMEOUT
+         *     .subscribe((event) => {
+         *         // Retrieve the player who timed out.
+         *         const playerWhoTimedout = event.player;
+         *
+         *         ... do something with this information ...
+         *     });
+         * ```
+         */
         readonly EVENT_PLAYER_TIMEOUT: Util.IEvent<IPlayerTimeoutEvent>;
 
+        /**
+         * Represents an event fired when an AI Player finishes their turn.
+         *
+         * @event
+         *
+         * @example
+         *
+         * ```javascript
+         * // Cache the singleton for future usage below.
+         * const me = Game.player;
+         *
+         * // Define some tracking variables for usage below.
+         * let lastPlayer = null;
+         * let lastPlayerChainCount = 0;
+         *
+         * Game.session
+         *     .EVENT_TURN_END
+         *     .subscribe((event) => {
+         *         // Cache the player who ended their turn for use below.
+         *         const player = event.player;
+         *
+         *         if (player !== lastPlayer) {
+         *             // The player who is ending their turn is a different
+         *             // player.
+         *             lastPlayerChainCount = 0;
+         *         } else {
+         *             // The player has had multiple turns in a row via
+         *             // chaining box captures.
+         *             lastPlayerChainCount = lastPlayerChainCount + 1;
+         *         }
+         *
+         *         // We need to always update this to properly keep track of
+         *         // who went last regardless if there was a turn chain.
+         *         lastPlayer = player;
+         *     });
+         *
+         * export default () => {
+         *     // Predefine a move variable we will assign below.
+         *     let move;
+         *
+         *     if (lastPlayerChainCount > 0 && lastPlayer !== me) {
+         *         // Use a specific strategy if our opponent(s) have been
+         *         // making big chain box captures.
+         *         move = ... calculate a move ...;
+         *     } else {
+         *         // Otherwise, if our AI Player has been making big capture
+         *         // chains or the opponent(s) have not been, then we use
+         *         // another strategy.
+         *         move = ... calculate a move ...;
+         *     }
+         *
+         *     // Return the xy-pair coordinates of the calculated move.
+         *     return {
+         *         x: move.x,
+         *         y: move.y
+         *     };
+         * };
+         * ```
+         */
         readonly EVENT_TURN_END: Util.IEvent<ITurnEndEvent>;
 
+        /**
+         * Represents an event fired when an AI Player throws a runtime error.
+         *
+         * @event
+         *
+         * > **NOTE**: When this event is fired the game is terminated.
+         *
+         * @example
+         *
+         * ```javascript
+         * // Subscribe to the event with a callback.
+         * Game.session
+         *     .EVENT_TURN_ERROR
+         *     .subscribe((event) => {
+         *         // Retrieve the player who errored.
+         *         const playerWhoErrored = event.player;
+         *
+         *         ... do something with this information ...
+         *     });
+         * ```
+         */
         readonly EVENT_TURN_ERROR: Util.IEvent<ITurnErrorEvent>;
 
+        /**
+         * Represents an event fired when an AI Player computed their move.
+         *
+         * @event
+         *
+         * @example
+         *
+         * ```javascript
+         * // Define some tracking variables for usage below.
+         * let lastMoveMade = null;
+         *
+         * // Subscribe to the event with a callback.
+         * Game.session
+         *     .EVENT_TURN_MOVE
+         *     .subscribe((event) => {
+         *         // Retrieve the last move made.
+         *         lastMoveMade = event.playerMove;
+         *      });
+         *
+         * export default () => {
+         *     // Predefine a move variable we will assign below.
+         *     let move;
+         *
+         *     if (lastMoveMade === null) {
+         *         // No move has been made yet. Meaning, we need to calculate
+         *         // the opening move.
+         *         move = ... calculate a move ...;
+         *     } else {
+         *         // Otherwise, an AI Player has made a move before. Why
+         *         // not try the strategy of using `lastMoveMade.x` / `lastMoveMade.y`
+         *         // to calculate a move in the opposite quadrant of the
+         *         // game board grid.
+         *         move = ... calculate a move ...;
+         *     }
+         *
+         *     // Return the xy-pair coordinates of the calculated move.
+         *     return {
+         *         x: move.x,
+         *         y: move.y
+         *     };
+         * };
+         * ```
+         */
         readonly EVENT_TURN_MOVE: Util.IEvent<ITurnMoveEvent>;
 
+        /**
+         * Represents an event fired when an AI Player starts their turn.
+         *
+         * @event
+         *
+         * @example
+         *
+         * ```javascript
+         * // Subscribe to the event with a callback.
+         * Game.session
+         *     .EVENT_TURN_START
+         *     .subscribe((event) => {
+         *         // Retrieve the player whose turn it is.
+         *         const playerWhoseTurnItIs = event.player;
+         *
+         *         ... do something with this information ...
+         *     });
+         * ```
+         */
         readonly EVENT_TURN_START: Util.IEvent<ITurnStartEvent>;
 
+        /**
+         * Represents the all the turns taken by AI players thus far
+         * in the current game.
+         *
+         * > **NOTE**: This array grows with turns as the game progresses.
+         *
+         * @example
+         *
+         * ```javascript
+         * // Cache the singletons for future usage below.
+         * const me = Game.player;
+         * const session = Game.session;
+         *
+         * export default () => {
+         *     // Get the amount of turns our AI player has taken so far.
+         *     const turnsWeHaveMade = session
+         *         .playerTurns
+         *         // Filter out all turns made by our AI player.
+         *         .filter((playerTurn) => playerTurn.player === me)
+         *         .length;
+         *
+         *     // Predefine a move variable we will assign below.
+         *     let move;
+         *
+         *     if (turnsWeHaveMade < 6) {
+         *         // If we have made less than six turns, then maybe the
+         *         // strategy should be to player less aggressively to
+         *         // confuse the opponent.
+         *         move = ... calculate a move ...;
+         *     } else {
+         *         // Otherwise, start ramping up once we make at least
+         *         // five moves.
+         *         move = ... calculate a move ...;
+         *     }
+         * };
+         * ```
+         */
         readonly playerTurns: IPlayerTurn[];
 
+        /**
+         * Applies a computed {@linkcode Engine.IPlayerTurn} instance to
+         * the game state.
+         *
+         * > **NOTE**: Do not use this API unless you are using it on a
+         * > {@linkcode Engine.IGameSession} instance you have created
+         * > with {@linkcode Engine.makeGameSession}!
+         * >
+         * > The instance exposed as the singleton {@linkcode Game.session}
+         * > is a copy of the game engine's main game state.
+         * >
+         * > You cannot directly alter the game engine's main game state.
+         *
+         * @param playerTurn The {@linkcode Engine.IPlayerTurn} instance being used
+         * to make the turn.
+         * @returns The amount of captures made in the turn.
+         */
         applyPlayerTurn(playerTurn: IPlayerTurn): number;
 
+        /**
+         * Uses the next AI player in turn order to compute their move
+         * that will then be converted into a {@linkcode Engine.IPlayerTurn}
+         * instance.
+         *
+         * > **NOTE**: Do not use this API unless you are using it on a
+         * > {@linkcode Engine.IGameSession} instance you have created
+         * > with {@linkcode Engine.makeGameSession}!
+         * >
+         * > The instance exposed as the singleton {@linkcode Game.session}
+         * > is a copy of the game engine's main game state.
+         * >
+         * > You cannot directly alter the game engine's main game state.
+         *
+         * @returns The computed {@linkcode Engine.IPlayerTurn} instance.
+         */
         computeNextPlayerTurn(): Promise<IPlayerTurn>;
 
+        /**
+         * Shifts the internal turn order by popping the current player
+         * from the top of the double ended queue and pushed to the back.
+         *
+         * > **NOTE**: Do not use this API unless you are using it on a
+         * > {@linkcode Engine.IGameSession} instance you have created
+         * > with {@linkcode Engine.makeGameSession}!
+         * >
+         * > The instance exposed as the singleton {@linkcode Game.session}
+         * > is a copy of the game engine's main game state.
+         * >
+         * > You cannot directly alter the game engine's main game state.
+         *
+         * @param capturesMade The number of captures made from an AI player's turn.
+         */
         shiftTurnOrder(capturesMade: number): void;
     }
 
