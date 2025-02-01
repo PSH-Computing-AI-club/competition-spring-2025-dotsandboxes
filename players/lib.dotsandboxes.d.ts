@@ -409,6 +409,10 @@ declare namespace Engine {
      *
      * @category Engine
      *
+     * @throws [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)
+     * if configured {@link Engine.IPlayerMove.x} and {@link Engine.IPlayerMove.y}
+     * fields are not of {@link Engine.SLOT_KIND.spacer} kind.
+     *
      * @param options Options to configure {@link Engine.IPlayerMove}.
      * @returns The configured {@link Engine.IPlayerMove}.
      */
