@@ -2,13 +2,13 @@
 // for a match. During a game session the player randomly selected between
 // the two selected players to use for a move computation.
 
-import { sampleArray } from './common.ts';
+import { sampleArray } from './common.js';
 
-import FirstOpeningPlayer from './first_opening_player.ts';
-import EdgingPlayer from './edging_player.ts';
-import GreedyPlayer from './greedy_player.ts';
-import RandomPlayer from './random_player.ts';
-import StrategicPlayer from './strategic_player.ts';
+import FirstOpeningPlayer from './first_opening_player.js';
+import EdgingPlayer from './edging_player.js';
+import GreedyPlayer from './greedy_player.js';
+import RandomPlayer from './random_player.js';
+import StrategicPlayer from './strategic_player.js';
 
 const AGGRESSIVE_PERSONALITY = sampleArray([
     GreedyPlayer,
