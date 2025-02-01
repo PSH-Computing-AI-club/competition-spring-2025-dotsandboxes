@@ -67,6 +67,14 @@ declare namespace Util {
  * Game Engine Global APIs
  *
  * @category Engine
+ *
+ * @example
+ *
+ * ```javascript
+ * const SLOT_KIND = Engine.SLOT_KIND;
+ *
+ * ... do something w/ game board slot kind enumeration ...
+ * ```
  */
 declare namespace Engine {
     // ---------- worker/engine_namespace.ts ----------
