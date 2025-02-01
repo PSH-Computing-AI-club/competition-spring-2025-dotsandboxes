@@ -360,7 +360,7 @@ declare namespace Engine {
      * @category Engine
      *
      * @param options Options to configure {@linkcode Engine.IPlayer}.
-     * @returns The configured {@linkcode Engine.IPlayer}.
+     * @returns The configured {@linkcode Engine.IPlayer} instance.
      */
     export type IPlayerConstructor<
         Options extends IPlayerOptions = IPlayerOptions,
@@ -414,7 +414,7 @@ declare namespace Engine {
      * fields are not of {@linkcode Engine.SLOT_KIND.spacer} kind.
      *
      * @param options Options to configure {@linkcode Engine.IPlayerMove}.
-     * @returns The configured {@linkcode Engine.IPlayerMove}.
+     * @returns The configured {@linkcode Engine.IPlayerMove} instance.
      */
     export function makePlayerMove(options: IPlayerMove): IPlayerMove;
 
