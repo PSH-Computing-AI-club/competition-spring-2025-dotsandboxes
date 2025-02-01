@@ -220,7 +220,7 @@ declare namespace Engine {
 
     /**
      * Represents when an {@linkcode Engine.IPlayer} instance that threw
-     * an error when its {@linkcode Engine.IPlayer.computeMove} was called.
+     * an error when its {@linkcode Engine.IPlayer.computePlayerMove} was called.
      *
      * @category Engine
      */
@@ -251,7 +251,7 @@ declare namespace Engine {
 
     /**
      * Represents when an {@linkcode Engine.IPlayer} instance that
-     * returned a `null` value when its {@linkcode Engine.IPlayer.computeMove}
+     * returned a `null` value when its {@linkcode Engine.IPlayer.computePlayerMove}
      * was called.
      *
      * @category Engine
@@ -278,7 +278,7 @@ declare namespace Engine {
     /**
      * Represents when an {@linkcode Engine.IPlayer} instance that did
      * not compute its move within the {@linkcode Engine.IGameSessionOptions.timeout}
-     * configured timelimit when its {@linkcode Engine.IPlayer.computeMove}
+     * configured timelimit when its {@linkcode Engine.IPlayer.computePlayerMove}
      * was called.
      *
      * @category Engine
