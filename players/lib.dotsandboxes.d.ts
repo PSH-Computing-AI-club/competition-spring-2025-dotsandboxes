@@ -837,11 +837,11 @@ declare namespace Engine {
      * - (odd, even) — {@linkcode Engine.SLOT_KIND.line}
      * - (even, odd) — {@linkcode Engine.SLOT_KIND.line}
      *
-     * @category Engine
-     *
      * > **NOTE**: Use this function to compute a {@linkcode Engine.SLOT_KIND}
      * > as if there was a {@linkcode Engine.IPlayerTurn} instance
      * > associated with the coordinates.
+     *
+     * @category Engine
      *
      * @param x The x-coordinate to compute from.
      * @param y The y-coordinate to compute from.
