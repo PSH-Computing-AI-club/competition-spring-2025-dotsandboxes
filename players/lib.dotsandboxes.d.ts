@@ -420,14 +420,47 @@ declare namespace Engine {
 
     // ---------- engine/player_turn.ts ----------
 
+    /**
+     * Represents a turn taken by an AI Player that was committed to
+     * the game state.
+     *
+     * @category Engine
+     */
     export interface IPlayerTurn extends IPlayerMove {
+        /**
+         * Represents the {@linkcode Engine.IPlayer} instance who
+         * took the committed turn.
+         */
         readonly player: IPlayer;
 
+        /**
+         * Represents the turn number of when this turn was committed.
+         *
+         * > **NOTE**: This number is zero-indexed!
+         */
         readonly turnIndex: number;
     }
 
+    /**
+     * Returns a new {@linkcode Engine.IPlayerTurn} instance.
+     *
+     * @category Engine
+     *
+     * @param options Options to configured {@linkcode Engine.IPlayerTurn}.
+     * @returns The configured {@linkcode Engine.IPlayerTurn} instance.
+     */
     export function makePlayerTurn(options: IPlayerTurn): IPlayerTurn;
 
+    /**
+     * Returns a new {@linkcode Engine.IPlayerTurn} instance that was
+     * partially configured via an {@linkcode Engine.IPlayerMove} instance.
+     *
+     * @category Engine
+     *
+     * @param moveOptions {@linkcode Engine.IPlayerMove} instance to pull data from.
+     * @param turnOptions Abbreviated options to configure {@linkcode Engine.IPlayerTurn}.
+     * @returns The configured {@linkcode Engine.IPlayerTurn} instance.
+     */
     export function makePlayerTurnFromPlayerMove(
         moveOptions: IPlayerMove,
         turnOptions: Omit<IPlayerTurn, keyof IPlayerMove>,
