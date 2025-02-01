@@ -152,7 +152,7 @@ declare namespace Engine {
     }
 
     /**
-     * Represents when an invalid x-y coordinate pair is used to
+     * Represents when an invalid xy-pair coordinates is used to
      * make a move.
      *
      * @category Engine
@@ -174,7 +174,7 @@ declare namespace Engine {
     }
 
     /**
-     * Represents when an invalid x-y coordinate pair is used to
+     * Represents when an invalid xy-pair coordinates is used to
      * query the current game state.
      *
      * @category Engine
@@ -391,7 +391,7 @@ declare namespace Engine {
     }
 
     /**
-     * Returns if the supplied x-y coordinate pair is a legal move.
+     * Returns if the supplied xy-pair coordinates is a legal move.
      *
      * > **IMPORTANT**: This function does _NOT_ check if the coordinate
      * > pair already had a line draw at the location.
@@ -446,7 +446,7 @@ declare namespace Engine {
      *
      * @category Engine
      *
-     * @param options Options to configured {@linkcode Engine.IPlayerTurn}.
+     * @param options Options to configure {@linkcode Engine.IPlayerTurn}.
      * @returns The configured {@linkcode Engine.IPlayerTurn} instance.
      */
     export function makePlayerTurn(options: IPlayerTurn): IPlayerTurn;
@@ -468,14 +468,82 @@ declare namespace Engine {
 
     // ---------- engine/game_board_slot.ts ----------
 
+    /**
+     * Represents an enumeration of all possible types of game board grid
+     * slots that can be stored in {@linkcode Engine.IGameBoard.grid}.
+     *
+     * @enum
+     * @category Engine
+     */
     export const SLOT_KIND: {
+        /**
+         * Represents that the game board grid slot is a dot boundary.
+         *
+         * > **NOTE**: Lines cannot be placed by AI Players on this
+         * > slot kind.
+         *
+         * > **NOTE**: All game board grid slots of
+         * > {@linkcode Engine.SLOT_KIND.dot} kind have coordinates
+         * > following the `(even, even)` xy-pair pattern.
+         */
         readonly dot: 'SLOT_DOT';
+
+        /**
+         * Represents that the game board grid slot is an empty box
+         * that does not yet have an initial inside of it.
+         *
+         * > **NOTE**: Lines cannot be placed by AI Players on this
+         * > slot kind.
+         *
+         * > **NOTE**: All game board grid slots of
+         * > {@linkcode Engine.SLOT_KIND.box} kind have coordinates
+         * > following the `(odd, odd)` xy-pair pattern.
+         */
         readonly box: 'SLOT_BOX';
+
+        /**
+         * Represents that the game board grid slot is a box that
+         * has an initial inside of it. Thus, the box is captured.
+         *
+         * > **NOTE**: Lines cannot be placed by AI Players on this
+         * > slot kind.
+         *
+         * > **NOTE**: All game board grid slots of
+         * > {@linkcode Engine.SLOT_KIND.initial} kind have coordinates
+         * > following the `(odd, odd)` xy-pair pattern.
+         */
         readonly initial: 'SLOT_INITIAL';
+
+        /**
+         * Represents that the game board grid slot is an empty
+         * spacer between dot boundary slots.
+         *
+         * > **NOTE**: All game board grid slots of
+         * > {@linkcode Engine.SLOT_KIND.spacer} kind have coordinates
+         * > following the `(even, odd)` or `(odd, even)` xy-pair patterns.
+         */
         readonly spacer: 'SLOT_SPACER';
+
+        /**
+         * Represents that the game board grid slot is a spacer
+         * between dot boundary slots that has line drawn on it.
+         *
+         * > **NOTE**: Lines cannot be placed by AI Players on this
+         * > slot kind.
+         *
+         * > **NOTE**: All game board grid slots of
+         * > {@linkcode Engine.SLOT_KIND.spacer} kind have coordinates
+         * > following the `(even, odd)` or `(odd, even)` xy-pair patterns.
+         */
         readonly line: 'SLOT_LINE';
     };
 
+    /**
+     * Represents a string union of all possible win kind identifiers
+     * there are.
+     *
+     * @category Engine
+     */
     export type SlotKind =
         | 'SLOT_DOT'
         | 'SLOT_BOX'
@@ -483,58 +551,255 @@ declare namespace Engine {
         | 'SLOT_SPACER'
         | 'SLOT_LINE';
 
+    /**
+     * Represents options passed to {@linkcode Engine.makeGameBoardSlot}.
+     *
+     * @category Engine
+     */
     export interface IGameBoardSlotOptions {
+        /**
+         * Represents an {@linkcode Engine.IPlayerTurn} instance associated
+         * with the game board grid slot.
+         *
+         * > **NOTE**: This field is only filled when a line has been placed
+         * > on a spacer slot or a box has been captured.
+         */
         readonly playerTurn?: IPlayerTurn | null;
 
+        /**
+         * Represents the x-coordinate of where the game board grid slot
+         * is located at in {@linkcode Engine.IGameBoard.grid}.
+         */
         readonly x: number;
 
+        /**
+         * Represents the y-coordinate of where the game board grid slot
+         * is located at in {@linkcode Engine.IGameBoard.grid}.
+         */
         readonly y: number;
     }
 
+    /**
+     * Represents the common interface to all game board grid slot kinds.
+     *
+     * @category Engine
+     */
     export interface IBaseBoardSlot extends Required<IGameBoardSlotOptions> {
+        /**
+         * Represents what kind the game board grid slot is.
+         *
+         * > **NOTE**: This value is computed by {@linkcode Engine.makeGameBoardSlot}
+         * > based on the xy-pair coordinates.
+         */
         readonly slotKind: SlotKind;
 
+        /**
+         * Returns if the game board grid slot is a horizontal spacer.
+         *
+         * > **NOTE**: This function only checks the coordinate pair. It
+         * > does not check if `{@link IBaseBoardSlot.slotKind} === {@link SLOT_KIND.spacer}`.
+         *
+         * @returns If the game board grid slot is horizontal.
+         */
         isHorizontalSpacer(): boolean;
 
+        /**
+         * Returns if the game board grid slot is a vertical spacer.
+         *
+         * > **NOTE**: This function only checks the coordinate pair. It
+         * > does not check if `{@link IBaseBoardSlot.slotKind} === {@link SLOT_KIND.spacer}`.
+         *
+         * @returns if the game board grid slot is vertical.
+         */
         isVerticalSpacer(): boolean;
     }
 
+    /**
+     * Represents a game board grid slot instance whose {@linkcode IBoxBoardSlot.slotKind}
+     * field is always set to {@linkcode SLOT_KIND.box} and never
+     * has an associated {@linkcode Engine.IPlayerTurn} assigned to it.
+     *
+     * @category Engine
+     */
     export interface IBoxBoardSlot extends IBaseBoardSlot {
+        /**
+         * Represents an {@linkcode Engine.IPlayerTurn} instance associated
+         * with the game board grid slot.
+         *
+         * > **NOTE**: This field is always `null` for this game board
+         * > grid slot kind.
+         */
         readonly playerTurn: null;
 
+        /**
+         * Represents what kind the game board grid slot is.
+         *
+         * > **NOTE**: This field is always {@linkcode SLOT_KIND.box}
+         * > for this game board grid slot kind.
+         */
         readonly slotKind: typeof SLOT_KIND['box'];
+
+        /**
+         * Returns `" "` to represent an empty box.
+         */
+        toString(): ' ';
     }
 
+    /**
+     * Represents a game board grid slot instance whose {@linkcode IDotBoardSlot.slotKind}
+     * field is always set to {@linkcode SLOT_KIND.dot} and never
+     * has an associated {@linkcode Engine.IPlayerTurn} assigned to it.
+     *
+     * @category Engine
+     */
     export interface IDotBoardSlot extends IBaseBoardSlot {
+        /**
+         * Represents an {@linkcode Engine.IPlayerTurn} instance associated
+         * with the game board grid slot.
+         *
+         * > **NOTE**: This field is always `null` for this game board
+         * > grid slot kind.
+         */
         readonly playerTurn: null;
 
+        /**
+         * Represents what kind the game board grid slot is.
+         *
+         * > **NOTE**: This field is always {@linkcode SLOT_KIND.dot}
+         * > for this game board grid slot kind.
+         */
         readonly slotKind: typeof SLOT_KIND['dot'];
+
+        /**
+         * Returns `"."` to represent a dot boundary.
+         */
+        toString(): '.';
     }
 
+    /**
+     * Represents a game board grid slot instance whose {@linkcode IInitialBoardSlot.slotKind}
+     * field is always set to {@linkcode SLOT_KIND.initial} and always
+     * has an associated {@linkcode Engine.IPlayerTurn} assigned to it.
+     *
+     * @category Engine
+     */
     export interface IInitialBoardSlot extends IBaseBoardSlot {
+        /**
+         * Represents an {@linkcode Engine.IPlayerTurn} instance associated
+         * with the game board grid slot.
+         *
+         * > **NOTE**: This field is always valid for this game board
+         * > grid slot kind.
+         */
         readonly playerTurn: IPlayerTurn;
 
+        /**
+         * Represents what kind the game board grid slot is.
+         *
+         * > **NOTE**: This field is always {@linkcode SLOT_KIND.initial}
+         * > for this game board grid slot kind.
+         */
         readonly slotKind: typeof SLOT_KIND['initial'];
-    }
 
-    export interface ILineBoardSlot extends IBaseBoardSlot {
-        readonly playerTurn: IPlayerTurn;
-
-        readonly slotKind: typeof SLOT_KIND['line'];
-    }
-
-    export interface ISpacerBoardSlot extends IBaseBoardSlot {
-        readonly playerTurn: null;
-
-        readonly slotKind: typeof SLOT_KIND['spacer'];
-
+        /**
+         * Returns the initial of the player who captured the box.
+         */
         toString(): string;
     }
 
+    /**
+     * Represents a game board grid slot instance whose {@linkcode ILineBoardSlot.slotKind}
+     * field is always set to {@linkcode SLOT_KIND.line} and always
+     * has an associated {@linkcode Engine.IPlayerTurn} assigned to it.
+     *
+     * @category Engine
+     */
+    export interface ILineBoardSlot extends IBaseBoardSlot {
+        /**
+         * Represents an {@linkcode Engine.IPlayerTurn} instance associated
+         * with the game board grid slot.
+         *
+         * > **NOTE**: This field is always valid for this game board
+         * > grid slot kind.
+         */
+        readonly playerTurn: IPlayerTurn;
+
+        /**
+         * Represents what kind the game board grid slot is.
+         *
+         * > **NOTE**: This field is always {@linkcode SLOT_KIND.line}
+         * > for this game board grid slot kind.
+         */
+        readonly slotKind: typeof SLOT_KIND['line'];
+
+        /**
+         * Returns `"-"` or `"|"` depending on if line is horizontal
+         * or vertical.
+         */
+        toString(): '-' | '|';
+    }
+
+    /**
+     * Represents a game board grid slot instance whose {@linkcode ISpacerBoardSlot.slotKind}
+     * field is always set to {@linkcode SLOT_KIND.spacer} and never
+     * has an associated {@linkcode Engine.IPlayerTurn} assigned to it.
+     *
+     * @category Engine
+     */
+    export interface ISpacerBoardSlot extends IBaseBoardSlot {
+        /**
+         * Represents an {@linkcode Engine.IPlayerTurn} instance associated
+         * with the game board grid slot.
+         *
+         * > **NOTE**: This field is always `null` for this game board
+         * > grid slot kind.
+         */
+        readonly playerTurn: null;
+
+        /**
+         * Represents what kind the game board grid slot is.
+         *
+         * > **NOTE**: This field is always {@linkcode SLOT_KIND.spacer}
+         * > for this game board grid slot kind.
+         */
+        readonly slotKind: typeof SLOT_KIND['spacer'];
+
+        /**
+         * Returns `" "` to represent an empty spacer.
+         */
+        toString(): ' ';
+    }
+
+    /**
+     * Represents a game board grid slot instance that could be a
+     * captured or empty box.
+     *
+     * > **NOTE**: This is used in APIs like {@linkcode Engine.IGameBoard.walkBoxes}
+     * > which can return either kind.
+     *
+     * @category Engine
+     */
     export type IBoxLikeBoardSlot = IBoxBoardSlot | IInitialBoardSlot;
 
+    /**
+     * Represents a game board grid slot instance that could be a
+     * drawn line or empty spacer.
+     *
+     * > **NOTE**: This is used in APIs like {@linkcode Engine.IGameBoard.walkSpacers}
+     * > which can return either kind.
+     *
+     * @category Engine
+     */
     export type ISpacerLikeBoardSlot = ILineBoardSlot | ISpacerBoardSlot;
 
+    /**
+     * Represents all possible game board grid slot instances.
+     *
+     * > **NOTE**: This is used in APIs like {@linkcode Engine.IGameBoard.grid}
+     * > which can return any kind.
+     *
+     * @category Engine
+     */
     export type IGameBoardSlot =
         | IBoxBoardSlot
         | IDotBoardSlot
@@ -542,14 +807,84 @@ declare namespace Engine {
         | ILineBoardSlot
         | ISpacerBoardSlot;
 
+    /**
+     * Returns the associated {@linkcode Engine.SLOT_KIND} kind matching
+     * the following xy-pair coordinates criteria:
+     *
+     * - (even, even) — {@linkcode Engine.SLOT_KIND.dot}
+     * - (odd, odd) — {@linkcode Engine.SLOT_KIND.box}
+     * - (odd, even) — {@linkcode Engine.SLOT_KIND.spacer}
+     * - (even, odd) — {@linkcode Engine.SLOT_KIND.spacer}
+     *
+     * > **NOTE**: Use this function to compute a {@linkcode Engine.SLOT_KIND}
+     * > as if there were no {@linkcode Engine.IPlayerTurn} instance
+     * > associated with the coordinates.
+     *
+     * @category Engine
+     *
+     * @param x The x-coordinate to compute from.
+     * @param y The y-coordinate to compute from.
+     * @returns The associated {@linkcode Engine.SLOT_KIND}.
+     */
     export function determineInitialSlotKind(x: number, y: number): SlotKind;
 
+    /**
+     * Returns the associated {@linkcode Engine.SLOT_KIND} kind matching
+     * the following xy-pair coordinates criteria:
+     *
+     * - (even, even) — {@linkcode Engine.SLOT_KIND.dot}
+     * - (odd, odd) — {@linkcode Engine.SLOT_KIND.initial}
+     * - (odd, even) — {@linkcode Engine.SLOT_KIND.line}
+     * - (even, odd) — {@linkcode Engine.SLOT_KIND.line}
+     *
+     * @category Engine
+     *
+     * > **NOTE**: Use this function to compute a {@linkcode Engine.SLOT_KIND}
+     * > as if there was a {@linkcode Engine.IPlayerTurn} instance
+     * > associated with the coordinates.
+     *
+     * @param x The x-coordinate to compute from.
+     * @param y The y-coordinate to compute from.
+     * @returns The associated {@linkcode Engine.SLOT_KIND}.
+     */
     export function determinePlacedSlotKind(x: number, y: number): SlotKind;
 
+    /**
+     * Returns if a xy-pair coordinates are a horizontal spacer.
+     *
+     * > **NOTE**: This function only checks the coordinate pair. It
+     * > does not check {@linkcode SLOT_KIND}.
+     *
+     * @category Engine
+     *
+     * @param x The x-coordinate to check.
+     * @param y The y-coordinate to check.
+     * @returns If the coordinate pair are horizontal.
+     */
     export function isHorizontalSpacer(x: number, y: number): boolean;
 
+    /**
+     * Returns if a xy-pair coordinates are a vertical spacer.
+     *
+     * > **NOTE**: This function only checks the coordinate pair. It
+     * > does not check {@linkcode SLOT_KIND}.
+     *
+     * @category Engine
+     *
+     * @param x The x-coordinate to check.
+     * @param y The y-coordinate to check.
+     * @returns If the coordinate pair are vertical.
+     */
     export function isVerticalSpacer(x: number, y: number): boolean;
 
+    /**
+     * Returns a new {@linkcode Engine.IGameBoardSlot} instance.
+     *
+     * @category Engine
+     *
+     * @param options Options to configure {@linkcode Engine.IGameBoardSlot}.
+     * @returns The configured {@linkcode Engine.IGameBoardSlot} instance.
+     */
     export function makeGameBoardSlot(
         options: IGameBoardSlotOptions,
     ): IGameBoardSlot;
