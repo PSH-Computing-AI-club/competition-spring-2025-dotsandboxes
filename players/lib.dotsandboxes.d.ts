@@ -914,74 +914,472 @@ declare namespace Engine {
 
     // ---------- engine/game_board.ts ----------
 
+    /**
+     * Represents the event details dispatched to
+     * {@linkcode Engine.IGameBoard.EVENT_APPLIED_CAPTURE} callbacks.
+     *
+     * @category Engine
+     */
     export interface IAppliedCaptureEvent {
+        /**
+         * Represents the state of the game board grid slot _after_
+         * the updated state is applied.
+         */
         readonly newBoardSlot: IInitialBoardSlot;
 
+        /**
+         * Represents the state of the game board grid slot _before_
+         * the updated state is applied.
+         */
         readonly oldBoardSlot: IBoxBoardSlot;
     }
 
+    /**
+     * Represents the event details dispatched to
+     * {@linkcode Engine.IGameBoard.EVENT_PLACE_LINE} callbacks.
+     *
+     * @category Engine
+     */
     export interface IPlacedLineEvent {
+        /**
+         * Represents the state of the game board grid slot _after_
+         * the updated state is applied.
+         */
         readonly newBoardSlot: ILineBoardSlot;
 
+        /**
+         * Represents the state of the game board grid slot _before_
+         * the updated state is applied.
+         */
         readonly oldBoardSlot: ISpacerBoardSlot;
-
-        readonly playerTurn: IPlayerTurn;
     }
 
+    /**
+     * Represents options passed to {@linkcode Engine.makeGameBoard}.
+     *
+     * @category Engine
+     */
     export interface IGameBoardOptions {
+        /**
+         * Represents the column dimension of the dot boundary grid.
+         */
         readonly columns: number;
 
+        /**
+         * Represents the row dimension of the dot boundary grid.
+         */
         readonly rows: number;
     }
 
+    /**
+     * Represents the game state manager that handles the game board grid,
+     * placement of lines, and other interactions.
+     *
+     * @category Engine
+     */
     export interface IGameBoard extends IGameBoardOptions {
+        /**
+         * Represents an event fired when the game board grid was modified
+         * to have a fill in an initial at an empty box.
+         *
+         * @event
+         *
+         * @example
+         *
+         * ```javascript
+         * // Subscribe to the event with a callback.
+         * Game.session
+         *     .EVENT_APPLIED_CAPTURE
+         *     .subscribe((event) => {
+         *         // Retrieve the new game board slot data.
+         *         const newBoardSlot = event.newBoardSlot;
+         *
+         *         ... do something with the data...
+         *     });
+         * ```
+         */
         readonly EVENT_APPLIED_CAPTURE: Util.IEvent<IAppliedCaptureEvent>;
 
+        /**
+         * Represents an event fired when the game board grid was modified
+         * to have a line placed at an empty spacer.
+         *
+         * @event
+         *
+         * @example
+         *
+         * ```javascript
+         * // Subscribe to the event with a callback.
+         * Game.session
+         *     .EVENT_PLACED_LINE
+         *     .subscribe((event) => {
+         *         // Retrieve the new game board slot data.
+         *         const newBoardSlot = event.newBoardSlot;
+         *
+         *         ... do something with the data...
+         *     });
+         * ```
+         */
         readonly EVENT_PLACED_LINE: Util.IEvent<IPlacedLineEvent>;
 
+        /**
+         * Represents how many boxes have been captured in the game
+         * board grid.
+         *
+         * > **NOTE**: This field updates as the game progresses.
+         */
         readonly boxesClaimed: number;
 
+        /**
+         * Represents how many columns have to be added to the game
+         * board grid to expand it.
+         *
+         * @see Engine.IGameBoardGrid.expandedColumns
+         */
         readonly columnPadding: number;
 
+        /**
+         * Represents the amount of columns allocated to the expanded
+         * 2D array stored in {@linkcode Engine.IGameBoard.grid}.
+         */
         readonly expandedColumns: number;
 
+        /**
+         * Represents the amount of rows allocated to the expanded
+         * 2D array stored in {@linkcode Engine.IGameBoard.grid}.
+         */
         readonly expandedRows: number;
 
+        /**
+         * Represents how many horizontal spacers between dot boundaries
+         * exist in the game board grid.
+         */
         readonly horizontalSpacers: number;
 
+        /**
+         * Represents a 2D array that stores every game board grid slot
+         * first by row then by column.
+         *
+         * The 2D array is an expanded version of a {@linkcode Engine.IGameBoardOptions.columns}
+         * x {@linkcode Engine.IGameBoardOptions.rows} grid of dots. The
+         * grid is expanded by adding {@linkcode Engine.IGameBoard.columnPadding}
+         * x {@linkcode Engine.IGameBoard.rowPadding} of columns x rows.
+         *
+         * For example, 3x5 2D grid of dots would normally look like this:
+         *
+         * ```plaintext
+         * .....
+         * .....
+         * .....
+         * ```
+         *
+         * But when using the padding values from {@linkcode Engine.IGameBoard.columnPadding}
+         * and {@linkcode Engine.IGameBoard.rowPadding}, the dot grid
+         * is expanded into a 2D grid that include spacing between the dots:
+         *
+         * ```plaintext
+         * . . . . .
+         *
+         * . . . . .
+         *
+         * . . . . .
+         * ```
+         *
+         * Each character, including spacing characters, is its own game
+         * board grid slot.
+         *
+         * Let's say you wanted to access this box:
+         *
+         * ```plaintext
+         * . . . . .
+         *    X
+         * . . . . .
+         *
+         * . . . . .
+         * ```
+         *
+         * It is at the xy-pair coordinates (3, 1). You would reference it
+         * like so:
+         *
+         * ```javascript
+         * // Store our coordinates in variables.
+         * const x = 3;
+         * const y = 1;
+         *
+         * // Access the yth row first and then the xth column.
+         * const boxRef1 = Game.board.grid[y][x];
+         *
+         * // Or more directory without variables:
+         * const boxRef2 = Game.board.grid[1][3];
+         * ```
+         *
+         * @example
+         *
+         * ```javascript
+         * // Cache the variables for future use below.
+         * const SLOT_KIND = Engine.SLOT_KIND;
+         * const expandedColumns = Game.board.expandedColumns;
+         * const expandedRows = Game.board.expandedRows;
+         * const grid = Game.board.grid;
+         *
+         * export default () => {
+         *     // We are going to loop through every row and column
+         *     // using a standard for-loop.
+         *     for (let y = 0; y <= expandedRows; y++) {
+         *         for (let x = 0; x <= expandedColumns; x++) {
+         *             const gameBoardSlot = grid[y][x];
+         *
+         *             // We are looking only for empty spacers.
+         *             if (gameBoardSlot.slotKind === SLOT_KIND.spacer) {
+         *                 // We will have our AI player return the first one is finds.
+         *                 return {
+         *                     x,
+         *                     y
+         *                 };
+         *             }
+         *         }
+         *     }
+         *
+         *     // Since we did not find anything, forfeit.
+         *     return null;
+         * };
+         * ```
+         */
         readonly grid: readonly (readonly IGameBoardSlot[])[];
 
+        /**
+         * Represents the remaining amount of empty boxes that have not
+         * been captured yet.
+         *
+         * > **NOTE**: This field updates as the game progresses.
+         */
         readonly remainingBoxes: number;
 
+        /**
+         * Represents how many spacers have not yet had a line placed on
+         * them.
+         *
+         * > **NOTE**: This field updates as the game progresses.
+         */
         readonly remainingSpacers: number;
 
+        /**
+         * Represents how many rows have to be added to the game
+         * board grid to expand it.
+         *
+         * @see Engine.IGameBoardGrid.expandedRows
+         */
         readonly rowPadding: number;
 
+        /**
+         * Represents how many spacers have had lines placed on them
+         * in the game board grid.
+         *
+         * > **NOTE**: This field updates as the game progresses.
+         */
         readonly spacersClaimed: number;
 
+        /**
+         * Represents how many boxes (empty + initial'd) exist total in
+         * the game board grid.
+         */
         readonly totalBoxes: number;
 
+        /**
+         * Represents how many spacers (empty + line) exist total in
+         * the game board grid.
+         */
         readonly totalSpacers: number;
 
+        /**
+         * Represents how many vertical spacers between dot boundaries
+         * exist in the game board grid.
+         */
         readonly verticalSpacers: number;
 
+        /**
+         * Applies any captures to empty boxes that have four lines
+         * around them.
+         *
+         * > **NOTE**: Do not use this API unless you are using it on a
+         * > {@linkcode Engine.IGameBoard} instance you have created
+         * > with {@linkcode Engine.makeGameBoard}!
+         * >
+         * > The instance exposed as the singleton {@linkcode Game.board}
+         * > is a copy of the game engine's main game state.
+         * >
+         * > You cannot directly alter the game engine's main game state.
+         *
+         * @returns The amount of captures made.
+         */
         applyCaptures(): number;
 
+        /**
+         * Returns the amount of lines surrounding a box (empty or initial'd).
+         *
+         * @example
+         *
+         * ```javascript
+         * // Cache the singleton for future use below.
+         * const SLOT_KIND = Engine.SLOT_KIND;
+         * const board = Game.board;
+         *
+         * export default () => {
+         *     // `IGameBoard.walkBoxes` uses an optimized traversal algorithm. So,
+         *     // let's use that method instead looping `IGameBoard.grid` w/ for-loops.
+         *     for (const box of board.walkBoxes()) {
+         *         // We only want boxes that have not already been captured.
+         *         if (box.slotKind === SLOT_KIND.initial) {
+         *             continue;
+         *         }
+         *
+         *         // We only want boxes that we can capture right away.
+         *         if (board.countSurroundingLines(box.x, box.y) !== 3) {
+         *             continue;
+         *         }
+         *
+         *         // We found our first box we can capture, return its coordinates.
+         *         return {
+         *             x: box.x,
+         *             y: box.y
+         *         };
+         *     }
+         *
+         *     // Since we did not find anything, forfeit.
+         *     return null;
+         * };
+         * ```
+         *
+         * @throws {@linkcode Engine.InvalidQueryError} If the xy-pair coordinates are not a box.
+         *
+         * @param x The x-coordinate to pull data from.
+         * @param y The y-coordinate to pull data from.
+         * @returns The amount of lines surrounding the box.
+         */
         countSurroundingLines(x: number, y: number): number;
 
+        /**
+         * Returns the {@linkcode IPlayerTurn} instance that placed the most
+         * recent line surrounding the box.
+         *
+         * @throws {@linkcode Engine.InvalidQueryError} If the xy-pair coordinates are not a box.
+         *
+         * @param x The x-coordinate to pull data from.
+         * @param y The y-coordinate to pull data from.
+         * @returns The most recent turn, if any.
+         */
         determinePriorityPlayerTurn(x: number, y: number): IPlayerTurn | null;
 
+        /**
+         * Places a line at an empty spacer using data from a
+         * {@linkcode Engine.IPlayerTurn} instance.
+         *
+         * > **NOTE**: Do not use this API unless you are using it on a
+         * > {@linkcode Engine.IGameBoard} instance you have created
+         * > with {@linkcode Engine.makeGameBoard}!
+         * >
+         * > The instance exposed as the singleton {@linkcode Game.board}
+         * > is a copy of the game engine's main game state.
+         * >
+         * > You cannot directly alter the game engine's main game state.
+         *
+         * @throws {@linkcode Engine.InvalidPlacementError} If the xy-pair coordinates are not a an empty spacer.
+         *
+         * @param playerTurn The {@linkcode Engine.IPlayerTurn} instance to pull data from.
+         */
         placeLine(playerTurn: IPlayerTurn): void;
 
+        /**
+         * Returns a visualized version of the game board grid as a string.
+         *
+         * @example
+         *
+         * ```plaintext
+         *    0
+         *    012345678
+         * 00 . . .-.-.
+         *  1 |
+         *  2 .-.-.-.-.
+         *  3       |B|
+         *  4 . .-.-.-.
+         *
+         * @returns Visualization of the game board grid.
+         * ```
+         */
         toString(): string;
 
+        /**
+         * Returns a generator that yields all boxes (empty + initial'd)
+         * via an optimized for-loop.
+         *
+         * @example
+         *
+         * ```javascript
+         * // Cache the singleton for future use below.
+         * const board = Game.board;
+         *
+         * export default () => {
+         *     for (const box of board.walkBoxes()) {
+         *         ... do stuff ...
+         *     }
+         * };
+         * ```
+         *
+         * @returns
+         */
         walkBoxes(): Generator<IBoxLikeBoardSlot>;
 
+        /**
+         * Returns a generator that yields all dot boundaries
+         * via an optimized for-loop.
+         *
+         * @example
+         *
+         * ```javascript
+         * // Cache the singleton for future use below.
+         * const board = Game.board;
+         *
+         * export default () => {
+         *     for (const dot of board.walkSpacers()) {
+         *         ... do stuff ...
+         *     }
+         * };
+         * ```
+         *
+         * @returns
+         */
         walkDots(): Generator<IDotBoardSlot>;
 
+        /**
+         * Returns a generator that yields all spacers (empty + line)
+         * via an optimized for-loop.
+         *
+         * @example
+         *
+         * ```javascript
+         * // Cache the singleton for future use below.
+         * const board = Game.board;
+         *
+         * export default () => {
+         *     for (const spacer of board.walkSpacers()) {
+         *         ... do stuff ...
+         *     }
+         * };
+         * ```
+         *
+         * @returns
+         */
         walkSpacers(): Generator<ISpacerLikeBoardSlot>;
     }
 
+    /**
+     * Returns a new {@linkcode Engine.IGameBoard} instance.
+     *
+     * @category Engine
+     *
+     * @param options Options to configure {@linkcode Engine.IGameBoard}.
+     * @returns The configured {@linkcode Engine.IGameBoard} instance.
+     */
     export function makeGameBoard(options: IGameBoardOptions): IGameBoard;
 
     // ---------- engine/game_session.ts ----------
@@ -1190,8 +1588,6 @@ declare namespace Engine {
          * their move in the configured {@linkcode Engine.IGameSessionOptions.timeout}.
          *
          * @event
-         *
-         * > **NOTE**: When this event is fired the game is terminated.
          *
          * @example
          *
