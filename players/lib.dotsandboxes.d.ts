@@ -550,7 +550,7 @@ declare namespace Engine {
     };
 
     /**
-     * Represents a string union of all possible win kind identifiers
+     * Represents a string union of all possible slot kind identifiers
      * there are.
      *
      * @category Engine
