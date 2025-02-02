@@ -2,10 +2,7 @@ import { Command } from '@cliffy/command';
 
 import { OUTPUT_KIND, OUTPUT_KIND_ENUM } from './output_logger.ts';
 import { COMMAND_SIMULATE } from './simulate.ts';
-
-const IS_WINDOWS = Deno.build.os === 'windows';
-
-const BINARY_NAME = IS_WINDOWS ? 'dotsandboxes.exe' : 'dotsandboxes';
+import { BINARY_NAME } from './util.ts';
 
 await new Command()
     .name(BINARY_NAME)
