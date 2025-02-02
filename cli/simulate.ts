@@ -1,8 +1,9 @@
 import { Command } from '@cliffy/command';
 
+import { runGameLoop } from './game_loop.ts';
 import type { IGlobalOptions } from './global.ts';
 import { setupOutputLogger } from './output_logger.ts';
-import { runGameLoop } from './game_loop.ts';
+import { BINARY_NAME } from './util.ts';
 
 interface ISimulateOptions extends IGlobalOptions {
     readonly gridColumns: number;
@@ -16,6 +17,14 @@ interface ISimulateOptions extends IGlobalOptions {
 
 export const COMMAND_SIMULATE = new Command()
     .description('Simulates a Dots and Boxes game session.')
+    .example(
+        'Simulate Two JavaScript Players',
+        `${BINARY_NAME} ./random_player.js ./strategic_player.js`,
+    )
+    .example(
+        'Simulate Two TypeScript Players',
+        `${BINARY_NAME} ./random_player.ts ./strategic_player.ts`,
+    )
     .option(
         '--grid-columns [columns:number]',
         'Determine how many columns of dots is in gameboard.',
