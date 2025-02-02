@@ -337,6 +337,8 @@ declare namespace Engine {
         /**
          * Represents a "stringification" function that serializes
          * the {@linkcode Engine.IPlayer} instance into a human-readable string.
+         *
+         * @returns Identifier for the {@linkcode IPlayer} instance.
          */
         toString(): string;
     }
@@ -652,6 +654,8 @@ declare namespace Engine {
 
         /**
          * Returns `" "` to represent an empty box.
+         *
+         * @returns The empty box representation string.
          */
         toString(): ' ';
     }
@@ -683,6 +687,8 @@ declare namespace Engine {
 
         /**
          * Returns `"."` to represent a dot boundary.
+         *
+         * @returns The dot boundary string representation.
          */
         toString(): '.';
     }
@@ -713,7 +719,9 @@ declare namespace Engine {
         readonly slotKind: typeof SLOT_KIND['initial'];
 
         /**
-         * Returns the initial of the player who captured the box.
+         * Returns the initial of the AI player who captured the box.
+         *
+         * @returns The AI player's initial string representation.
          */
         toString(): string;
     }
@@ -746,6 +754,8 @@ declare namespace Engine {
         /**
          * Returns `"-"` or `"|"` depending on if line is horizontal
          * or vertical.
+         *
+         * @returns The pipe character string representation of a line.
          */
         toString(): '-' | '|';
     }
@@ -777,6 +787,8 @@ declare namespace Engine {
 
         /**
          * Returns `" "` to represent an empty spacer.
+         *
+         * @returns The empty spacer representation string.
          */
         toString(): ' ';
     }
