@@ -1446,7 +1446,7 @@ declare namespace Engine {
      *
      * @category Engine
      *
-     * @param options Options to {@linkcode Engine.IGameSession}.
+     * @param options Options to configure {@linkcode Engine.IGameSession}.
      * @returns The configured {@linkcode Engine.IGameSession} instance.
      */
     export function makeGameSession(options: IGameSessionOptions): IGameSession;
