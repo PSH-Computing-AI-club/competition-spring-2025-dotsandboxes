@@ -15,10 +15,10 @@ Download the [latest release](https://github.com/PSH-Computing-AI-club/competiti
 ## Usage
 
 ```shell
-$ dotsandboxes --help
+$ dotsandboxes-{OS} --help
 
-Usage:   dotsandboxes
-Version: 0.0.1       
+Usage:   dotsandboxes-{OS}
+Version: 0.0.2       
 
 Description:
 
@@ -41,10 +41,10 @@ Commands:
 > **NOTE:** You need internet access for the first time you run a simulation so [`deno_emit`](https://github.com/denoland/deno_emit) can download its payload.
 
 ```shell
-$ dotsandboxes simulate --help
+$ dotsandboxes-{OS} simulate --help
 
-Usage:   dotsandboxes simulate <files...>
-Version: 0.0.1                           
+Usage:   dotsandboxes-{OS} simulate <files...>
+Version: 0.0.2                                 
 
 Description:
 
@@ -57,8 +57,14 @@ Options:
   --output-kind   [outputKind]  - Determine the format used for output.                                       (Default: "human", Values: "human", "jsonl")
   --grid-columns  [columns]     - Determine how many columns of dots is in gameboard.                         (Default: 5)                                
   --grid-rows     [rows]        - Determine how many rows of dots is in gameboard.                            (Default: 3)                                
-  --seed          [seed]        - Determine what value to initially seed random number generators with.       (Default: 1736428032852)                    
-  --timeout       [timeout]     - Determine how long in milliseconds should each player get to compute their  (Default: 1000)
+  --seed          [seed]        - Determine what value to initially seed random number generators with.       (Default: 1738463778408)                    
+  --timeout       [timeout]     - Determine how long in milliseconds should each player get to compute their  (Default: 1000)                             
+                                  turns.                                                                                                                  
+
+Examples:
+
+  Simulate Two JavaScript Players: dotsandboxes-{OS} ./random_player.js ./strategic_player.js
+  Simulate Two TypeScript Players: dotsandboxes-{OS} ./random_player.ts ./strategic_player.ts
 ```
 
 ## Player Scripting API Reference
