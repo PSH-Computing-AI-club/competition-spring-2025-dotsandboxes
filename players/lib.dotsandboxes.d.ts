@@ -344,15 +344,15 @@ declare namespace Engine {
     }
 
     /**
-     * Represents a common interface for AI Players to implement. This
-     * allows the game engine to communicate with AI Players using
+     * Represents a common interface for AI players to implement. This
+     * allows the game engine to communicate with AI players using
      * a strict specification without edge cases.
      *
      * @category Engine
      */
     export interface IPlayer extends IPlayerOptions {
         /**
-         * The callback function for AI Players that passes them
+         * The callback function for AI players that passes them
          * the current game state so they can return a computed move.
          *
          * @param gameSession
@@ -366,8 +366,8 @@ declare namespace Engine {
     }
 
     /**
-     * Represents a common interface for AI Players to implement. This
-     * allows for the game engine to construct AI Players without having
+     * Represents a common interface for AI players to implement. This
+     * allows for the game engine to construct AI players without having
      * to implement edge cases.
      *
      * @category Engine
@@ -385,19 +385,19 @@ declare namespace Engine {
     // ---------- engine/player_move.ts ----------
 
     /**
-     * Represents a move computed by an AI Player.
+     * Represents a move computed by an AI player.
      *
      * @category Engine
      */
     export interface IPlayerMove {
         /**
-         * Represents the x-coordinate the AI Player tried to draw a
+         * Represents the x-coordinate the AI player tried to draw a
          * line at.
          */
         readonly x: number;
 
         /**
-         * Represents the x-coordinate the AI Player tried to draw a
+         * Represents the x-coordinate the AI player tried to draw a
          * line at.
          */
         readonly y: number;
@@ -434,7 +434,7 @@ declare namespace Engine {
     // ---------- engine/player_turn.ts ----------
 
     /**
-     * Represents a turn taken by an AI Player that was committed to
+     * Represents a turn taken by an AI player that was committed to
      * the game state.
      *
      * @category Engine
@@ -492,7 +492,7 @@ declare namespace Engine {
         /**
          * Represents that the game board grid slot is a dot boundary.
          *
-         * > **NOTE**: Lines cannot be placed by AI Players on this
+         * > **NOTE**: Lines cannot be placed by AI players on this
          * > slot kind.
          *
          * > **NOTE**: All game board grid slots of
@@ -505,7 +505,7 @@ declare namespace Engine {
          * Represents that the game board grid slot is an empty box
          * that does not yet have an initial inside of it.
          *
-         * > **NOTE**: Lines cannot be placed by AI Players on this
+         * > **NOTE**: Lines cannot be placed by AI players on this
          * > slot kind.
          *
          * > **NOTE**: All game board grid slots of
@@ -518,7 +518,7 @@ declare namespace Engine {
          * Represents that the game board grid slot is a box that
          * has an initial inside of it. Thus, the box is captured.
          *
-         * > **NOTE**: Lines cannot be placed by AI Players on this
+         * > **NOTE**: Lines cannot be placed by AI players on this
          * > slot kind.
          *
          * > **NOTE**: All game board grid slots of
@@ -541,7 +541,7 @@ declare namespace Engine {
          * Represents that the game board grid slot is a spacer
          * between dot boundary slots that has line drawn on it.
          *
-         * > **NOTE**: Lines cannot be placed by AI Players on this
+         * > **NOTE**: Lines cannot be placed by AI players on this
          * > slot kind.
          *
          * > **NOTE**: All game board grid slots of
@@ -1163,7 +1163,7 @@ declare namespace Engine {
      */
     export interface IGameSession extends IGameSessionOptions {
         /**
-         * Represents an event fired when an AI Player forefeits.
+         * Represents an event fired when an AI player forefeits.
          *
          * @event
          *
@@ -1186,7 +1186,7 @@ declare namespace Engine {
         readonly EVENT_PLAYER_FORFEIT: Util.IEvent<IPlayerForfeitEvent>;
 
         /**
-         * Represents an event fired when an AI Player fails to compute
+         * Represents an event fired when an AI player fails to compute
          * their move in the configured {@linkcode Engine.IGameSessionOptions.timeout}.
          *
          * @event
@@ -1210,7 +1210,7 @@ declare namespace Engine {
         readonly EVENT_PLAYER_TIMEOUT: Util.IEvent<IPlayerTimeoutEvent>;
 
         /**
-         * Represents an event fired when an AI Player finishes their turn.
+         * Represents an event fired when an AI player finishes their turn.
          *
          * @event
          *
@@ -1254,7 +1254,7 @@ declare namespace Engine {
          *         // making big chain box captures.
          *         move = ... calculate a move ...;
          *     } else {
-         *         // Otherwise, if our AI Player has been making big capture
+         *         // Otherwise, if our AI player has been making big capture
          *         // chains or the opponent(s) have not been, then we use
          *         // another strategy.
          *         move = ... calculate a move ...;
@@ -1271,7 +1271,7 @@ declare namespace Engine {
         readonly EVENT_TURN_END: Util.IEvent<ITurnEndEvent>;
 
         /**
-         * Represents an event fired when an AI Player throws a runtime error.
+         * Represents an event fired when an AI player throws a runtime error.
          *
          * @event
          *
@@ -1294,7 +1294,7 @@ declare namespace Engine {
         readonly EVENT_TURN_ERROR: Util.IEvent<ITurnErrorEvent>;
 
         /**
-         * Represents an event fired when an AI Player computed their move.
+         * Represents an event fired when an AI player computed their move.
          *
          * @event
          *
@@ -1321,7 +1321,7 @@ declare namespace Engine {
          *         // the opening move.
          *         move = ... calculate a move ...;
          *     } else {
-         *         // Otherwise, an AI Player has made a move before. Why
+         *         // Otherwise, an AI player has made a move before. Why
          *         // not try the strategy of using `lastMoveMade.x` / `lastMoveMade.y`
          *         // to calculate a move in the opposite quadrant of the
          *         // game board grid.
@@ -1339,7 +1339,7 @@ declare namespace Engine {
         readonly EVENT_TURN_MOVE: Util.IEvent<ITurnMoveEvent>;
 
         /**
-         * Represents an event fired when an AI Player starts their turn.
+         * Represents an event fired when an AI player starts their turn.
          *
          * @event
          *
@@ -1587,7 +1587,7 @@ declare namespace Engine {
     }
 
     /**
-     * Represents an AI Player that always returns a move at a specific
+     * Represents an AI player that always returns a move at a specific
      * set of coordinates when it is their turn to compute a move.
      *
      * @category Engine
@@ -1618,7 +1618,7 @@ declare namespace Engine {
     export type IDummyPlayerOptions = IPlayerOptions;
 
     /**
-     * Represents an AI Player that always throws an error when it is
+     * Represents an AI player that always throws an error when it is
      * their turn to compute a move.
      *
      * @category Engine
@@ -1649,7 +1649,7 @@ declare namespace Engine {
     export type IForfeitPlayerOptions = IPlayerOptions;
 
     /**
-     * Represents an AI Player that always forfeits when it is
+     * Represents an AI player that always forfeits when it is
      * their turn to compute a move.
      *
      * @category Engine
@@ -1756,7 +1756,7 @@ declare namespace Game {
 
     /**
      * Represents the {@linkcode Engine.IPlayer} singleton that the game engine
-     * uses to track your AI Player's moves.
+     * uses to track your AI player's moves.
      *
      * @category Game
      *
