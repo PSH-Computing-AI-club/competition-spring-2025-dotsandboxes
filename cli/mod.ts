@@ -2,11 +2,11 @@ import { Command } from '@cliffy/command';
 
 import { OUTPUT_KIND, OUTPUT_KIND_ENUM } from './output_logger.ts';
 import { COMMAND_SIMULATE } from './simulate.ts';
-import { BINARY_NAME } from './util.ts';
+import { BINARY_NAME, BUILD_VERSION } from './util.ts';
 
 await new Command()
     .name(BINARY_NAME)
-    .version('0.0.1')
+    .version(BUILD_VERSION)
     .description('Game engine for simulating Dots and Boxes game sessions.')
     .globalType('OutputKind', OUTPUT_KIND_ENUM)
     .globalOption(

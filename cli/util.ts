@@ -18,3 +18,5 @@ function getBinaryBuildMatch(): string {
 }
 
 export const BINARY_NAME = getBinaryBuildMatch();
+
+export const BUILD_VERSION = '0.0.2';
