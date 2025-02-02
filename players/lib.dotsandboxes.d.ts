@@ -1201,7 +1201,7 @@ declare namespace Engine {
          * Applies any captures to empty boxes that have four lines
          * around them.
          *
-         * > **NOTE**: Do not use this API unless you are using it on a
+         * > **WARNING**: Do not use this API unless you are using it on a
          * > {@linkcode Engine.IGameBoard} instance you have created
          * > with {@linkcode Engine.makeGameBoard}!
          * >
@@ -1274,7 +1274,7 @@ declare namespace Engine {
          * Places a line at an empty spacer using data from a
          * {@linkcode Engine.IPlayerTurn} instance.
          *
-         * > **NOTE**: Do not use this API unless you are using it on a
+         * > **WARNING**: Do not use this API unless you are using it on a
          * > {@linkcode Engine.IGameBoard} instance you have created
          * > with {@linkcode Engine.makeGameBoard}!
          * >
@@ -1798,7 +1798,7 @@ declare namespace Engine {
          * Applies a computed {@linkcode Engine.IPlayerTurn} instance to
          * the game state.
          *
-         * > **NOTE**: Do not use this API unless you are using it on a
+         * > **WARNING**: Do not use this API unless you are using it on a
          * > {@linkcode Engine.IGameSession} instance you have created
          * > with {@linkcode Engine.makeGameSession}!
          * >
@@ -1818,7 +1818,7 @@ declare namespace Engine {
          * that will then be converted into a {@linkcode Engine.IPlayerTurn}
          * instance.
          *
-         * > **NOTE**: Do not use this API unless you are using it on a
+         * > **WARNING**: Do not use this API unless you are using it on a
          * > {@linkcode Engine.IGameSession} instance you have created
          * > with {@linkcode Engine.makeGameSession}!
          * >
@@ -1835,7 +1835,7 @@ declare namespace Engine {
          * Shifts the internal turn order by popping the current player
          * from the top of the double ended queue and pushed to the back.
          *
-         * > **NOTE**: Do not use this API unless you are using it on a
+         * > **WARNING**: Do not use this API unless you are using it on a
          * > {@linkcode Engine.IGameSession} instance you have created
          * > with {@linkcode Engine.makeGameSession}!
          * >
