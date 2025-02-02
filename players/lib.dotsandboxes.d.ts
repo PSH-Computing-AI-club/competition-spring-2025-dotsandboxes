@@ -1065,6 +1065,8 @@ declare namespace Engine {
          * grid is expanded by adding {@linkcode Engine.IGameBoard.columnPadding}
          * x {@linkcode Engine.IGameBoard.rowPadding} of columns x rows.
          *
+         * @example
+         *
          * For example, 3x5 2D grid of dots would normally look like this:
          *
          * ```plaintext
