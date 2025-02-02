@@ -18,11 +18,11 @@ interface ISimulateOptions extends IGlobalOptions {
 export const COMMAND_SIMULATE = new Command()
     .description('Simulates a Dots and Boxes game session.')
     .example(
-        'Simulate Two JavaScript Players',
+        'Simulate Two JavaScript Players:',
         `${BINARY_NAME} ./random_player.js ./strategic_player.js`,
     )
     .example(
-        'Simulate Two TypeScript Players',
+        'Simulate Two TypeScript Players:',
         `${BINARY_NAME} ./random_player.ts ./strategic_player.ts`,
     )
     .option(
